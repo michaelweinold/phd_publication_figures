@@ -13,6 +13,9 @@ cm = 1/2.54 # for inches-cm conversion
 import numpy as np
 import pandas as pd
 
+# i/o
+from pathlib import PurePath, Path
+
 # SETUP #########################################
 
 plt.rcParams.update({
@@ -49,7 +52,30 @@ y_top = df['max']
 y_bottom = df['min']
 y_average = df['average']
 
+# AXIS LIMITS ################
+
+plt.ylim(0,150)
+
 # TICKS AND LABELS ###########
+
+ax.minorticks_on()
+ax.tick_params(axis='x', which='minor', bottom=False)
+
+ax.set_xticks(np.arange(df.index.size))
+ax.set_xticklabels([1,2,3,4,5,6,7,8,9,10,11])
+
+# GRIDS ######################
+
+ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
+ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
+
+# AXIS LABELS ################
+
+plt.xlabel("Study")
+plt.ylabel("Underestimation of Impacts \n $\Delta(I_{PLCI}, I_{HLCI})$ [\%]")
+
+
+# PLOTTING ###################
 
 plt.bar(
     x = x,
@@ -65,19 +91,16 @@ plt.scatter(
     label = 'Average'
 )
 
-plt.ylim(0,150)
+# LEGEND ####################
 
-# GRIDS ######################
-
-ax.grid(visible=None, which='major', axis='y')
-
-# AXIS LABELS ################
-
-plt.xlabel("Study")
-plt.ylabel(" Underestimation of Impacts \n $\Delta(I_{PLCI}, I_{HLCI})$ [\%]")
+ax.legend(loc = 'upper right', frameon = True)
 
 # EXPORT #########################################
 
-ax.legend(loc = 'upper left')
-
+plt.savefig(
+    PurePath(PurePath(Path.cwd()), 'underestimation.pdf'),
+    format="pdf",
+    bbox_inches='tight',
+    transparent = False
+)
 # %%
