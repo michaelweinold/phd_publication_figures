@@ -28,7 +28,7 @@ plt.rcParams.update({
 # DATA IMPORT ###################################
 
 df = pd.read_csv(
-    filepath_or_buffer = 'research_plan_data.csv',
+    filepath_or_buffer = 'data/research_plan_data.csv',
     sep = ',',
     header = 'infer',
     index_col = False

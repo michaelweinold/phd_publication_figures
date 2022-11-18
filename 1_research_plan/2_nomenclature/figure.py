@@ -65,7 +65,9 @@ fig, ax = plt.subplots(
         num = 'main',
         nrows = 1,
         ncols = 4,
+        sharey = True,
         dpi = 300,
+        width_ratios = [6,4,3,13],
         figsize=(16.5*cm, 5*cm), # A4=(210x297)mm
     )
 
@@ -74,23 +76,82 @@ fig, ax = plt.subplots(
 x_i = df_i.index
 y_i = df_i[1]
 
+x_ma = df_ma.index
+y_ma = df_ma[1]
+
+x_pxc = df_pxc.index
+y_pxc = df_pxc[1]
+
+x_t = df_t.index
+y_t = df_t[1]
+
 # AXIS LIMITS ################
+
+plt.ylim(0,21)
 
 # TICKS AND LABELS ###########
 
+ax[0].set_xticks(
+    ticks = np.arange(df_i[0].size),
+    labels = df_i[0]
+)
+ax[0].tick_params(direction='out', labelrotation = 90)
+
+ax[1].set_xticks(
+    ticks = np.arange(df_ma[0].size),
+    labels = df_ma[0]
+)
+ax[1].tick_params(direction='out', labelrotation = 90)
+
+ax[2].set_xticks(
+    ticks = np.arange(df_pxc[0].size),
+    labels = df_pxc[0]
+)
+ax[2].tick_params(direction='out', labelrotation = 90)
+
+ax[3].set_xticks(
+    ticks = np.arange(df_t[0].size),
+    labels = df_t[0]
+)
+ax[3].tick_params(direction='out', labelrotation = 90)
+
 # GRIDS ######################
+
+for axis in ax:
+    axis.minorticks_on()
+    axis.tick_params(axis='x', which='minor', bottom=False)
+    axis.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
+    axis.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-plt.xlabel("Nomenclature")
-plt.ylabel("Number of Studies")
+ax[0].set_ylabel('Number of Studies')
 
 # PLOTTING ###################
 
-plt.bar(
+ax[0].bar(
     x = x_i,
     height = y_i
 )
+ax[0].set_title('Integrated')
+
+ax[1].bar(
+    x = x_ma,
+    height = y_ma
+)
+ax[1].set_title('Matrix')
+
+ax[2].bar(
+    x = x_pxc,
+    height = y_pxc
+)
+ax[2].set_title('Path Exchange')
+
+ax[3].bar(
+    x = x_t,
+    height = y_t
+)
+ax[3].set_title('Tiered')
 
 # LEGEND ####################
 
