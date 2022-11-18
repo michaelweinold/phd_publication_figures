@@ -22,6 +22,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
     "font.sans-serif": "Computer Modern",
+    'font.size': 8
 })
 
 # DATA IMPORT ###################################
@@ -97,8 +98,10 @@ ax.legend(loc = 'upper right', frameon = True)
 
 # EXPORT #########################################
 
+figure_name: str = str(Path.cwd().stem + '.pdf')
+
 plt.savefig(
-    PurePath(PurePath(Path.cwd()), 'underestimation.pdf'),
+    fname = figure_name,
     format="pdf",
     bbox_inches='tight',
     transparent = False
