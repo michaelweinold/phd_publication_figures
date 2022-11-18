@@ -34,6 +34,11 @@ df = pd.read_csv(
     index_col = False
 )
 
+# DATA MANIPULATION #############################
+
+df['midpoint'] = ((df['max'] - df['min'])/2)+df['min']
+df['errorbars'] = (df['max'] - df['min'])/2
+
 # FIGURE ########################################
 
 # SETUP ######################
@@ -49,8 +54,8 @@ fig, ax = plt.subplots(
 # DATA #######################
 
 x = df.index
-y_top = df['max']
-y_bottom = df['min']
+y = df['midpoint']
+y_err = df['errorbars']
 y_average = df['average']
 
 # AXIS LIMITS ################
@@ -78,18 +83,23 @@ plt.ylabel("Underestimation of Impacts \n $\Delta(I_{PLCI}, I_{HLCI})$ [\%]")
 
 # PLOTTING ###################
 
-plt.bar(
+plt.errorbar(
     x = x,
-    height = y_top,
-    bottom=y_bottom,
-    width = 0.5*cm,
-    label = 'Range (min./max.)'
+    y = y,
+    yerr = y_err,
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    label = 'Range (min./max.)',
+    elinewidth=1
 )
 plt.scatter(
     x = x,
     y = y_average,
     c = 'black',
-    label = 'Average'
+    marker = 'x',
+    s = 10,
+    label = 'Average',
 )
 
 # LEGEND ####################
