@@ -133,25 +133,25 @@ ax[0].bar(
     x = x_i,
     height = y_i
 )
-ax[0].set_title('Integrated')
+ax[0].set_title('Integrated', fontsize = 8)
 
 ax[1].bar(
     x = x_ma,
     height = y_ma
 )
-ax[1].set_title('Matrix')
+ax[1].set_title('Matrix', fontsize = 8)
 
 ax[2].bar(
     x = x_pxc,
     height = y_pxc
 )
-ax[2].set_title('Path Exchange')
+ax[2].set_title('Path Exchange', fontsize = 8)
 
 ax[3].bar(
     x = x_t,
     height = y_t
 )
-ax[3].set_title('Tiered')
+ax[3].set_title('Tiered', fontsize = 8)
 
 # LEGEND ####################
 
