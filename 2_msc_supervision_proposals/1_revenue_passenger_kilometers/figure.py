@@ -89,7 +89,8 @@ plt.ylabel("ASK [km]")
 plt.plot(
     x,
     y,
-    color = 'black'
+    color = 'black',
+    linewidth = 1
 )
 
 # LEGEND ####################
