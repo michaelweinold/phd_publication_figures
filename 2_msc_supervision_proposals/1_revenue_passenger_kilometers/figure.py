@@ -7,6 +7,7 @@
 # plotting
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
+from matplotlib.ticker import FuncFormatter
 cm = 1/2.54 # for inches-cm conversion
 
 # data science
@@ -27,11 +28,11 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df = pd.read_excel(
-    io = 'data/data_aviation_radiative_forcing.xlsx',
-    sheet_name = 'efficiency',
-    header = 0,
-    engine = 'openpyxl'
+df = pd.read_csv(
+    filepath_or_buffer = 'data/data_airline_capacity_and_traffic.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False
 )
 
 # DATA MANIPULATION #############################
@@ -50,8 +51,8 @@ fig, ax = plt.subplots(
 
 # DATA #######################
 
-x = df['year']
-y = df['RPK/kg CO2']
+x = df['Year']
+y = df['Available seat kilometers; ASKs']
 
 # AXIS LIMITS ################
 
@@ -62,8 +63,16 @@ y = df['RPK/kg CO2']
 ax.minorticks_on()
 ax.tick_params(axis='x', which='minor', bottom=False)
 
-#ax.set_xticks(np.arange(df.index.size))
-#ax.set_xticklabels([1,2,3,4,5,6,7,8,9,10,11])
+def human_format(num, pos):
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    # add more suffixes if you need them
+    return '%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+
+formatter = FuncFormatter(human_format)
+ax.yaxis.set_major_formatter(formatter)
 
 # GRIDS ######################
 
@@ -73,15 +82,14 @@ ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
 # AXIS LABELS ################
 
 plt.xlabel("Year")
-plt.ylabel("Efficiency [RPK/kg CO$_2$]")
+plt.ylabel("ASK [km]")
 
 # PLOTTING ###################
 
 plt.plot(
     x,
     y,
-    color = 'black',
-    linewidth = 1
+    color = 'black'
 )
 
 # LEGEND ####################

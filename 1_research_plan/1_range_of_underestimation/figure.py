@@ -91,7 +91,7 @@ plt.errorbar(
     capsize = 2,
     ecolor = 'black',
     label = 'Range (min./max.)',
-    elinewidth=1
+    elinewidth = 1
 )
 plt.scatter(
     x = x,
