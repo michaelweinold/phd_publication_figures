@@ -69,7 +69,7 @@ def human_format(num, pos):
         magnitude += 1
         num /= 1000.0
     # add more suffixes if you need them
-    return '%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+    return '%.0f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
 
 formatter = FuncFormatter(human_format)
 ax.yaxis.set_major_formatter(formatter)
