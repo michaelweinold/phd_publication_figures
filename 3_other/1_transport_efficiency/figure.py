@@ -98,7 +98,8 @@ ax.plot(
     y_car,
     color = 'black',
     linewidth = 1,
-    label = 'Passenger Cars'
+    label = 'Passenger Cars',
+    linestyle = 'dashed',
 )
 
 ax.plot(
