@@ -1,4 +1,4 @@
-# %%
+#%%
 # runs code as interactive cell 
 # https://code.visualstudio.com/docs/python/jupyter-support-py
 
@@ -7,6 +7,7 @@
 # plotting
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
+from matplotlib.ticker import FuncFormatter
 cm = 1/2.54 # for inches-cm conversion
 
 # data science
@@ -27,17 +28,21 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df = pd.read_csv(
-    filepath_or_buffer = 'data/research_plan_data.csv',
+df_eff = pd.read_excel(
+    io = 'data/data_aviation_radiative_forcing.xlsx',
+    sheet_name = 'efficiency',
+    header = 0,
+    engine = 'openpyxl'
+)
+
+df_km = pd.read_csv(
+    filepath_or_buffer = 'data/data_airline_capacity_and_traffic.csv',
     sep = ',',
     header = 'infer',
     index_col = False
 )
 
 # DATA MANIPULATION #############################
-
-df['midpoint'] = ((df['max'] - df['min'])/2)+df['min']
-df['errorbars'] = (df['max'] - df['min'])/2
 
 # FIGURE ########################################
 
@@ -51,24 +56,34 @@ fig, ax = plt.subplots(
         figsize=(16.5*cm, 5*cm), # A4=(210x297)mm
     )
 
+ax2=ax.twinx()
+
 # DATA #######################
 
-x = df.index
-y = df['midpoint']
-y_err = df['errorbars']
-y_average = df['average']
+x_eff = df_eff['year']
+x_km = df_km['Year']
+y_eff = df_eff['kg CO2/RPK']
+y_km = df_km['Available seat kilometers; ASKs']
 
 # AXIS LIMITS ################
 
-plt.ylim(0,150)
+#plt.ylim(0,150)
 
 # TICKS AND LABELS ###########
 
 ax.minorticks_on()
 ax.tick_params(axis='x', which='minor', bottom=False)
 
-ax.set_xticks(np.arange(df.index.size))
-ax.set_xticklabels([1,2,3,4,5,6,7,8,9,10,11])
+def human_format(num, pos):
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    # add more suffixes if you need them
+    return '%.0f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+
+formatter = FuncFormatter(human_format)
+ax2.yaxis.set_major_formatter(formatter)
 
 # GRIDS ######################
 
@@ -77,34 +92,40 @@ ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-plt.xlabel("Study")
-plt.ylabel("Underestimation of Impacts \n $\Delta(I_{PLCI}, I_{HLCI})$ [\%]")
-
+plt.xlabel("Year")
+ax.set_ylabel("Carbon Intensity \n [kg CO$_2$/RPK]")
+ax2.set_ylabel("RPK")
 
 # PLOTTING ###################
 
-plt.errorbar(
-    x = x,
-    y = y,
-    yerr = y_err,
-    fmt = 'none',
-    capsize = 2,
-    ecolor = 'black',
-    label = 'Range (min./max.)',
-    elinewidth = 1
+
+ax.plot(
+    x_eff,
+    y_eff,
+    color = 'black',
+    linewidth = 1,
+    label = 'Carbon Intensity'
 )
-plt.scatter(
-    x = x,
-    y = y_average,
-    c = 'black',
-    marker = 'x',
-    s = 10,
-    label = 'Average',
+
+ax2.plot(
+    x_km,
+    y_km,
+    color = 'black',
+    linewidth = 1,
+    linestyle = 'dashed',
+    label = 'RPK'
 )
 
 # LEGEND ####################
 
-ax.legend(loc = 'upper right', frameon = True)
+fig.legend(
+    bbox_to_anchor=(1,1), bbox_transform=ax.transAxes,
+    loc = 'upper right',
+    fontsize = 'small',
+    markerscale = 1.0,
+    frameon = True,
+    fancybox = False
+)
 
 # EXPORT #########################################
 

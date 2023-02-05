@@ -1,4 +1,4 @@
-# %%
+#%%
 # runs code as interactive cell 
 # https://code.visualstudio.com/docs/python/jupyter-support-py
 
@@ -7,7 +7,10 @@
 # plotting
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
+# unit conversion
 cm = 1/2.54 # for inches-cm conversion
+# time manipulation
+from datetime import datetime
 
 # data science
 import numpy as np
@@ -27,17 +30,25 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df = pd.read_csv(
-    filepath_or_buffer = 'data/research_plan_data.csv',
+df_jetfuel = pd.read_csv(
+    filepath_or_buffer = 'data/data_jetfuel.csv',
     sep = ',',
     header = 'infer',
-    index_col = False
+    index_col = False,
+    parse_dates = [0],
+    infer_datetime_format = True,
+)
+
+df_gasoline = pd.read_csv(
+    filepath_or_buffer = 'data/data_gasoline.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+    parse_dates = [0],
+    infer_datetime_format = True,
 )
 
 # DATA MANIPULATION #############################
-
-df['midpoint'] = ((df['max'] - df['min'])/2)+df['min']
-df['errorbars'] = (df['max'] - df['min'])/2
 
 # FIGURE ########################################
 
@@ -53,22 +64,22 @@ fig, ax = plt.subplots(
 
 # DATA #######################
 
-x = df.index
-y = df['midpoint']
-y_err = df['errorbars']
-y_average = df['average']
+x_gasoline = df_gasoline['DATE']
+y_gasoline = df_gasoline['WPU0571']
+x_jetfuel = df_jetfuel['DATE']
+y_jetfuel = df_jetfuel['WPU0572']
 
 # AXIS LIMITS ################
 
-plt.ylim(0,150)
+plt.xlim(
+    datetime.strptime('1950', '%Y'),
+    datetime.strptime('2023', '%Y')
+)
 
 # TICKS AND LABELS ###########
 
 ax.minorticks_on()
 ax.tick_params(axis='x', which='minor', bottom=False)
-
-ax.set_xticks(np.arange(df.index.size))
-ax.set_xticklabels([1,2,3,4,5,6,7,8,9,10,11])
 
 # GRIDS ######################
 
@@ -77,34 +88,21 @@ ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-plt.xlabel("Study")
-plt.ylabel("Underestimation of Impacts \n $\Delta(I_{PLCI}, I_{HLCI})$ [\%]")
-
+plt.xlabel("Year")
+ax.set_ylabel("Fuel Price")
 
 # PLOTTING ###################
 
-plt.errorbar(
-    x = x,
-    y = y,
-    yerr = y_err,
-    fmt = 'none',
-    capsize = 2,
-    ecolor = 'black',
-    label = 'Range (min./max.)',
-    elinewidth = 1
-)
-plt.scatter(
-    x = x,
-    y = y_average,
-    c = 'black',
-    marker = 'x',
-    s = 10,
-    label = 'Average',
+
+ax.plot(
+    x_jetfuel,
+    y_jetfuel,
+    color = 'black',
+    linewidth = 1,
+    label = 'Jet Fuel (Kerosene)'
 )
 
 # LEGEND ####################
-
-ax.legend(loc = 'upper right', frameon = True)
 
 # EXPORT #########################################
 
