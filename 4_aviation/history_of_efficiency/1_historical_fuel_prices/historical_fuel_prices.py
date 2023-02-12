@@ -23,7 +23,7 @@ from pathlib import PurePath, Path
 
 plt.rcParams.update({
     "text.usetex": True,
-    "font.family": "serif",
+    "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
     'font.size': 8
 })
@@ -59,7 +59,7 @@ fig, ax = plt.subplots(
         nrows = 1,
         ncols = 1,
         dpi = 300,
-        figsize=(16.5*cm, 5*cm), # A4=(210x297)mm
+        figsize=(30*cm, 15*cm), # A4=(210x297)mm
     )
 
 # DATA #######################
