@@ -28,27 +28,24 @@ plt.rcParams.update({
     'font.size': 8
 })
 
+# DIRECTORIES ###################################
+
+path_dir_data: PurePath = Path.cwd().joinpath('data/bars')
+
 # DATA IMPORT ###################################
 
-df_jetfuel = pd.read_csv(
-    filepath_or_buffer = 'data/data_jetfuel.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-    parse_dates = [0],
-    infer_datetime_format = True,
-)
-
-df_gasoline = pd.read_csv(
-    filepath_or_buffer = 'data/data_gasoline.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-    parse_dates = [0],
-    infer_datetime_format = True,
-)
+dict_files: dict = dict()
+list_files: list = list()
+for file in path_dir_data.glob('*.csv'):
+    dict_files[file.stem] = pd.read_csv(filepath_or_buffer = file)
+    list_files.append(file.stem)
 
 # DATA MANIPULATION #############################
+
+for file in list_files:
+    df: pd.DataFrame = dict_files[file]
+    df['data_absolute'] = df['data_upper'] + df['data_lower']
+    dict_files[file] = df
 
 # FIGURE ########################################
 
@@ -64,17 +61,15 @@ fig, ax = plt.subplots(
 
 # DATA #######################
 
-x_gasoline = df_gasoline['DATE']
-y_gasoline = df_gasoline['WPU0571']
-x_jetfuel = df_jetfuel['DATE']
-y_jetfuel = df_jetfuel['WPU0572']
+x = dict_files['sustainable_aviation_fuels']['year']
+y = dict_files['sustainable_aviation_fuels']['data_absolute']
 
 # AXIS LIMITS ################
 
-plt.xlim(
-    datetime.strptime('1950', '%Y'),
-    datetime.strptime('2023', '%Y')
-)
+#plt.xlim(
+#    datetime.strptime('2020', '%Y'),
+#    datetime.strptime('2050', '%Y')
+#)
 
 # TICKS AND LABELS ###########
 
@@ -83,8 +78,8 @@ ax.tick_params(axis='x', which='minor', bottom=False)
 
 # GRIDS ######################
 
-ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
+#ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
+#ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
@@ -93,13 +88,11 @@ ax.set_ylabel("Fuel Price")
 
 # PLOTTING ###################
 
-
-ax.plot(
-    x_jetfuel,
-    y_jetfuel,
-    color = 'black',
-    linewidth = 1,
-    label = 'Jet Fuel (Kerosene)'
+ax.bar(
+    x = x,
+    height = dict_files['sustainable_aviation_fuels']['data_lower'],
+    bottom = dict_files['sustainable_aviation_fuels']['data_upper'],
+    width=0.8
 )
 
 # LEGEND ####################
