@@ -1,0 +1,5 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=west] (0) at (0, 0) {Ponsard 1966 \\ \cite{ponsard_application_1966}};
+	\end{pgfonlayer}
+\end{tikzpicture}
