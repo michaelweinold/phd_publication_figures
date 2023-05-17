@@ -26,7 +26,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
-    'font.size': 8
+    'font.size': 12
 })
 
 # DIRECTORIES ###################################
@@ -64,7 +64,7 @@ for filename in list_filenames:
     x: pd.Series = df_raw['x']
     y: pd.Series = df_raw['y']
 
-    x_new: np.ndarray = np.linspace(x.min(), y.max(), 100)
+    x_new: np.ndarray = np.linspace(x.min(), 150, 100)
     y_spline: sp.interpolate.BSpline = sp.interpolate.make_interp_spline(x, y, k = 1)
     y_new: np.ndarray = y_spline(x_new)
 
@@ -78,6 +78,7 @@ for filename in list_filenames:
 # DATAFRAMES #################
 
 variation_cost_quantity: pd.DataFrame = dict_files['interpolated_variation_cost_quantity']
+ratio_tool_construction_cost: pd.DataFrame = dict_files['interpolated_ratio_tool_construction_cost']
 
 # SETUP ######################
 
@@ -86,36 +87,50 @@ fig, ax = plt.subplots(
         nrows = 1,
         ncols = 1,
         dpi = 300,
-        figsize=(30*cm, 15*cm), # A4=(210x297)mm
+        figsize=(30*cm, 10*cm), # A4=(210x297)mm
     )
 
 # AXIS LIMITS ################
 
-#plt.xlim(
-#    datetime.strptime('2020', '%Y'),
-#    datetime.strptime('2050', '%Y')
-#)
+plt.xlim(0, 150)
+plt.ylim(0, 100)
 
 # TICKS AND LABELS ###########
 
 ax.minorticks_on()
 ax.tick_params(axis='x', which='minor', bottom=False)
+ax.tick_params(axis='y', which='minor', bottom=False)
 
 # GRIDS ######################
 
-#ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
-#ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
+ax.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+ax.grid(which='both', axis='y', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-plt.xlabel("Year")
-ax.set_ylabel("Fuel Price")
+plt.xlabel("Quantity (Number of Aircraft Produced)")
+plt.ylabel('[\%]')
 
 # PLOTTING ###################
 
-ax.plot(variation_cost_quantity['x_new'], variation_cost_quantity['y_new'])
+ax.plot(
+    variation_cost_quantity['x_new'],
+    variation_cost_quantity['y_new'],
+    label="Variation of Cost with Quantity",
+    linestyle = '-',
+    color = 'black'
+)
+ax.plot(
+    ratio_tool_construction_cost['x_new'],
+    ratio_tool_construction_cost['y_new'],
+    label="Ratio of Tool Cost to Construction Cost",
+    linestyle = '-.',
+    color = 'black'
+)
 
 # LEGEND ####################
+
+ax.legend()
 
 # EXPORT #########################################
 
