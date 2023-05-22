@@ -25,7 +25,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
-    'font.size': 8
+    'font.size': 12
 })
 
 # DATA IMPORT ###################################
@@ -49,6 +49,10 @@ df_gasoline = pd.read_csv(
 )
 
 # DATA MANIPULATION #############################
+'''
+Normalize data to 1950 = 1
+'''
+df_jetfuel['WPU0572_normalized_1950'] = df_jetfuel['WPU0572'] / df_jetfuel['WPU0572'].loc[df_jetfuel['DATE'] == '1950-01-01'].values[0]
 
 # FIGURE ########################################
 
@@ -59,15 +63,13 @@ fig, ax = plt.subplots(
         nrows = 1,
         ncols = 1,
         dpi = 300,
-        figsize=(30*cm, 15*cm), # A4=(210x297)mm
+        figsize=(30*cm, 10*cm), # A4=(210x297)mm
     )
 
 # DATA #######################
 
-x_gasoline = df_gasoline['DATE']
-y_gasoline = df_gasoline['WPU0571']
 x_jetfuel = df_jetfuel['DATE']
-y_jetfuel = df_jetfuel['WPU0572']
+y_jetfuel = df_jetfuel['WPU0572_normalized_1950']
 
 # AXIS LIMITS ################
 
@@ -75,6 +77,7 @@ plt.xlim(
     datetime.strptime('1950', '%Y'),
     datetime.strptime('2023', '%Y')
 )
+ax.set_ylim(1,80)
 
 # TICKS AND LABELS ###########
 
@@ -83,13 +86,13 @@ ax.tick_params(axis='x', which='minor', bottom=False)
 
 # GRIDS ######################
 
-ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
+ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax.grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-plt.xlabel("Year")
-ax.set_ylabel("Fuel Price")
+ax.set_xlabel("Year")
+ax.set_ylabel("Producer Price Index \n (Aviation Fuel)")
 
 # PLOTTING ###################
 
