@@ -30,29 +30,15 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_jetfuel = pd.read_csv(
-    filepath_or_buffer = 'data/data_jetfuel.csv',
+df_fossil = pd.read_csv(
+    filepath_or_buffer = 'data/fossil.csv',
     sep = ',',
     header = 'infer',
     index_col = False,
-    parse_dates = [0],
-    infer_datetime_format = True,
-)
-
-df_gasoline = pd.read_csv(
-    filepath_or_buffer = 'data/data_gasoline.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-    parse_dates = [0],
-    infer_datetime_format = True,
+    skipinitialspace=True
 )
 
 # DATA MANIPULATION #############################
-'''
-Normalize data to 1950 = 1
-'''
-df_jetfuel['WPU0572_normalized_1950'] = df_jetfuel['WPU0572'] / df_jetfuel['WPU0572'].loc[df_jetfuel['DATE'] == '1950-01-01'].values[0]
 
 # FIGURE ########################################
 
@@ -68,16 +54,13 @@ fig, ax = plt.subplots(
 
 # DATA #######################
 
-x_jetfuel = df_jetfuel['DATE']
-y_jetfuel = df_jetfuel['WPU0572_normalized_1950']
+x_fossil = df_fossil['MJ/kg']
+y_fossil = df_fossil['MJ/l']
 
 # AXIS LIMITS ################
 
-plt.xlim(
-    datetime.strptime('1950', '%Y'),
-    datetime.strptime('2023', '%Y')
-)
-ax.set_ylim(1,80)
+ax.set_xlim(0,100)
+ax.set_ylim(0,160)
 
 # TICKS AND LABELS ###########
 
@@ -91,18 +74,15 @@ ax.grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_xlabel("Year")
-ax.set_ylabel("Producer Price Index \n (Aviation Fuel)")
+ax.set_xlabel("Gravimetric Energy Density [MJ/kg]")
+ax.set_ylabel("Volumetric Energy Density [MJ/l]")
 
 # PLOTTING ###################
 
-
-ax.plot(
-    x_jetfuel,
-    y_jetfuel,
+plt.scatter(
+    x_fossil,
+    y_fossil,
     color = 'black',
-    linewidth = 1,
-    label = 'Jet Fuel (Kerosene)'
 )
 
 # LEGEND ####################
