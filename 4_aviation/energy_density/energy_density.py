@@ -37,6 +37,13 @@ df_fossil = pd.read_csv(
     index_col = False,
     skipinitialspace=True
 )
+df_avition_requirements = pd.read_csv(
+    filepath_or_buffer = 'data/aviation_requirements.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+    skipinitialspace=True
+)
 
 # DATA MANIPULATION #############################
 
@@ -59,8 +66,8 @@ y_fossil = df_fossil['MJ/l']
 
 # AXIS LIMITS ################
 
-ax.set_xlim(0,100)
-ax.set_ylim(0,160)
+ax.set_xlim(0,150)
+ax.set_ylim(0,80)
 
 # TICKS AND LABELS ###########
 
@@ -70,7 +77,7 @@ ax.tick_params(axis='x', which='minor', bottom=False)
 # GRIDS ######################
 
 ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
+ax.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
 # AXIS LABELS ################
 
@@ -79,11 +86,12 @@ ax.set_ylabel("Volumetric Energy Density [MJ/l]")
 
 # PLOTTING ###################
 
-plt.scatter(
+ax.scatter(
     x_fossil,
     y_fossil,
     color = 'black',
 )
+ax.axvline(x=df_avition_requirements.iloc[0]['MJ/kg'], color='r', linestyle='--')
 
 # LEGEND ####################
 

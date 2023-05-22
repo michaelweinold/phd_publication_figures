@@ -1,0 +1,6 @@
+description, MJ/kg, comment, source
+regional, 2.16, 600Wh/kg, https://doi.org/10.1021/acsenergylett.9b02574 (figure 1)
+narrow-body, 2.952, 820Wh/kg, https://doi.org/10.1021/acsenergylett.9b02574 (figure 1)
+wide-body, 4.608, 1280Wh/kg, https://doi.org/10.1021/acsenergylett.9b02574 (figure 1)
+lower_range_all_classes, 3.6, 10E3Wh/kg, https://doi.org/10.1038/s41586-021-04139-1 (figure 2)
+upper_range_all_classes, 36, 10E4h/kg, https://doi.org/10.1038/s41586-021-04139-1 (figure 2)
