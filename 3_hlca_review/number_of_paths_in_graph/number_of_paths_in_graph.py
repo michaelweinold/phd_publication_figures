@@ -29,7 +29,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
-    'font.size': 12
+    'font.size': 10
 })
 
 # DATA GENERATION ################################
@@ -41,7 +41,7 @@ def number_of_paths_two_nodes_graph_theory(n, l) -> int:
     Compare: https://math.stackexchange.com/a/4704603/
     '''
     result: int = 0
-    for k in range(n-l, n-1): # mathematically: k=[n-l-1, n-2]
+    for k in range(n-l-1, n-2+1): # mathematically: k=[n-l-1, n-2]
         if n-l >0:
             result += math.factorial(n-2) * 1/math.factorial(k)
         else:
@@ -71,10 +71,10 @@ def create_dataframe_number_of_paths(
     df_power_series.index = index_series
     df_graph_theory.index = index_series
     
-    for param in range(1, param_max+1):
+    for param in range(2, param_max):
         column_power_series = pd.Series()
         column_graph_theory = pd.Series()
-        for n in range(1, n_max+1):
+        for n in index_series:
             column_power_series.loc[n]=number_of_paths_two_nodes_power_series(n, param)
             column_graph_theory.loc[n]=number_of_paths_two_nodes_graph_theory(n, param)
         df_power_series[param]=column_power_series
@@ -86,6 +86,8 @@ df_power_series, df_graph_theory = create_dataframe_number_of_paths()
 
 # DATA MANIPULATION #############################
 
+df_graph_theory = df_graph_theory.replace(0, np.nan)
+
 # FIGURE ########################################
 
 # SETUP ######################
@@ -96,7 +98,7 @@ fig, ax = plt.subplots(
         ncols = 1,
         sharey=True,
         dpi = 300,
-        figsize=(30*cm, 10*cm), # A4=(210x297)mm
+        figsize=(15.6*cm, 6*cm), # A4=(210x297)mm
     )
 
 # DATA #######################
@@ -206,4 +208,6 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
+
 # %%
