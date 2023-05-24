@@ -98,7 +98,7 @@ fig, ax = plt.subplots(
         ncols = 1,
         sharey=True,
         dpi = 300,
-        figsize=(15.6*cm, 6*cm), # A4=(210x297)mm
+        figsize=(15.5*cm, 6*cm), # A4=(210x297)mm
     )
 
 # DATA #######################
@@ -109,6 +109,7 @@ ax.set_yscale('log')
 
 # AXIS LIMITS ################
 
+ax.set_ylim(0, 1E20)
 ax.set_xlim(0,300)
 
 # TICKS AND LABELS ###########
@@ -120,6 +121,8 @@ ax.tick_params(axis='x', which='both', bottom=False)
 
 ax.grid(True, which='both', axis='y', linestyle='-', linewidth = 0.5)
 ax.grid(True, which='both', axis='x', linestyle='-', linewidth = 0.5)
+
+ax.minorticks_on()
 
 # AXIS LABELS ################
 
@@ -196,7 +199,9 @@ ax.plot(
 
 # LEGEND ####################
 
-ax.legend()
+ax.legend(
+    loc = 'upper right',
+)
 
 # EXPORT #########################################
 
