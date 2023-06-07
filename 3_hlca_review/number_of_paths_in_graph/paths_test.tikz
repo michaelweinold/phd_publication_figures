@@ -1,0 +1,57 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=black filled dot] (3) at (0, 6.75) {};
+		\node [style=black filled dot] (4) at (4, 6.75) {};
+		\node [style=black filled dot] (5) at (8, 6.75) {};
+		\node [style=black filled dot] (12) at (0, 8.25) {};
+		\node [style=black filled dot] (13) at (4, 8.25) {};
+		\node [style=black filled dot] (14) at (8, 8.25) {};
+		\node [style=none] (15) at (0, 9.75) {1};
+		\node [style=none] (16) at (4, 9.75) {2};
+		\node [style=none] (17) at (8, 9.75) {3};
+		\node [style=black filled dot] (29) at (0, 5.5) {};
+		\node [style=black filled dot] (30) at (4, 5.5) {};
+		\node [style=black filled dot] (31) at (8, 5.5) {};
+		\node [style=black filled dot] (32) at (0, 4.25) {};
+		\node [style=black filled dot] (33) at (4, 4.25) {};
+		\node [style=black filled dot] (34) at (8, 4.25) {};
+		\node [style=black filled dot] (35) at (0, 3) {};
+		\node [style=black filled dot] (36) at (4, 3) {};
+		\node [style=black filled dot] (37) at (8, 3) {};
+		\node [style=black filled dot] (38) at (0, 1.75) {};
+		\node [style=black filled dot] (39) at (4, 1.75) {};
+		\node [style=black filled dot] (40) at (8, 1.75) {};
+		\node [style=none] (41) at (-1.25, 7.5) {};
+		\node [style=none] (42) at (9, 7.5) {};
+		\node [style=none] (44) at (-1.25, 9) {};
+		\node [style=none] (45) at (-1.25, 0.5) {};
+		\node [style=none] (46) at (9, 0.5) {};
+		\node [style=none] (47) at (9, 9) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [style=black arrow, bend left=15] (12) to (13);
+		\draw [style=black arrow, bend left=15] (13) to (14);
+		\draw [style=black arrow, in=135, out=45, loop] (3) to ();
+		\draw [style=black arrow, in=165, out=15] (3) to (4);
+		\draw [style=black arrow, bend left=15] (4) to (5);
+		\draw [style=black arrow, in=165, out=15] (29) to (30);
+		\draw [style=black arrow, bend left=15] (30) to (31);
+		\draw [style=black arrow, in=135, out=45, loop] (30) to ();
+		\draw [style=black arrow, in=165, out=15] (32) to (33);
+		\draw [style=black arrow, bend left=15] (33) to (34);
+		\draw [style=black arrow, in=135, out=45, loop] (34) to ();
+		\draw [style=black arrow, in=165, out=15] (35) to (36);
+		\draw [style=black arrow, bend left=15] (36) to (35);
+		\draw [style=black arrow, bend right=15] (35) to (37);
+		\draw [style=black arrow, bend right=15] (38) to (40);
+		\draw [style=black arrow, bend left=15] (39) to (40);
+		\draw [style=black arrow, bend left=15] (40) to (39);
+		\draw [style=line] (41.center) to (42.center);
+		\draw [style=line] (44.center) to (41.center);
+		\draw [style=line] (41.center) to (45.center);
+		\draw [style=line] (45.center) to (46.center);
+		\draw [style=line] (44.center) to (47.center);
+		\draw [style=line] (46.center) to (42.center);
+		\draw [style=line] (42.center) to (47.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
