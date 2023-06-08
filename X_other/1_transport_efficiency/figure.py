@@ -45,6 +45,28 @@ df_air = pd.read_excel(
     engine = 'openpyxl'
 )
 
+df_maritime_general_cargo = pd.read_csv(
+    filepath_or_buffer = 'data/maritime/general_cargo.csv',
+    sep = ';',
+    header = 'infer',
+    index_col = False,
+    skipinitialspace=True
+)
+df_maritime_bulk = pd.read_csv(
+    filepath_or_buffer = 'data/maritime/bulk.csv',
+    sep = ';',
+    header = 'infer',
+    index_col = False,
+    skipinitialspace=True
+)
+df_maritime_tanker = pd.read_csv(
+    filepath_or_buffer = 'data/maritime/tanker.csv',
+    sep = ';',
+    header = 'infer',
+    index_col = False,
+    skipinitialspace=True
+)
+
 # DATA MANIPULATION #############################
 
 # cut off dates
@@ -59,10 +81,11 @@ df_air['relative_efficiency'] = 1/(df_air['RPK/kg fuel']/df_air['RPK/kg fuel'].i
 
 fig, ax = plt.subplots(
         num = 'main',
-        nrows = 1,
+        nrows = 3,
         ncols = 1,
         dpi = 300,
-        figsize=(16.5*cm, 5*cm), # A4=(210x297)mm
+        figsize=(16.5*cm, 5*cm), # A4=(210x297)mm,
+        sharex = True
     )
 
 # DATA #######################
@@ -72,28 +95,35 @@ x_air = df_air['year']
 y_car = df_car['relative_efficiency']
 y_air = df_air['relative_efficiency']
 
+# AXIS SCALE #################
+
+ax[2].set_yscale('log')
+
 # AXIS LIMITS ################
 
-plt.xlim(1950,2010)
+plt.xlim(1950,2020)
+ax[2].set_ylim(1,150)
 
 # TICKS AND LABELS ###########
 
-ax.minorticks_on()
-ax.tick_params(axis='x', which='minor', bottom=False)
+# ax.minorticks_on()
+# ax.tick_params(axis='x', which='minor', bottom=False)
 
 # GRIDS ######################
 
-ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
+plt.grid(which='major', axis='both', linestyle='-', linewidth = 0.5)
+
+# ax[0].grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
+# ax[0].grid(which='minor', axis='y', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-plt.xlabel("Year")
-ax.set_ylabel("Relative Carbon Intensity [\%]")
+ax[0].set_ylabel("EEOI [gCO$_2$/p-km]")
+ax[2].set_ylabel("EEOI [gCO$_2$/t-nm]")
 
 # PLOTTING ###################
 
-ax.plot(
+ax[0].plot(
     x_car,
     y_car,
     color = 'black',
@@ -102,7 +132,7 @@ ax.plot(
     linestyle = 'dashed',
 )
 
-ax.plot(
+ax[0].plot(
     x_air,
     y_air,
     color = 'black',
@@ -110,10 +140,33 @@ ax.plot(
     label = 'Passenger Airplanes'
 )
 
+ax[2].plot(
+    df_maritime_general_cargo['year'],
+    df_maritime_general_cargo['efficiency(gCO2/t-nm)'],
+    color = 'black',
+    linewidth = 1,
+    label = 'General Cargo'
+)
+ax[2].plot(
+    df_maritime_bulk['year'],
+    df_maritime_bulk['efficiency(gCO2/t-nm)'],
+    color = 'black',
+    linewidth = 1,
+    label = 'Bulk Cargo'
+)
+ax[2].plot(
+    df_maritime_tanker['year'],
+    df_maritime_tanker['efficiency(gCO2/t-nm)'],
+    color = 'black',
+    linewidth = 1,
+    label = 'Tankers'
+)
+
+
 # LEGEND ####################
 
 fig.legend(
-    bbox_to_anchor=(1,1), bbox_transform=ax.transAxes,
+    bbox_to_anchor=(1,1),
     loc = 'upper right',
     fontsize = 'small',
     markerscale = 1.0,
@@ -131,4 +184,8 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
+
+# %%
+
 # %%
