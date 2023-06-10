@@ -46,8 +46,30 @@ df_freight = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
+df_pax = pd.read_excel(
+    io = 'data/world/data.xlsx',
+    sheet_name = 'Passengers',
+    usecols = lambda column: column in [
+        'year',
+        'plot world gdp (2022 USD)',
+        'plot world air passenger traffic (km)',
+    ],
+    dtype={
+        'year': int,
+        'plot world gdp (2022 USD)': float,
+        'plot world air passenger traffic (km)': float,
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
 
 # DATA MANIPULATION #############################
+
+df_pax['plot world air passenger traffic (km)'] = df_pax['plot world air passenger traffic (km)'] / 1e9
+df_pax['plot world gdp (2022 USD)'] = df_pax['plot world gdp (2022 USD)'] / 1e12
+df_freight['plot world gdp (2022 USD)'] = df_freight['plot world gdp (2022 USD)'] / 1e12
+
+
 
 
 # FIGURE ########################################
@@ -88,13 +110,20 @@ ax1.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax1.set_xlabel("GDP [2022 USD]")
-ax1.set_ylabel("Air Transport (Passengers) [km]")
+ax1.set_xlabel("World GDP [2022 TUSD]")
+ax1.set_ylabel("Air Transport (Passengers) [Gkm]")
 ax2.set_ylabel("Air Transport (Freight) [Mtkm]")
 
 # PLOTTING ###################
 
 ax1.scatter(
+    df_pax['plot world gdp (2022 USD)'],
+    df_pax['plot world air passenger traffic (km)'],
+    color = 'blue',
+    marker = 'o',
+    label = 'Passengers'
+)
+ax2.scatter(
     df_freight['plot world gdp (2022 USD)'],
     df_freight['plot world air freight (Mtkm)'],
     color = 'black',
@@ -104,12 +133,12 @@ ax1.scatter(
 
 # LEGEND ####################
 
-ax1.legend(
-    loc = 'upper left',
-    fontsize = 'small',
-    markerscale = 1.0,
-    frameon = True,
-    fancybox = False,
+lines, labels = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+ax2.legend(
+    lines + lines2,
+    labels + labels2,
+    loc='upper left',
 )
 
 # EXPORT #########################################
