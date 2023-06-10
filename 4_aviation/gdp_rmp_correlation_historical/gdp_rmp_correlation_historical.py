@@ -52,12 +52,12 @@ df_pax = pd.read_excel(
     usecols = lambda column: column in [
         'year',
         'plot world gdp (2022 USD)',
-        'plot world air passenger traffic (km)',
+        'plot world rpk (km)',
     ],
     dtype={
         'year': int,
         'plot world gdp (2022 USD)': float,
-        'plot world air passenger traffic (km)': float,
+        'plot world rpk (km)': float,
     },
     header = 0,
     engine = 'openpyxl'
@@ -65,12 +65,11 @@ df_pax = pd.read_excel(
 
 # DATA MANIPULATION #############################
 
-df_pax['plot world air passenger traffic (km)'] = df_pax['plot world air passenger traffic (km)'] / 1e9
-df_pax['plot world gdp (2022 USD)'] = df_pax['plot world gdp (2022 USD)'] / 1e12
-df_freight['plot world gdp (2022 USD)'] = df_freight['plot world gdp (2022 USD)'] / 1e12
+df_freight['plot world air freight (Gtkm)'] = df_freight['plot world air freight (Mtkm)'] / 1e3
+df_pax['plot world rpk (Gkm)'] = df_pax['plot world rpk (km)'] / 1e9
 
-
-
+df_pax['plot world gdp (2022 TUSD)'] = df_pax['plot world gdp (2022 USD)'] / 1e12
+df_freight['plot world gdp (2022 TUSD)'] = df_freight['plot world gdp (2022 USD)'] / 1e12
 
 # FIGURE ########################################
 
@@ -112,20 +111,20 @@ ax1.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
 ax1.set_xlabel("World GDP [2022 TUSD]")
 ax1.set_ylabel("Air Transport (Passengers) [Gkm]")
-ax2.set_ylabel("Air Transport (Freight) [Mtkm]")
+ax2.set_ylabel("Air Transport (Freight) [Gtkm]")
 
 # PLOTTING ###################
 
 ax1.scatter(
-    df_pax['plot world gdp (2022 USD)'],
-    df_pax['plot world air passenger traffic (km)'],
+    df_pax['plot world gdp (2022 TUSD)'],
+    df_pax['plot world rpk (Gkm)'],
     color = 'blue',
     marker = 'o',
     label = 'Passengers'
 )
 ax2.scatter(
-    df_freight['plot world gdp (2022 USD)'],
-    df_freight['plot world air freight (Mtkm)'],
+    df_freight['plot world gdp (2022 TUSD)'],
+    df_freight['plot world air freight (Gtkm)'],
     color = 'black',
     marker = 's',
     label = 'Freight'
