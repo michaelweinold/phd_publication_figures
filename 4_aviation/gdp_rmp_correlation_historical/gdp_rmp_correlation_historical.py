@@ -96,6 +96,8 @@ ax2 = ax1.twinx()
 
 # COLORBAR ###################
 
+#colormap = plt.cm.get_cmap('plasma', len(df_freight['year'].unique()))
+
 # TICKS AND LABELS ###########
 
 ax1.minorticks_on()
@@ -118,14 +120,14 @@ ax2.set_ylabel("Air Transport (Freight) [Gtkm]")
 ax1.scatter(
     df_pax['plot world gdp (2022 TUSD)'],
     df_pax['plot world rpk (Gkm)'],
-    color = 'blue',
+    c = 'black',
     marker = 'o',
     label = 'Passengers'
 )
 ax2.scatter(
     df_freight['plot world gdp (2022 TUSD)'],
     df_freight['plot world air freight (Gtkm)'],
-    color = 'black',
+    c = 'blue',
     marker = 's',
     label = 'Freight'
 )
@@ -138,6 +140,20 @@ ax2.legend(
     lines + lines2,
     labels + labels2,
     loc='upper left',
+)
+
+# TITLE #####################
+
+title_text = 'World, 1950-2021'
+ax2.text(
+    0.2, 0.9825,
+    title_text,
+    fontsize=12,
+    fontweight='bold',
+    ha='left',
+    transform=ax1.transAxes,
+    bbox=dict(facecolor='white', edgecolor='black', boxstyle='round'),
+    zorder=10
 )
 
 # EXPORT #########################################

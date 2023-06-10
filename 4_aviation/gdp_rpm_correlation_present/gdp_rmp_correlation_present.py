@@ -182,6 +182,8 @@ ax2 = ax1.twinx()
 
 # DATA #######################
 
+df_plot_pax['2021_passengers_Mkm'] = df_plot_pax['2021_passengers'] / 1e9
+
 # AXIS SCALE #################
 
 ax1.set_yscale('log')
@@ -206,42 +208,53 @@ ax1.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 # AXIS LABELS ################
 
 ax1.set_xlabel("GDP [2022 USD]")
-ax1.set_ylabel("Air Transport (Passengers) [km]")
+ax1.set_ylabel("Air Transport (Passengers) [Mkm]")
 ax2.set_ylabel("Air Transport (Freight) [Mtkm]")
 
 # PLOTTING ###################
 
 ax1.scatter(
     df_plot_pax['2021_gdp'],
-    df_plot_pax['2021_passengers'],
+    df_plot_pax['2021_passengers_Mkm'],
     color = 'black',
-    marker = 's',
+    marker = 'o',
     label = 'Passengers'
 )
 ax2.scatter(
     df_plot_freight['2021_gdp'],
     df_plot_freight['2021_freight'],
     color = 'blue',
-    marker = 'o',
+    marker = 's',
     label = 'Freight'
 )
 
 # LEGEND ####################
 
-ax1.legend(
-    loc = 'lower left',
-    fontsize = 'small',
-    markerscale = 1.0,
-    frameon = True,
-    fancybox = False,
-)
+lines, labels = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
 ax2.legend(
-    loc = 'lower right',
-    fontsize = 'small',
-    markerscale = 1.0,
-    frameon = True,
-    fancybox = False,
+    lines + lines2,
+    labels + labels2,
+    loc='upper left',
 )
+
+
+# TITLE #####################
+
+title_text = 'All Countries, 2021'
+ax2.text(
+    0.2, 0.9825,
+    title_text,
+    fontsize=12,
+    fontweight='bold',
+    ha='left',
+    transform=ax1.transAxes,
+    bbox=dict(facecolor='white', edgecolor='black', boxstyle='round'),
+    zorder=10
+)
+
+# ANNOTATION ################
+
 
 # EXPORT #########################################
 
