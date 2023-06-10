@@ -30,19 +30,21 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_fossil = pd.read_csv(
-    filepath_or_buffer = 'data/fossil.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-    skipinitialspace=True
-)
-df_avition_requirements = pd.read_csv(
-    filepath_or_buffer = 'data/aviation_requirements.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-    skipinitialspace=True
+df_fuels = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Energy Density Fuels',
+    usecols = lambda column: column in [
+        'substance',
+        'MJ/kg',
+        'MJ/l'
+    ],
+    dtype={
+        'substance': str,
+        'MJ/kg': float,
+        'MJ/l': float
+    },
+    header = 0,
+    engine = 'openpyxl'
 )
 
 # DATA MANIPULATION #############################
@@ -54,46 +56,80 @@ df_avition_requirements = pd.read_csv(
 fig, ax = plt.subplots(
         num = 'main',
         nrows = 1,
-        ncols = 1,
+        ncols = 2,
         dpi = 300,
-        figsize=(30*cm, 10*cm), # A4=(210x297)mm
+        figsize=(30*cm, 10*cm), # A4=(210x297)mm,
+        gridspec_kw = dict(
+            width_ratios=[9, 1],
+        ),
+        sharey=True
     )
+plt.subplots_adjust(wspace=0.075)
 
-# DATA #######################
-
-x_fossil = df_fossil['MJ/kg']
-y_fossil = df_fossil['MJ/l']
 
 # AXIS LIMITS ################
 
-ax.set_xlim(0,150)
-ax.set_ylim(0,80)
+ax[0].set_xlim(0,60)
+ax[0].set_ylim(0,60)
+
+ax[1].set_xlim(140,150)
+ax[1].set_ylim(0,60)
 
 # TICKS AND LABELS ###########
 
-ax.minorticks_on()
-ax.tick_params(axis='x', which='minor', bottom=False)
+ax[0].minorticks_on()
+ax[0].tick_params(axis='x', which='both', bottom=False)
+ax[0].tick_params(axis='y', which='both', bottom=False)
+
+ax[1].minorticks_on()
+ax[1].tick_params(axis='x', which='both', bottom=False)
+ax[1].tick_params(axis='y', which='both', bottom=False)
 
 # GRIDS ######################
 
-ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+ax[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax[0].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+
+ax[1].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax[1].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_xlabel("Gravimetric Energy Density [MJ/kg]")
-ax.set_ylabel("Volumetric Energy Density [MJ/l]")
+ax[0].set_xlabel("Gravimetric Energy Density [MJ/kg]")
+ax[0].set_ylabel("Volumetric Energy Density [MJ/l]")
 
 # PLOTTING ###################
 
-ax.scatter(
-    x_fossil,
-    y_fossil,
+ax[0].scatter(
+    df_fuels['MJ/kg'],
+    df_fuels['MJ/l'],
     color = 'black',
 )
-ax.axvline(x=df_avition_requirements.iloc[0]['MJ/kg'], color='r', linestyle='--')
+ax[1].scatter(
+    df_fuels['MJ/kg'],
+    df_fuels['MJ/l'],
+    color = 'black',
+)
 
 # LEGEND ####################
+
+# ANNOTATION ################
+
+for idx, row in df_fuels.iterrows():
+    ax[0].annotate(
+        row['substance'],
+        (row['MJ/kg'], row['MJ/l']),
+        ha='right',
+        va='bottom',
+        fontsize=9
+    )
+    ax[1].annotate(
+        row['substance'],
+        (row['MJ/kg'], row['MJ/l']),
+        ha='right',
+        va='bottom',
+        fontsize=9
+    )
 
 # EXPORT #########################################
 
@@ -105,4 +141,6 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
+
 # %%
