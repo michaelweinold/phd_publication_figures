@@ -112,7 +112,7 @@ ax1.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 # AXIS LABELS ################
 
 ax1.set_xlabel("World GDP [2022 TUSD]")
-ax1.set_ylabel("Air Transport (Passengers) [Gkm]")
+ax1.set_ylabel("Air Transport (Pax) [GRPkm]")
 ax2.set_ylabel("Air Transport (Freight) [Gtkm]")
 
 # PLOTTING ###################
