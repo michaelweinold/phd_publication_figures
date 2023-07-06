@@ -19,6 +19,9 @@ import pandas as pd
 # i/o
 from pathlib import PurePath, Path
 
+# type hints
+from typing import List
+
 # SETUP #########################################
 
 plt.rcParams.update({
@@ -82,9 +85,15 @@ dict_battery_technologies: dict = {
 
 import matplotlib.patches as patches
 
-def build_rectangles(dict_battery_technologies: dict):
+def build_rectangles(
+        dict_battery_technologies: dict,
+        df_batteries: pd.DataFrame
+) -> List:
+    
+    list_rectangles: List = []
+
     for key, value in dict_battery_technologies.items():
-        df_row: pd.DataFrame = df_batteries_2011.loc[df_batteries_2011['technology'] == key]
+        df_row: pd.DataFrame = df_batteries.loc[df_batteries['technology'] == key]
         x_min: float = df_row['range lower [Wh/kg]'].iloc[0]
         x_max: float = df_row['range higher [Wh/kg]'].iloc[0]
         y_min: float = df_row['range lower [Wh/l]'].iloc[0]
@@ -96,7 +105,14 @@ def build_rectangles(dict_battery_technologies: dict):
             edgecolor = value,
             facecolor = 'none'
         )
-        ax_Wh[0].add_patch(rectangle)
+        list_rectangles.append(rectangle)
+
+    return list_rectangles
+
+battery_rectangles_2011 = build_rectangles(
+    dict_battery_technologies = dict_battery_technologies,
+    df_batteries = df_batteries_2011
+)
 
 # FIGURE ########################################
 
@@ -182,14 +198,41 @@ ax_Wh[1].scatter(
     df_fuels['Wh/l'],
     color = 'black',
 )
-
-build_rectangles(dict_battery_technologies)
-
+#for rectangle in battery_rectangles_2011:
+#    ax_Wh[0].add_patch(rectangle)
 
 # LEGEND ####################
 
 # ANNOTATION ################
 
+# ZOOM #######################
+
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+
+ax_battery_inset = zoomed_inset_axes(
+    parent_axes = ax_Wh[0],
+    zoom = 8,
+    loc = 'upper left',
+    #bbox_to_anchor = [0.05, 0.1, 0.5, 0.5]
+)
+mark_inset(
+    parent_axes = ax_Wh[0],
+    inset_axes = ax_battery_inset,
+    loc1=2,
+    loc2=4,
+    fc="none",
+    ec="black"
+)
+ax_battery_inset.axis([0, 500, 0, 750])
+ax_battery_inset.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax_battery_inset.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+ax_battery_inset.yaxis.tick_right()
+
+battery_rectangles_2011_copy = battery_rectangles_2011.copy()
+
+for rectangle in battery_rectangles_2011_copy:
+    ax_battery_inset.add_patch(rectangle)
 
 # EXPORT #########################################
 
