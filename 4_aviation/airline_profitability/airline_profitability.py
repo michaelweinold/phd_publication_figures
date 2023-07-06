@@ -107,7 +107,7 @@ lines, labels = ax.get_legend_handles_labels()
 
 # ANNOTATIONS ###############
 
-ax.axvline(x=1978, color='black', linestyle='-')
+ax.axvline(x=1978, color='black', linestyle='--')
 ax.annotate(
     'U.S. Airline Deregulation Act',  # Text to display in the annotation box
     xy=(1978 - 1, 40),  # Position of the upper end of the vertical line
@@ -115,17 +115,23 @@ ax.annotate(
     va='bottom'  # Vertical alignment of the text
 )
 
-ax.axvline(x=1990, color='black', linestyle='-')
-ax.axvline(x=1997, color='black', linestyle='-')
-ax.annotate(
-    'start...',  # Text to display in the annotation box
-    xy=(1991, 40),  # Position of the upper end of the vertical line
-    ha='left',  # Horizontal alignment of the text
-    va='bottom'  # Vertical alignment of the text
+plt.axvline(
+    x = 1990,
+    ymin = 0,
+    ymax = 1,
+    color = 'black',
+    linestyle='--'
+)
+plt.axvline(
+    x = 1997,
+    ymin = 0,
+    ymax = 0.875,
+    color = 'black',
+    linestyle='--'
 )
 ax.annotate(
-    '...end of EU Dereg. Efforts',  # Text to display in the annotation box
-    xy=(1998, 40),  # Position of the upper end of the vertical line
+    'Period of EU Airline Deregulation',  # Text to display in the annotation box
+    xy=(1991, 40),  # Position of the upper end of the vertical line
     ha='left',  # Horizontal alignment of the text
     va='bottom'  # Vertical alignment of the text
 )
