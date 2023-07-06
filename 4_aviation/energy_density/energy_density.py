@@ -46,8 +46,57 @@ df_fuels = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
+df_batteries_2011 = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Energy Density Batteries (2011)',
+    usecols = lambda column: column in [
+        'technology',
+        'range lower [Wh/kg]',
+        'range higher [Wh/kg]',
+        'range lower [Wh/l]',
+        'range higher [Wh/l]',
+    ],
+    dtype={
+        'technology': str,
+        'range lower [Wh/kg]': float,
+        'range higher [Wh/kg]': float,
+        'range lower [Wh/l]': float,
+        'range higher [Wh/l]': float,
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
 
 # DATA MANIPULATION #############################
+
+# BUILD RECTANGLES ###############
+
+dict_battery_technologies: dict = {
+    'Lead-Acid': 'red',
+    'Ni-Cd': 'green',
+    'Ni-MH': 'orange',
+    'Li-ion': 'blue',
+    'PLiON': 'purple',
+    'Li-metal': 'pink',
+}
+
+import matplotlib.patches as patches
+
+def build_rectangles(dict_battery_technologies: dict):
+    for key, value in dict_battery_technologies.items():
+        df_row: pd.DataFrame = df_batteries_2011.loc[df_batteries_2011['technology'] == key]
+        x_min: float = df_row['range lower [Wh/kg]'].iloc[0]
+        x_max: float = df_row['range higher [Wh/kg]'].iloc[0]
+        y_min: float = df_row['range lower [Wh/l]'].iloc[0]
+        y_max: float = df_row['range higher [Wh/l]'].iloc[0]
+        rectangle = patches.Rectangle(
+            xy = (x_min, y_min),
+            width = x_max - x_min,
+            height = y_max - y_min,
+            edgecolor = value,
+            facecolor = 'none'
+        )
+        ax_Wh[0].add_patch(rectangle)
 
 # FIGURE ########################################
 
@@ -134,10 +183,12 @@ ax_Wh[1].scatter(
     color = 'black',
 )
 
+build_rectangles(dict_battery_technologies)
+
+
 # LEGEND ####################
 
 # ANNOTATION ################
-
 
 
 # EXPORT #########################################
