@@ -35,13 +35,13 @@ df_fuels = pd.read_excel(
     sheet_name = 'Energy Density Fuels',
     usecols = lambda column: column in [
         'substance',
-        'MJ/kg',
-        'MJ/l'
+        'Wh/kg',
+        'Wh/l'
     ],
     dtype={
         'substance': str,
-        'MJ/kg': float,
-        'MJ/l': float
+        'Wh/kg': float,
+        'Wh/l': float
     },
     header = 0,
     engine = 'openpyxl'
@@ -53,7 +53,7 @@ df_fuels = pd.read_excel(
 
 # SETUP ######################
 
-fig, ax = plt.subplots(
+fig, ax_Wh = plt.subplots(
         num = 'main',
         nrows = 1,
         ncols = 2,
@@ -66,48 +66,71 @@ fig, ax = plt.subplots(
     )
 plt.subplots_adjust(wspace=0.075)
 
+# AXIS UNIT CONVERSION #######
+
+ax_MJ_x = ax_Wh[0].twiny() # https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.twiny.html
+ax_MJ_y = ax_Wh[0].twinx() # https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.twinx.html
+
+def convert_xaxis_units_from_MJ_to_Wh(axis_Wh = ax_Wh[0]):
+    x_lower_Wh, x_upper_Wh = axis_Wh.get_xlim()
+    x_lower_MJ = x_lower_Wh * 0.0036 # https://www.wolframalpha.com/input?i=1+Wh+in+MJ
+    x_upper_MJ = x_upper_Wh * 0.0036 # https://www.wolframalpha.com/input?i=1+Wh+in+MJ
+    ax_MJ_x.set_xlim(x_lower_MJ, x_upper_MJ)
+    ax_MJ_x.figure.canvas.draw()
+
+def convert_yaxis_units_from_MJ_to_Wh(axis_Wh = ax_Wh[0]):
+    y_lower_Wh, y_upper_Wh = axis_Wh.get_ylim()
+    y_lower_MJ = y_lower_Wh * 0.0036 # https://www.wolframalpha.com/input?i=1+Wh+in+MJ
+    y_upper_MJ = y_upper_Wh * 0.0036 # https://www.wolframalpha.com/input?i=1+Wh+in+MJ
+    ax_MJ_y.set_ylim(y_lower_MJ, y_upper_MJ)
+    ax_MJ_y.figure.canvas.draw()
 
 # AXIS LIMITS ################
 
-ax[0].set_xlim(0,60)
-ax[0].set_ylim(0,60)
+ax_Wh[0].callbacks.connect("xlim_changed", convert_xaxis_units_from_MJ_to_Wh)
+ax_Wh[0].callbacks.connect("ylim_changed", convert_yaxis_units_from_MJ_to_Wh)
 
-ax[1].set_xlim(140,150)
-ax[1].set_ylim(0,60)
+ax_Wh[0].set_xlim(0,16000)
+ax_Wh[0].set_ylim(0,10000)
+
+ax_Wh[1].set_xlim(140,150)
 
 # TICKS AND LABELS ###########
 
-ax[0].minorticks_on()
-ax[0].tick_params(axis='x', which='both', bottom=False)
-ax[0].tick_params(axis='y', which='both', bottom=False)
+ax_Wh[0].minorticks_on()
+ax_Wh[0].tick_params(axis='x', which='both', bottom=False)
+ax_Wh[0].tick_params(axis='y', which='both', bottom=False)
 
-ax[1].minorticks_on()
-ax[1].tick_params(axis='x', which='both', bottom=False)
-ax[1].tick_params(axis='y', which='both', bottom=False)
+ax_Wh[1].minorticks_on()
+ax_Wh[1].tick_params(axis='x', which='both', bottom=False)
+ax_Wh[1].tick_params(axis='y', which='both', bottom=False)
 
 # GRIDS ######################
 
-ax[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax[0].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+ax_Wh[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax_Wh[0].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
-ax[1].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax[1].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+ax_Wh[1].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax_Wh[1].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax[0].set_xlabel("Gravimetric Energy Density [MJ/kg]")
-ax[0].set_ylabel("Volumetric Energy Density [MJ/l]")
+ax_Wh[0].set_xlabel("Gravimetric Energy Density [Wh/kg]")
+ax_Wh[0].set_ylabel("Volumetric Energy Density [Wh/l]")
+
+ax_MJ_x.set_xlabel("Gravimetric Energy Density [MJ/kg]")
+ax_MJ_y.set_ylabel("Volumetric Energy Density [MJ/l]")
 
 # PLOTTING ###################
 
-ax[0].scatter(
-    df_fuels['MJ/kg'],
-    df_fuels['MJ/l'],
+ax_Wh[0].scatter(
+    df_fuels['Wh/kg'],
+    df_fuels['Wh/l'],
     color = 'black',
 )
-ax[1].scatter(
-    df_fuels['MJ/kg'],
-    df_fuels['MJ/l'],
+ax_Wh[1].scatter(
+    df_fuels['Wh/kg'],
+    df_fuels['Wh/l'],
     color = 'black',
 )
 
@@ -115,21 +138,7 @@ ax[1].scatter(
 
 # ANNOTATION ################
 
-for idx, row in df_fuels.iterrows():
-    ax[0].annotate(
-        row['substance'],
-        (row['MJ/kg'], row['MJ/l']),
-        ha='right',
-        va='bottom',
-        fontsize=9
-    )
-    ax[1].annotate(
-        row['substance'],
-        (row['MJ/kg'], row['MJ/l']),
-        ha='right',
-        va='bottom',
-        fontsize=9
-    )
+
 
 # EXPORT #########################################
 
@@ -141,6 +150,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
-
 # %%
