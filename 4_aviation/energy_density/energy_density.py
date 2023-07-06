@@ -7,6 +7,7 @@
 # plotting
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
+import matplotlib.ticker as ticker
 # unit conversion
 cm = 1/2.54 # for inches-cm conversion
 # time manipulation
@@ -179,6 +180,15 @@ ax_Wh[1].set_xlim(140,150)
 
 # TICKS AND LABELS ###########
 
+def thousand_formatter(value, tick_number):
+    """
+    Formats the tick label with thousand separators: 1000 = 1'000.
+    """
+    return f"{int(value):,}".replace(",", "'")
+
+ax_Wh[0].xaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
+ax_Wh[0].yaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
+
 ax_Wh[0].minorticks_on()
 ax_Wh[0].tick_params(axis='x', which='both', bottom=False)
 ax_Wh[0].tick_params(axis='y', which='both', bottom=False)
@@ -209,7 +219,7 @@ ax_Wh[0].scatter(
     df_fuels['Wh/kg'],
     df_fuels['Wh/l'],
     color = 'black',
-    s = 8
+    s = 10
 )
 ax_Wh[1].scatter(
     df_fuels['Wh/kg'],
@@ -221,7 +231,49 @@ for rectangle in battery_rectangles_2011:
 
 # LEGEND ####################
 
+from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
+
+legend_elements = [
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        marker='o',
+        color = 'black',
+        markerfacecolor='black',
+        linestyle = 'None',
+        markersize=3,
+        label='Fuels'
+    ),
+    Patch(
+        facecolor = 'none',
+        edgecolor = 'black',
+        label = 'Batteries'
+    ),
+]
+
+ax_Wh[0].legend(
+    handles=legend_elements,
+    loc='upper right',
+)
+
 # ANNOTATION ################
+
+for idx, row in df_fuels.iterrows():
+    ax_Wh[0].annotate(
+        text = row['substance'],
+        xy = (row['Wh/kg']+100, row['Wh/l']),
+        ha='right',
+        va='bottom',
+        fontsize=9
+    )
+    ax_Wh[1].annotate(
+        row['substance'],
+        (row['Wh/kg'], row['Wh/l']),
+        ha='left',
+        va='bottom',
+        fontsize=9
+    )
 
 # ZOOM #######################
 
@@ -243,6 +295,7 @@ mark_inset(
     ec="black"
 )
 ax_battery_inset.axis([0, 400, 0, 600])
+ax_battery_inset.xaxis.set_major_locator(ticker.MultipleLocator(base=100))
 ax_battery_inset.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
 ax_battery_inset.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 ax_battery_inset.yaxis.tick_right()
