@@ -30,30 +30,18 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_rail = pd.read_excel(
+df_priceindex = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Rail Travel Price per Distance',
+    sheet_name = 'Air Travel Price Index',
     usecols = lambda column: column in [
         'year',
-        'fare/101km [EURO, 2022]',
+        'figure price index',
+        'cpi'
     ],
     dtype={
         'year': datetime,
-        'fare/101km [EURO, 2022]': float,
-    },
-    header = 0,
-    engine = 'openpyxl'
-)
-df_air = pd.read_excel(
-    io = 'data/data.xlsx',
-    sheet_name = 'Air Travel Price per Distance',
-    usecols = lambda column: column in [
-        'year',
-        'revenue/mile [U.S. cents, 2023]',
-    ],
-    dtype={
-        'year': datetime,
-        'revenue/mile [U.S. cents, 2023]': float,
+        'figure price index': float,
+        'cpi': float
     },
     header = 0,
     engine = 'openpyxl'
@@ -61,8 +49,8 @@ df_air = pd.read_excel(
 
 # DATA MANIPULATION #############################
 
-df_rail.replace('', np.nan)
-df_air['revenue/km [U.S. cents, 2023]'] = df_air['revenue/mile [U.S. cents, 2023]'] * 1.609
+df_priceindex['figure price index'] = df_priceindex['figure price index'] / 100
+df_priceindex['cpi'] = df_priceindex['cpi'] / 100
 
 # FIGURE ########################################
 
@@ -79,13 +67,12 @@ fig, ax = plt.subplots(
 
 # SECONDARY AXES ##############
 
-ax_right = ax.twinx()
+ax_delta = ax.twinx()
 
 # AXIS LIMITS ################
 
 ax.set_xlim(1950, 2023)
-ax.set_ylim(0,110)
-ax_right.set_ylim(0,110)
+ax.set_ylim(0,15)
 
 # TICKS AND LABELS ###########
 
@@ -99,26 +86,36 @@ ax.grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_ylabel("Approx. Air Fare [U.S. cents/km (2022)]")
-ax_right.set_ylabel("Approx. Rail Fare [Euro cents/km (2022)]")
+ax.set_ylabel("Price Indices [1950=1]")
+ax_delta.set_ylabel("$\Delta$ Price Indices")
 
 # PLOTTING ###################
 
 ax.plot(
-    df_air['year'],
-    df_air['revenue/km [U.S. cents, 2023]'],
+    df_priceindex['year'],
+    df_priceindex['figure price index'],
     color = 'black',
     linewidth = 1,
     label = 'Price Index (Air Travel, U.S. Domestic Routes)'
 )
-ax_right.plot(
-    df_rail['year'],
-    df_rail['fare/101km [EURO, 2022]'],
+ax.plot(
+    df_priceindex['year'],
+    df_priceindex['cpi'],
     color = 'black',
     linewidth = 1,
     label = 'Consumer Price Index (U.S. Urban Consumers)',
     linestyle = '--'
 )
+
+ax_delta.plot(
+    df_priceindex['year'],
+    df_priceindex['figure price index'] - df_priceindex['cpi'],
+    color = 'blue',
+    linewidth = 1,
+    label = 'Consumer Price Index (U.S. Urban Consumers)'
+)
+
+ax_delta.axhline(y=0, color='black')
 
 
 # LEGEND ####################
@@ -130,20 +127,28 @@ legend_elements = [
         ydata = [0],
         color = 'black',
         linestyle = '-',
-        label='Air (U.S., Domestic Routes)'
+        label='Price Index (Air Travel, U.S. Domestic Routes)'
     ),
     Line2D(
         xdata = [0],
         ydata = [0],
         color = 'black',
         linestyle = '--',
-        label='Rail (Germany, Domestic Routes $>100$km)'
-    )
+        label='Consumer Price Index (U.S. Urban Consumers)'
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'blue',
+        linestyle = '-',
+        label='$\Delta$ Price Indices'
+    ),
 ]
+
 
 ax.legend(
     handles=legend_elements,
-    loc='upper right',
+    loc='upper left',
 )
 
 # EXPORT #########################################
