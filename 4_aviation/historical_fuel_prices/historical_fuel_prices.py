@@ -89,7 +89,7 @@ fig, ax = plt.subplots(
 # AXIS LIMITS ################
 
 ax[0].set_xlim(
-    datetime.strptime('1950', '%Y'),
+    datetime.strptime('1949', '%Y'),
     datetime.strptime('2023', '%Y')
 )
 ax[0].set_ylim(1,65)
