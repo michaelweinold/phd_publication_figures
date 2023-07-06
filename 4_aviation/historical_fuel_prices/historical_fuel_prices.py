@@ -30,29 +30,43 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_jetfuel = pd.read_csv(
-    filepath_or_buffer = 'data/data_jetfuel.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-    parse_dates = [0],
-    infer_datetime_format = True,
+df_fuel = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Jet Fuel Price',
+    usecols = lambda column: column in [
+        'date',
+        'producer price index (1950=100)',
+    ],
+    dtype={
+        'date': datetime,
+        'producer price index (1950=100)': float,
+    },
+    header = 0,
+    engine = 'openpyxl'
 )
-
-df_gasoline = pd.read_csv(
-    filepath_or_buffer = 'data/data_gasoline.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-    parse_dates = [0],
-    infer_datetime_format = True,
+df_expenses = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Airline Expense Breakdown',
+    usecols = lambda column: column in [
+        'year',
+        'labour expense [%]',
+        'fuel expense [%]',
+        'other expense [%]',
+    ],
+    dtype={
+        'year': int,
+        'labour expense [%]': float,
+        'fuel expense [%]': float,
+        'other expense [%]': float,
+    },
+    parse_dates=['year'],
+    header = 0,
+    engine = 'openpyxl'
 )
 
 # DATA MANIPULATION #############################
-'''
-Normalize data to 1950 = 1
-'''
-df_jetfuel['WPU0572_normalized_1950'] = df_jetfuel['WPU0572'] / df_jetfuel['WPU0572'].loc[df_jetfuel['DATE'] == '1950-01-01'].values[0]
+
+df_fuel['producer price index (1950=100)'] = df_fuel['producer price index (1950=100)'] / 100
 
 # FIGURE ########################################
 
@@ -60,52 +74,103 @@ df_jetfuel['WPU0572_normalized_1950'] = df_jetfuel['WPU0572'] / df_jetfuel['WPU0
 
 fig, ax = plt.subplots(
         num = 'main',
-        nrows = 1,
+        nrows = 2,
         ncols = 1,
         dpi = 300,
-        figsize=(30*cm, 10*cm), # A4=(210x297)mm
+        figsize=(30*cm, 10*cm), # A4=(210x297)mm,
+        gridspec_kw = dict(
+            height_ratios=[3,1],
+        ),
+        sharex=True
     )
 
 # DATA #######################
 
-x_jetfuel = df_jetfuel['DATE']
-y_jetfuel = df_jetfuel['WPU0572_normalized_1950']
-
 # AXIS LIMITS ################
 
-plt.xlim(
+ax[0].set_xlim(
     datetime.strptime('1950', '%Y'),
     datetime.strptime('2023', '%Y')
 )
-ax.set_ylim(1,80)
+ax[0].set_ylim(1,65)
+
+ax[1].set_ylim(0, 100)
 
 # TICKS AND LABELS ###########
 
-ax.minorticks_on()
-ax.tick_params(axis='x', which='minor', bottom=False)
+ax[0].minorticks_on()
+ax[0].tick_params(axis='x', which='minor', bottom=False)
 
 # GRIDS ######################
 
-ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
+ax[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax[0].grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_xlabel("Year")
-ax.set_ylabel("Producer Price Index \n (Aviation Fuel)")
+ax[0].set_ylabel("Producer Price Index \n (Aviation Fuel) [1950=1]")
+ax[1].set_xlabel("Year")
+ax[1].set_ylabel("Airline \n Expenses [\%]")
 
 # PLOTTING ###################
 
-
-ax.plot(
-    x_jetfuel,
-    y_jetfuel,
+ax[0].plot(
+    df_fuel['date'],
+    df_fuel['producer price index (1950=100)'],
     color = 'black',
     linewidth = 1,
     label = 'Jet Fuel (Kerosene)'
 )
+ax[1].bar(
+    x = df_expenses['year'],
+    height = df_expenses['fuel expense [%]'],
+    width=200,
+    bottom=None,
+    align='center',
+    color = 'purple'
+)
+ax[1].bar(
+    x = df_expenses['year'],
+    height = df_expenses['labour expense [%]'],
+    width=200,
+    bottom=df_expenses['fuel expense [%]'],
+    align='center',
+    color = 'green'
+)
+ax[1].bar(
+    x = df_expenses['year'],
+    height = df_expenses['other expense [%]'],
+    width=200,
+    bottom=df_expenses['fuel expense [%]'] + df_expenses['labour expense [%]'],
+    align='center',
+    color = 'orange'
+)
 
 # LEGEND ####################
+
+import matplotlib.patches as patches
+
+legend_elements = [
+    patches.Patch(
+        facecolor = 'purple',
+        edgecolor = 'none',
+        label = 'Fuel'
+    ),
+    patches.Patch(
+        facecolor = 'green',
+        edgecolor = 'none',
+        label = 'Labour'
+    ),
+    patches.Patch(
+        facecolor = 'orange',
+        edgecolor = 'none',
+        label = 'Other'
+    ),
+]
+ax[0].legend(
+    handles=legend_elements,
+    loc='lower left',
+)
 
 # EXPORT #########################################
 

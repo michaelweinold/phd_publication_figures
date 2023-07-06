@@ -86,7 +86,7 @@ ax.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 # AXIS LABELS ################
 
 ax.set_xlabel("Year")
-ax.set_ylabel("Airline Net Profit [2022 BUSD]")
+ax.set_ylabel("Airline Net Profit [2022 bn.USD]")
 
 # PLOTTING ###################
 
