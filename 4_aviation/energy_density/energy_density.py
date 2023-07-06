@@ -109,10 +109,27 @@ def build_rectangles(
 
     return list_rectangles
 
+def copy_rectangles_for_inset(list_rectangles: List) -> List:
+    rectangles_inset = []
+    for rectangle in list_rectangles:
+        rectangle_copy = patches.Rectangle(
+            rectangle.get_xy(),
+            rectangle.get_width(),
+            rectangle.get_height(),
+            linewidth=rectangle.get_linewidth(),
+            edgecolor=rectangle.get_edgecolor(),
+            facecolor=rectangle.get_facecolor(),
+        )
+        rectangles_inset.append(rectangle_copy)
+    
+    return rectangles_inset
+
 battery_rectangles_2011 = build_rectangles(
     dict_battery_technologies = dict_battery_technologies,
     df_batteries = df_batteries_2011
 )
+
+battery_rectangles_2011_inset = copy_rectangles_for_inset(battery_rectangles_2011)
 
 # FIGURE ########################################
 
@@ -192,14 +209,15 @@ ax_Wh[0].scatter(
     df_fuels['Wh/kg'],
     df_fuels['Wh/l'],
     color = 'black',
+    s = 8
 )
 ax_Wh[1].scatter(
     df_fuels['Wh/kg'],
     df_fuels['Wh/l'],
     color = 'black',
 )
-#for rectangle in battery_rectangles_2011:
-#    ax_Wh[0].add_patch(rectangle)
+for rectangle in battery_rectangles_2011:
+    ax_Wh[0].add_patch(rectangle)
 
 # LEGEND ####################
 
@@ -212,7 +230,7 @@ from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
 
 ax_battery_inset = zoomed_inset_axes(
     parent_axes = ax_Wh[0],
-    zoom = 8,
+    zoom = 8.5,
     loc = 'upper left',
     #bbox_to_anchor = [0.05, 0.1, 0.5, 0.5]
 )
@@ -224,14 +242,14 @@ mark_inset(
     fc="none",
     ec="black"
 )
-ax_battery_inset.axis([0, 500, 0, 750])
+ax_battery_inset.axis([0, 400, 0, 600])
 ax_battery_inset.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
 ax_battery_inset.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 ax_battery_inset.yaxis.tick_right()
 
 battery_rectangles_2011_copy = battery_rectangles_2011.copy()
 
-for rectangle in battery_rectangles_2011_copy:
+for rectangle in battery_rectangles_2011_inset:
     ax_battery_inset.add_patch(rectangle)
 
 # EXPORT #########################################
