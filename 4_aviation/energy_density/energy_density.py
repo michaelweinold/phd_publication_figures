@@ -152,7 +152,7 @@ plt.subplots_adjust(wspace=0.075)
 # AXIS UNIT CONVERSION #######
 
 ax_MJ_x = ax_Wh[0].twiny() # https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.twiny.html
-ax_MJ_y = ax_Wh[0].twinx() # https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.twinx.html
+ax_MJ_y = ax_Wh[1].twinx() # https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.twinx.html
 
 def convert_xaxis_units_from_MJ_to_Wh(axis_Wh = ax_Wh[0]):
     x_lower_Wh, x_upper_Wh = axis_Wh.get_xlim()
@@ -176,7 +176,7 @@ ax_Wh[0].callbacks.connect("ylim_changed", convert_yaxis_units_from_MJ_to_Wh)
 ax_Wh[0].set_xlim(0,16000)
 ax_Wh[0].set_ylim(0,10000)
 
-ax_Wh[1].set_xlim(140,150)
+ax_Wh[1].set_xlim(39700,40000)
 
 # TICKS AND LABELS ###########
 
@@ -188,6 +188,8 @@ def thousand_formatter(value, tick_number):
 
 ax_Wh[0].xaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
 ax_Wh[0].yaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
+
+ax_Wh[1].xaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
 
 ax_Wh[0].minorticks_on()
 ax_Wh[0].tick_params(axis='x', which='both', bottom=False)
@@ -225,6 +227,7 @@ ax_Wh[1].scatter(
     df_fuels['Wh/kg'],
     df_fuels['Wh/l'],
     color = 'black',
+    s = 10
 )
 for rectangle in battery_rectangles_2011:
     ax_Wh[0].add_patch(rectangle)
