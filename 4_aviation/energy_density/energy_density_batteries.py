@@ -74,20 +74,50 @@ df_acft_electrification_icct = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'Aircraft Electrification (ICCT)',
     usecols = lambda column: column in [
-        'battery energy density, current EMF [Wh/kg]',
+        'battery energy density, commuter traffic, current EMF [Wh/kg]',
         'replacable commuter traffic, current EMF [%]',
-        'battery energy density, 15% EMF reduction [Wh/kg]',
+        'battery energy density, commuter traffic, 15% EMF reduction [Wh/kg]',
         'replacable commuter traffic, 15% EMF reduction [%]',
-        'battery energy density, 30% EMF reduction [Wh/kg]',
-        'replacable commuter traffic, 30% EMF reduction [%]'
+        'battery energy density, commuter traffic, 30% EMF reduction [Wh/kg]',
+        'replacable commuter traffic, 30% EMF reduction [%]',
+        'battery energy density, turboprop traffic, current EMF [Wh/kg]',
+        'replacable turboprop traffic, current EMF [%]',
+        'battery energy density, turboprop traffic, 15% EMF reduction [Wh/kg]',
+        'replacable turboprop traffic, 15% EMF reduction [%]',
+        'battery energy density, turboprop traffic, 30% EMF reduction [Wh/kg]',
+        'replacable turboprop traffic, 30% EMF reduction [%]',
     ],
     dtype={
-        'battery energy density, current EMF [Wh/kg]': float,
+        'battery energy density, commuter traffic, current EMF [Wh/kg]': float,
         'replacable commuter traffic, current EMF [%]': float,
-        'battery energy density, 15% EMF reduction [Wh/kg]': float,
+        'battery energy density, commuter traffic, 15% EMF reduction [Wh/kg]': float,
         'replacable commuter traffic, 15% EMF reduction [%]': float,
-        'battery energy density, 30% EMF reduction [Wh/kg]': float,
-        'replacable commuter traffic, 30% EMF reduction [%]': float
+        'battery energy density, commuter traffic, 30% EMF reduction [Wh/kg]': float,
+        'replacable commuter traffic, 30% EMF reduction [%]': float,
+        'battery energy density, turboprop traffic, current EMF [Wh/kg]': float,
+        'replacable turboprop traffic, current EMF [%]': float,
+        'battery energy density, turboprop traffic, 15% EMF reduction [Wh/kg]': float,
+        'replacable turboprop traffic, 15% EMF reduction [%]': float,
+        'battery energy density, turboprop traffic, 30% EMF reduction [Wh/kg]': float,
+        'replacable turboprop traffic, 30% EMF reduction [%]': float
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
+df_acft_requirements = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Electric Aircraft Requirements',
+    usecols = lambda column: column in [
+        'description',
+        'authors',
+        'Wh/kg',
+        'Wh/l',
+    ],
+    dtype={
+        'description': str,
+        'authors': str,
+        'Wh/kg': float,
+        'Wh/l': float,
     },
     header = 0,
     engine = 'openpyxl'
@@ -178,7 +208,7 @@ ax[0].callbacks.connect("ylim_changed", convert_yaxis_units_from_MJ_to_Wh)
 
 ax[0].set_xlim(0,1000)
 
-ax[0].set_ylim(0,500)
+ax[0].set_ylim(0,1000)
 ax[1].set_ylim(0,100)
 
 # TICKS AND LABELS ###########
@@ -234,25 +264,54 @@ for rectangle in battery_rectangles_2011:
     ax[0].add_patch(rectangle)
 
 ax[1].plot(
-    df_acft_electrification_icct['battery energy density, current EMF [Wh/kg]'],
+    df_acft_electrification_icct['battery energy density, commuter traffic, current EMF [Wh/kg]'],
     df_acft_electrification_icct['replacable commuter traffic, current EMF [%]'],
     color = 'red',
     linestyle = '-',
     linewidth = 1
 )
 ax[1].plot(
-    df_acft_electrification_icct['battery energy density, 15% EMF reduction [Wh/kg]'],
+    df_acft_electrification_icct['battery energy density, commuter traffic, 15% EMF reduction [Wh/kg]'],
     df_acft_electrification_icct['replacable commuter traffic, 15% EMF reduction [%]'],
     color = 'orange',
     linestyle = '-',
     linewidth = 1
 )
 ax[1].plot(
-    df_acft_electrification_icct['battery energy density, 30% EMF reduction [Wh/kg]'],
+    df_acft_electrification_icct['battery energy density, commuter traffic, 30% EMF reduction [Wh/kg]'],
     df_acft_electrification_icct['replacable commuter traffic, 30% EMF reduction [%]'],
     color = 'green',
     linestyle = '-',
     linewidth = 1
+)
+
+ax[1].plot(
+    df_acft_electrification_icct['battery energy density, turboprop traffic, current EMF [Wh/kg]'],
+    df_acft_electrification_icct['replacable turboprop traffic, current EMF [%]'],
+    color = 'red',
+    linestyle = '--',
+    linewidth = 1
+)
+ax[1].plot(
+    df_acft_electrification_icct['battery energy density, turboprop traffic, 15% EMF reduction [Wh/kg]'],
+    df_acft_electrification_icct['replacable turboprop traffic, 15% EMF reduction [%]'],
+    color = 'orange',
+    linestyle = '--',
+    linewidth = 1
+)
+ax[1].plot(
+    df_acft_electrification_icct['battery energy density, turboprop traffic, 30% EMF reduction [Wh/kg]'],
+    df_acft_electrification_icct['replacable turboprop traffic, 30% EMF reduction [%]'],
+    color = 'green',
+    linestyle = '--',
+    linewidth = 1
+)
+
+ax[0].scatter(
+    df_acft_requirements['Wh/kg'],
+    df_acft_requirements['Wh/l'],
+    color = 'black',
+    marker = '+'
 )
 
 # LEGEND ####################
@@ -264,17 +323,44 @@ legend_elements = [
     Line2D(
         xdata = [0],
         ydata = [0],
-        marker='o',
         color = 'black',
         markerfacecolor='black',
         linestyle = 'None',
-        markersize=3,
-        label='Fuels'
+        markersize=4,
+        marker='+',
+        label = 'Acft. Requirements'
     ),
     Patch(
         facecolor = 'none',
         edgecolor = 'black',
         label = 'Batteries'
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        marker='none',
+        color = 'red',
+        linestyle = '-',
+        linewidth=1,
+        label='current EMF'
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        marker='none',
+        color = 'orange',
+        linestyle = '-',
+        linewidth=1,
+        label='15\% EMF reduction'
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        marker='none',
+        color = 'green',
+        linestyle = '-',
+        linewidth=1,
+        label='30\% EMF reduction'
     ),
 ]
 
