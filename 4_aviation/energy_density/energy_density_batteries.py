@@ -70,6 +70,28 @@ df_batteries_2011 = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
+df_acft_electrification_icct = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Aircraft Electrification (ICCT)',
+    usecols = lambda column: column in [
+        'battery energy density, current EMF [Wh/kg]',
+        'replacable commuter traffic, current EMF [%]',
+        'battery energy density, 15% EMF reduction [Wh/kg]',
+        'replacable commuter traffic, 15% EMF reduction [%]',
+        'battery energy density, 30% EMF reduction [Wh/kg]',
+        'replacable commuter traffic, 30% EMF reduction [%]'
+    ],
+    dtype={
+        'battery energy density, current EMF [Wh/kg]': float,
+        'replacable commuter traffic, current EMF [%]': float,
+        'battery energy density, 15% EMF reduction [Wh/kg]': float,
+        'replacable commuter traffic, 15% EMF reduction [%]': float,
+        'battery energy density, 30% EMF reduction [Wh/kg]': float,
+        'replacable commuter traffic, 30% EMF reduction [%]': float
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
 
 # DATA MANIPULATION #############################
 
@@ -136,47 +158,28 @@ battery_rectangles_2011_inset = copy_rectangles_for_inset(battery_rectangles_201
 
 # SETUP ######################
 
-fig, ax_Wh = plt.subplots(
+fig, ax = plt.subplots(
         num = 'main',
-        nrows = 1,
-        ncols = 2,
+        nrows = 2,
+        ncols = 1,
         dpi = 300,
         figsize=(30*cm, 10*cm), # A4=(210x297)mm,
         gridspec_kw = dict(
-            width_ratios=[9, 1],
+            height_ratios=[4, 1],
         ),
-        sharey=True
+        sharex=True
     )
 plt.subplots_adjust(wspace=0.075)
 
-# AXIS UNIT CONVERSION #######
-
-ax_MJ_x = ax_Wh[0].twiny() # https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.twiny.html
-ax_MJ_y = ax_Wh[1].twinx() # https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.twinx.html
-
-def convert_xaxis_units_from_MJ_to_Wh(axis_Wh = ax_Wh[0]):
-    x_lower_Wh, x_upper_Wh = axis_Wh.get_xlim()
-    x_lower_MJ = x_lower_Wh * 0.0036 # https://www.wolframalpha.com/input?i=1+Wh+in+MJ
-    x_upper_MJ = x_upper_Wh * 0.0036 # https://www.wolframalpha.com/input?i=1+Wh+in+MJ
-    ax_MJ_x.set_xlim(x_lower_MJ, x_upper_MJ)
-    ax_MJ_x.figure.canvas.draw()
-
-def convert_yaxis_units_from_MJ_to_Wh(axis_Wh = ax_Wh[0]):
-    y_lower_Wh, y_upper_Wh = axis_Wh.get_ylim()
-    y_lower_MJ = y_lower_Wh * 0.0036 # https://www.wolframalpha.com/input?i=1+Wh+in+MJ
-    y_upper_MJ = y_upper_Wh * 0.0036 # https://www.wolframalpha.com/input?i=1+Wh+in+MJ
-    ax_MJ_y.set_ylim(y_lower_MJ, y_upper_MJ)
-    ax_MJ_y.figure.canvas.draw()
-
 # AXIS LIMITS ################
 
-ax_Wh[0].callbacks.connect("xlim_changed", convert_xaxis_units_from_MJ_to_Wh)
-ax_Wh[0].callbacks.connect("ylim_changed", convert_yaxis_units_from_MJ_to_Wh)
+ax[0].callbacks.connect("xlim_changed", convert_xaxis_units_from_MJ_to_Wh)
+ax[0].callbacks.connect("ylim_changed", convert_yaxis_units_from_MJ_to_Wh)
 
-ax_Wh[0].set_xlim(0,16000)
-ax_Wh[0].set_ylim(0,10000)
+ax[0].set_xlim(0,1000)
 
-ax_Wh[1].set_xlim(39700,40000)
+ax[0].set_ylim(0,500)
+ax[1].set_ylim(0,100)
 
 # TICKS AND LABELS ###########
 
@@ -186,51 +189,71 @@ def thousand_formatter(value, tick_number):
     """
     return f"{int(value):,}".replace(",", "'")
 
-ax_Wh[0].xaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
-ax_Wh[0].yaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
+ax[0].xaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
+ax[0].yaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
 
-ax_Wh[1].xaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
+ax[1].xaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
 
-ax_Wh[0].minorticks_on()
-ax_Wh[0].tick_params(axis='x', which='both', bottom=False)
-ax_Wh[0].tick_params(axis='y', which='both', bottom=False)
+ax[0].minorticks_on()
+ax[0].tick_params(axis='x', which='both', bottom=False)
+ax[0].tick_params(axis='y', which='both', bottom=False)
 
-ax_Wh[1].minorticks_on()
-ax_Wh[1].tick_params(axis='x', which='both', bottom=False)
-ax_Wh[1].tick_params(axis='y', which='both', bottom=False)
+ax[1].minorticks_on()
+ax[1].tick_params(axis='x', which='both', bottom=False)
+ax[1].tick_params(axis='y', which='both', bottom=False)
 
 # GRIDS ######################
 
-ax_Wh[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax_Wh[0].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+ax[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax[0].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
-ax_Wh[1].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax_Wh[1].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+ax[1].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax[1].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax_Wh[0].set_xlabel("Gravimetric Energy Density [Wh/kg]")
-ax_Wh[0].set_ylabel("Volumetric Energy Density [Wh/l]")
-
-ax_MJ_x.set_xlabel("Gravimetric Energy Density [MJ/kg]")
-ax_MJ_y.set_ylabel("Volumetric Energy Density [MJ/l]")
+ax[1].set_xlabel("Gravimetric Energy Density [Wh/kg]")
+ax[1].set_ylabel("[\%]")
+ax[0].set_ylabel("Vol. Energy Density [Wh/l]")
 
 # PLOTTING ###################
 
-ax_Wh[0].scatter(
+ax[0].scatter(
     df_fuels['Wh/kg'],
     df_fuels['Wh/l'],
     color = 'black',
     s = 10
 )
-ax_Wh[1].scatter(
+ax[1].scatter(
     df_fuels['Wh/kg'],
     df_fuels['Wh/l'],
     color = 'black',
     s = 10
 )
 for rectangle in battery_rectangles_2011:
-    ax_Wh[0].add_patch(rectangle)
+    ax[0].add_patch(rectangle)
+
+ax[1].plot(
+    df_acft_electrification_icct['battery energy density, current EMF [Wh/kg]'],
+    df_acft_electrification_icct['replacable commuter traffic, current EMF [%]'],
+    color = 'red',
+    linestyle = '-',
+    linewidth = 1
+)
+ax[1].plot(
+    df_acft_electrification_icct['battery energy density, 15% EMF reduction [Wh/kg]'],
+    df_acft_electrification_icct['replacable commuter traffic, 15% EMF reduction [%]'],
+    color = 'orange',
+    linestyle = '-',
+    linewidth = 1
+)
+ax[1].plot(
+    df_acft_electrification_icct['battery energy density, 30% EMF reduction [Wh/kg]'],
+    df_acft_electrification_icct['replacable commuter traffic, 30% EMF reduction [%]'],
+    color = 'green',
+    linestyle = '-',
+    linewidth = 1
+)
 
 # LEGEND ####################
 
@@ -255,7 +278,7 @@ legend_elements = [
     ),
 ]
 
-ax_Wh[0].legend(
+ax[0].legend(
     handles=legend_elements,
     loc='upper right',
 )
@@ -263,14 +286,14 @@ ax_Wh[0].legend(
 # ANNOTATION ################
 
 for idx, row in df_fuels.iterrows():
-    ax_Wh[0].annotate(
+    ax[0].annotate(
         text = row['substance'],
         xy = (row['Wh/kg']+100, row['Wh/l']),
         ha='right',
         va='bottom',
         fontsize=9
     )
-    ax_Wh[1].annotate(
+    ax[1].annotate(
         row['substance'],
         (row['Wh/kg'], row['Wh/l']),
         ha='left',
@@ -278,39 +301,12 @@ for idx, row in df_fuels.iterrows():
         fontsize=9
     )
 
-# ZOOM #######################
-
-from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
-
-ax_battery_inset = zoomed_inset_axes(
-    parent_axes = ax_Wh[0],
-    zoom = 8.5,
-    loc = 'upper left',
-    #bbox_to_anchor = [0.05, 0.1, 0.5, 0.5]
-)
-mark_inset(
-    parent_axes = ax_Wh[0],
-    inset_axes = ax_battery_inset,
-    loc1=2,
-    loc2=4,
-    fc="none",
-    ec="black"
-)
-ax_battery_inset.axis([0, 400, 0, 600])
-ax_battery_inset.xaxis.set_major_locator(ticker.MultipleLocator(base=100))
-ax_battery_inset.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax_battery_inset.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
-ax_battery_inset.yaxis.tick_right()
-
-battery_rectangles_2011_copy = battery_rectangles_2011.copy()
-
-for rectangle in battery_rectangles_2011_inset:
-    ax_battery_inset.add_patch(rectangle)
 
 # EXPORT #########################################
 
-figure_name: str = str(Path.cwd().stem + '.pdf')
+file_path = os.path.abspath(__file__)
+file_name = os.path.basename(file_path)
+figure_name: str = str(file_name + '.pdf')
 
 plt.savefig(
     fname = figure_name,
