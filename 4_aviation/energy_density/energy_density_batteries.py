@@ -29,7 +29,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
-    'font.size': 12
+    'font.size': 11
 })
 
 # DATA IMPORT ###################################
@@ -206,9 +206,9 @@ plt.subplots_adjust(wspace=0.075)
 
 # AXIS LIMITS ################
 
-ax[0].set_xlim(0,1500)
+ax[0].set_xlim(0,1000)
 
-ax[0].set_ylim(0,1000)
+ax[0].set_ylim(0,1250)
 ax[1].set_ylim(0,100)
 
 # TICKS AND LABELS ###########
@@ -369,7 +369,7 @@ for idx, row in df_lion_historical.iterrows():
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
-legend_elements = [
+legend_elements_categories = [
     Line2D(
         xdata = [0],
         ydata = [0],
@@ -378,12 +378,12 @@ legend_elements = [
         linestyle = 'None',
         markersize=4,
         marker='+',
-        label = 'Acft. Requirements'
+        label = 'Batteries, Best Perf. (historical)'
     ),
     Patch(
         facecolor = 'none',
         edgecolor = 'black',
-        label = 'Batteries'
+        label = 'Batteries, Aver. (2010)'
     ),
     Line2D(
         xdata = [0],
@@ -414,9 +414,30 @@ legend_elements = [
     ),
 ]
 
+legend_elements_battery_technology: list = []
+def add_battery_technology_color_legend():
+    for technology, legend_color in dict_battery_technologies.items():
+        colored_line = Line2D(
+            xdata = [0],
+            ydata = [0],
+            marker='none',
+            color = legend_color,
+            linestyle = '-',
+            label = technology
+        )
+        legend_elements_battery_technology.append(colored_line)
+
+add_battery_technology_color_legend()
+
+legend_categories = ax[0].legend(
+    handles = legend_elements_categories,
+    loc = 'upper right',
+)
+ax[0].add_artist(legend_categories)
+
 ax[0].legend(
-    handles=legend_elements,
-    loc='upper left',
+    handles = legend_elements_battery_technology,
+    loc = 'upper left',
 )
 
 # ANNOTATION ################
