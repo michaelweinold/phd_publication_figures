@@ -104,20 +104,23 @@ df_acft_electrification_icct = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
-df_acft_requirements = pd.read_excel(
+
+df_lion_historical = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Electric Aircraft Requirements',
+    sheet_name = 'Li-ion Historical',
     usecols = lambda column: column in [
-        'description',
-        'authors',
-        'Wh/kg',
-        'Wh/l',
+        'year',
+        'Wh/kg (historical)',
+        'Wh/l (historical)',
+        'Wh/kg (target)',
+        'Wh/l (target)'
     ],
     dtype={
-        'description': str,
-        'authors': str,
+        'year': str,
         'Wh/kg': float,
         'Wh/l': float,
+        'Wh/kg (target)': float,
+        'Wh/l (target)': float,
     },
     header = 0,
     engine = 'openpyxl'
@@ -203,10 +206,7 @@ plt.subplots_adjust(wspace=0.075)
 
 # AXIS LIMITS ################
 
-ax[0].callbacks.connect("xlim_changed", convert_xaxis_units_from_MJ_to_Wh)
-ax[0].callbacks.connect("ylim_changed", convert_yaxis_units_from_MJ_to_Wh)
-
-ax[0].set_xlim(0,1000)
+ax[0].set_xlim(0,1500)
 
 ax[0].set_ylim(0,1000)
 ax[1].set_ylim(0,100)
@@ -308,11 +308,61 @@ ax[1].plot(
 )
 
 ax[0].scatter(
-    df_acft_requirements['Wh/kg'],
-    df_acft_requirements['Wh/l'],
-    color = 'black',
-    marker = '+'
+    df_lion_historical['Wh/kg (historical)'],
+    df_lion_historical['Wh/l (historical)'],
+    color = 'blue',
+    s = 10
 )
+
+ax[0].scatter(
+    df_lion_historical['Wh/kg (target)'],
+    df_lion_historical['Wh/l (target)'],
+    color = 'blue',
+    s = 10
+)
+ax[0].scatter(
+    df_lion_historical['Wh/kg (target)'],
+    df_lion_historical['Wh/l (target)'],
+    color = 'blue',
+    s = 80,
+    facecolors = 'none',
+    edgecolors = 'blue'
+)
+
+# ANNOTATION ################
+
+annotation_years_historical: list = [
+    '1991',
+    '1995',
+    '2000',
+    '2005',
+    '2010',
+    '2015',
+    '2020'
+]
+annotation_years_target: list = [
+    '2026',
+    '2031'
+]
+
+for idx, row in df_lion_historical.iterrows():
+    if row['year'] in annotation_years_historical:
+        ax[0].annotate(
+            text = row['year'],
+            xy = (row['Wh/kg (historical)'], row['Wh/l (historical)'] - 25),
+            ha='right',
+            va='top',
+            fontsize=9
+        )
+for idx, row in df_lion_historical.iterrows():
+    if row['year'] in annotation_years_target:
+        ax[0].annotate(
+            text = row['year'],
+            xy = (row['Wh/kg (target)'], row['Wh/l (target)'] - 25),
+            ha='right',
+            va='top',
+            fontsize=9
+        )
 
 # LEGEND ####################
 
@@ -366,7 +416,7 @@ legend_elements = [
 
 ax[0].legend(
     handles=legend_elements,
-    loc='upper right',
+    loc='upper left',
 )
 
 # ANNOTATION ################
@@ -390,8 +440,9 @@ for idx, row in df_fuels.iterrows():
 
 # EXPORT #########################################
 
+
 file_path = os.path.abspath(__file__)
-file_name = os.path.basename(file_path)
+file_name = os.path.splitext(os.path.basename(file_path))[0]
 figure_name: str = str(file_name + '.pdf')
 
 plt.savefig(
