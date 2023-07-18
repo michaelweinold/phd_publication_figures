@@ -341,16 +341,16 @@ annotation_years_historical: list = [
     '2020'
 ]
 annotation_years_target: list = [
-    '2026',
-    '2031'
+    '2025',
+    '2030'
 ]
 
 for idx, row in df_lion_historical.iterrows():
     if row['year'] in annotation_years_historical:
         ax[0].annotate(
             text = row['year'],
-            xy = (row['Wh/kg (historical)'], row['Wh/l (historical)'] - 25),
-            ha='right',
+            xy = (row['Wh/kg (historical)'], row['Wh/l (historical)'] - 50),
+            ha='left',
             va='top',
             fontsize=9
         )
@@ -358,8 +358,8 @@ for idx, row in df_lion_historical.iterrows():
     if row['year'] in annotation_years_target:
         ax[0].annotate(
             text = row['year'],
-            xy = (row['Wh/kg (target)'], row['Wh/l (target)'] - 25),
-            ha='right',
+            xy = (row['Wh/kg (target)'], row['Wh/l (target)'] - 50),
+            ha='left',
             va='top',
             fontsize=9
         )
@@ -377,40 +377,23 @@ legend_elements_categories = [
         markerfacecolor='black',
         linestyle = 'None',
         markersize=4,
-        marker='+',
-        label = 'Batteries, Best Perf. (historical)'
+        marker='o',
+        label = 'Best Commercial (historical)'
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'black',
+        markerfacecolor='none',
+        linestyle = 'None',
+        markersize=7,
+        marker='o',
+        label = 'Future Targets'
     ),
     Patch(
         facecolor = 'none',
         edgecolor = 'black',
-        label = 'Batteries, Aver. (2010)'
-    ),
-    Line2D(
-        xdata = [0],
-        ydata = [0],
-        marker='none',
-        color = 'red',
-        linestyle = '-',
-        linewidth=1,
-        label='current EMF'
-    ),
-    Line2D(
-        xdata = [0],
-        ydata = [0],
-        marker='none',
-        color = 'orange',
-        linestyle = '-',
-        linewidth=1,
-        label='15\% EMF reduction'
-    ),
-    Line2D(
-        xdata = [0],
-        ydata = [0],
-        marker='none',
-        color = 'green',
-        linestyle = '-',
-        linewidth=1,
-        label='30\% EMF reduction'
+        label = 'Average (around 2010)'
     ),
 ]
 
@@ -439,25 +422,6 @@ ax[0].legend(
     handles = legend_elements_battery_technology,
     loc = 'upper left',
 )
-
-# ANNOTATION ################
-
-for idx, row in df_fuels.iterrows():
-    ax[0].annotate(
-        text = row['substance'],
-        xy = (row['Wh/kg']+100, row['Wh/l']),
-        ha='right',
-        va='bottom',
-        fontsize=9
-    )
-    ax[1].annotate(
-        row['substance'],
-        (row['Wh/kg'], row['Wh/l']),
-        ha='left',
-        va='bottom',
-        fontsize=9
-    )
-
 
 # EXPORT #########################################
 
