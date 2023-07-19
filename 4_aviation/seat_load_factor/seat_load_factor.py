@@ -101,7 +101,7 @@ ax.plot(
     df_slf['year'],
     df_slf['plf'],
     color = 'black',
-    label = 'Air Transport Seat Load Factor (U.S.)',
+    label = 'Air Transport Seat Load Factor (Global)',
     linestyle = '-',
 )
 ax.plot(
