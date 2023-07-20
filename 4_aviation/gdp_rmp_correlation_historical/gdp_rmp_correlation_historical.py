@@ -94,10 +94,6 @@ ax2 = ax1.twinx()
 
 # AXIS LIMITS ################
 
-# COLORBAR ###################
-
-#colormap = plt.cm.get_cmap('plasma', len(df_freight['year'].unique()))
-
 # TICKS AND LABELS ###########
 
 ax1.minorticks_on()
@@ -132,6 +128,31 @@ ax2.scatter(
     label = 'Freight'
 )
 
+# ANNOTATION ################
+
+annotation_years: list = [
+    1950,
+    1970,
+    1980,
+    1990,
+    2000,
+    2005,
+    2010,
+    2015,
+    2019,
+    2020,
+]
+
+for idx, row in df_freight.iterrows():
+    if row['year'] in annotation_years:
+        ax2.annotate(
+            text = row['year'].astype(int),
+            xy = (row['plot world gdp (2022 TUSD)'], row['plot world air freight (Gtkm)'] + 20),
+            ha='center',
+            va='top',
+            fontsize=11
+        )
+
 # LEGEND ####################
 
 lines, labels = ax1.get_legend_handles_labels()
@@ -144,18 +165,6 @@ ax2.legend(
 
 # TITLE #####################
 
-title_text = 'World, 1950-2021'
-ax2.text(
-    0.2, 0.9825,
-    title_text,
-    fontsize=12,
-    fontweight='bold',
-    ha='left',
-    transform=ax1.transAxes,
-    bbox=dict(facecolor='white', edgecolor='black', boxstyle='round'),
-    zorder=10
-)
-
 # EXPORT #########################################
 
 figure_name: str = str(Path.cwd().stem + '.pdf')
@@ -166,6 +175,3 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
-
-# %%
