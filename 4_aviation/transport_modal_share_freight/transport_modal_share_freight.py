@@ -30,26 +30,45 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_rail = pd.read_excel(
+df_share = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Rail Travel Price per Distance',
+    sheet_name = 'share of air freight',
     usecols = lambda column: column in [
         'year',
-        'fare/101km [EURO, 2022]',
+        'country',
+        'share of air freight (weight)',
+        'share of air freight (value)',
     ],
     dtype={
-        'year': datetime,
-        'fare/101km [EURO, 2022]': float,
+        'year': int,
+        'country': str,
+        'share of air freight (weight)': float,
+        'share of air freight (value)': float,
     },
     header = 0,
     engine = 'openpyxl'
 )
-
-
+df_us_trade = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'US air freight trade',
+    usecols = lambda column: column in [
+        'weight (1000 tons)',
+        'value (mio. $(2022))',
+        'country (import/export to U.S.)',
+    ],
+    dtype={
+        'weight (1000 tons)': float,
+        'value (mio. $(2022))': float,
+        'country (import/export to U.S.)': str,
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
+		
 # DATA MANIPULATION #############################
 
-df_rail.replace('', np.nan)
-df_air['revenue/km [U.S. cents, 2023]'] = df_air['revenue/mile [U.S. cents, 2023]'] * 1.609
+# select only latest datapoint for Switzerland
+df_share.drop(df_share[(df_share['country'] == 'Switzerland') & (df_share['year'] != 2019)].index, inplace=True)
 
 # FIGURE ########################################
 
@@ -58,80 +77,75 @@ df_air['revenue/km [U.S. cents, 2023]'] = df_air['revenue/mile [U.S. cents, 2023
 fig, ax = plt.subplots(
         num = 'main',
         nrows = 1,
-        ncols = 1,
+        ncols = 2,
         dpi = 300,
         figsize=(30*cm, 10*cm), # A4=(210x297)mm,
-        sharex=True
     )
 
-# SECONDARY AXES ##############
+# AXIS SCALING ###############
 
-ax_right = ax.twinx()
+ax[0].set_yscale('log')
 
 # AXIS LIMITS ################
 
-ax.set_xlim(1950, 2023)
-ax.set_ylim(0,110)
-ax_right.set_ylim(0,110)
+ax[0].set_ylim(0, 100)
+ax[0].set_xlim(0, 3)
+
+ax[1].set_xlim(0, 700)
+ax[1].set_ylim(0, 80000)
 
 # TICKS AND LABELS ###########
 
-ax.minorticks_on()
-ax.tick_params(axis='x', which='minor', bottom=False)
+ax[1].minorticks_on()
+ax[1].tick_params(axis='x', which='minor', bottom=False)
+
+import matplotlib.ticker as ticker
+def thousand_formatter(value, tick_number):
+    """
+    Formats the tick label with thousand separators: 1000 = 1'000.
+    """
+    return f"{int(value):,}".replace(",", "'")
+
+ax[1].yaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
 
 # GRIDS ######################
 
-ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
+ax[1].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax[1].grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_ylabel("Approx. Air Fare [U.S. cents/km (2022)]")
-ax_right.set_ylabel("Approx. Rail Fare [Euro cents/km (2022)]")
+ax[0].set_xlabel("Countries")
+ax[0].set_ylabel("Share of Air Freight in Total Trade [\%]")
+
+ax[1].set_xlabel("Trade by Air Freight (Tonnage) [kt]")
+ax[1].set_ylabel("Trade by Air Freight (Value) [mio. USD]")
 
 # PLOTTING ###################
 
-ax.plot(
-    df_air['year'],
-    df_air['revenue/km [U.S. cents, 2023]'],
-    color = 'black',
-    linewidth = 1,
-    label = 'Price Index (Air Travel, U.S. Domestic Routes)'
-)
-ax_right.plot(
-    df_rail['year'],
-    df_rail['fare/101km [EURO, 2022]'],
-    color = 'black',
-    linewidth = 1,
-    label = 'Consumer Price Index (U.S. Urban Consumers)',
-    linestyle = '--'
-)
+width = 0.5
+multiplier = 0
+x = np.arange(len(df_share['country']))
 
+for category in ['share of air freight (weight)', 'share of air freight (value)']:
+    offset = width * multiplier
+    ax[0].bar(
+        x = x + offset,
+        height = df_share[category],
+        width = width,
+        label = df_share['country'],
+    )
+    multiplier += 1
+
+ax[1].scatter(
+    df_us_trade['weight (1000 tons)'],
+    df_us_trade['value (mio. $(2022))'],
+    color = 'blue',
+    s = 10,
+)
 
 # LEGEND ####################
 
-from matplotlib.lines import Line2D
-legend_elements = [
-    Line2D(
-        xdata = [0],
-        ydata = [0],
-        color = 'black',
-        linestyle = '-',
-        label='Air (U.S., Domestic Routes)'
-    ),
-    Line2D(
-        xdata = [0],
-        ydata = [0],
-        color = 'black',
-        linestyle = '--',
-        label='Rail (Germany, Domestic Routes $>100$km)'
-    )
-]
-
-ax.legend(
-    handles=legend_elements,
-    loc='upper right',
-)
 
 # EXPORT #########################################
 
