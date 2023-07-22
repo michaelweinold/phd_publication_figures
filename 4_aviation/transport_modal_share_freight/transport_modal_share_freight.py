@@ -88,8 +88,8 @@ ax[0].set_yscale('log')
 
 # AXIS LIMITS ################
 
-ax[0].set_ylim(0, 100)
-ax[0].set_xlim(0, 3)
+#ax[0].set_ylim(0, 1)
+#ax[0].set_xlim(0, 4)
 
 ax[1].set_xlim(0, 700)
 ax[1].set_ylim(0, 80000)
@@ -113,6 +113,8 @@ ax[1].yaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
 ax[1].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
 ax[1].grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
+ax[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+
 # AXIS LABELS ################
 
 ax[0].set_xlabel("Countries")
@@ -123,18 +125,19 @@ ax[1].set_ylabel("Trade by Air Freight (Value) [mio. USD]")
 
 # PLOTTING ###################
 
-width = 0.5
+width = 0.4
 multiplier = 0
 x = np.arange(len(df_share['country']))
+ax[0].set_xticks(x, df_share['country'])
 
 for category in ['share of air freight (weight)', 'share of air freight (value)']:
     offset = width * multiplier
-    ax[0].bar(
+    rects = ax[0].bar(
         x = x + offset,
         height = df_share[category],
         width = width,
-        label = df_share['country'],
     )
+    ax[0].bar_label(rects, padding=3, fmt = '%d.2')
     multiplier += 1
 
 ax[1].scatter(
@@ -146,6 +149,24 @@ ax[1].scatter(
 
 # LEGEND ####################
 
+from matplotlib.patches import Patch
+
+legend_categories = [
+    Patch(
+        facecolor = 'orange',
+        label = 'Value'
+    ),
+    Patch(
+        facecolor = 'blue',
+        label = 'Weight'
+    ),
+]
+
+legend_categories = ax[0].legend(
+    handles = legend_categories,
+    loc = 'best',
+)
+ax[0].add_artist(legend_categories)
 
 # EXPORT #########################################
 
