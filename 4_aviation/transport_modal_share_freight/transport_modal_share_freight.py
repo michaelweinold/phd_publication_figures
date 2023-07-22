@@ -117,10 +117,9 @@ ax[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax[0].set_xlabel("Countries")
 ax[0].set_ylabel("Share of Air Freight in Total Trade [\%]")
 
-ax[1].set_xlabel("Trade by Air Freight (Tonnage) [kt]")
+ax[1].set_xlabel("Trade by Air Freight (Weight) [kt]")
 ax[1].set_ylabel("Trade by Air Freight (Value) [mio. USD]")
 
 # PLOTTING ###################
@@ -143,8 +142,9 @@ for category in ['share of air freight (weight)', 'share of air freight (value)'
 ax[1].scatter(
     df_us_trade['weight (1000 tons)'],
     df_us_trade['value (mio. $(2022))'],
-    color = 'blue',
+    color = 'black',
     s = 10,
+    label = 'Imports/Exports to/from the U.S.',
 )
 
 # LEGEND ####################
@@ -157,7 +157,7 @@ legend_categories = [
         label = 'Value'
     ),
     Patch(
-        facecolor = 'blue',
+        facecolor = 'cornflowerblue',
         label = 'Weight'
     ),
 ]
@@ -167,6 +167,10 @@ legend_categories = ax[0].legend(
     loc = 'best',
 )
 ax[0].add_artist(legend_categories)
+
+ax[1].legend(
+    loc = 'best',
+)
 
 # EXPORT #########################################
 
