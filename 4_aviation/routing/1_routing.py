@@ -44,6 +44,18 @@ df_british = pd.read_csv(
     header = 'infer',
     index_col = False,
 )
+df_pal= pd.read_csv(
+    filepath_or_buffer = 'data/PR102_3056874f.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
+df_airfrance= pd.read_csv(
+    filepath_or_buffer = 'data/3138ab42.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
 
 # DATA MANIPULATION #############################
 
@@ -71,6 +83,14 @@ british_track, lat_british, lon_british = extract_coordinates_from_csv(
     df = df_british,
     column_name = 'Position'
 )
+pal_track, lat_pal, lon_pal = extract_coordinates_from_csv(
+    df = df_pal,
+    column_name = 'Position'
+)
+airfrance_track, lat_airfrance, lon_airfrance = extract_coordinates_from_csv(
+    df = df_airfrance,
+    column_name = 'Position'
+)
 
 # FIGURE ########################################
 
@@ -90,9 +110,9 @@ ax = plt.subplot(
 )
 
 # https://scitools.org.uk/cartopy/docs/latest/gallery/lines_and_polygons/features.html#features
-ax.add_feature(cfeature.BORDERS, alpha=0.25)
-ax.add_feature(cfeature.LAKES, alpha=0.5)
-ax.add_feature(cfeature.COASTLINE)
+ax.add_feature(cfeature.BORDERS, alpha=0.25, linewidth=0.5)
+ax.add_feature(cfeature.LAKES, alpha=0.5, linewidth=0.5)
+ax.add_feature(cfeature.COASTLINE, linewidth=0.5)
 ax.set_global()
 
 # DATA #######################
@@ -121,12 +141,27 @@ ax.add_geometries(
     edgecolor = 'red',
     linewidth = 1
 )
+ax.add_geometries(
+    geoms = pal_track,
+    crs = ccrs.Geodetic(),
+    facecolor = 'none',
+    edgecolor = 'red',
+    linewidth = 1
+)
+ax.add_geometries(
+    geoms = airfrance_track,
+    crs = ccrs.PlateCarree(),
+    facecolor = 'none',
+    edgecolor = 'red',
+    linewidth = 1
+)
+
 ax.plot(
     lon_finnair,
     lat_finnair,
     color='blue',
     transform=ccrs.Geodetic(),
-    linewidth = 1
+    linewidth = 1,
 )
 ax.plot(
     lon_british,
@@ -135,17 +170,52 @@ ax.plot(
     transform=ccrs.Geodetic(),
     linewidth = 1
 )
+ax.plot(
+    lon_pal,
+    lat_pal,
+    color='blue',
+    transform=ccrs.Geodetic(),
+    linewidth = 1
+)
+ax.plot(
+    lon_airfrance,
+    lat_airfrance,
+    color='blue',
+    transform=ccrs.Geodetic(),
+    linewidth = 1
+)
 
 # LEGEND ####################
 
-plt.legend(
-    loc = 'lower left',
-    frameon = False,
-    fontsize = 14)
+from matplotlib.lines import Line2D
+
+legend_elements = [
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'blue',
+        linestyle = '-',
+        label='Great Circle'
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'red',
+        linestyle = '-',
+        label='Track'
+    ),
+]
+
+ax.legend(
+    handles=legend_elements,
+    loc='lower left',
+)
 
 # EXPORT #########################################
 
-figure_name: str = str(Path.cwd().stem + '.pdf')
+file_path = os.path.abspath(__file__)
+file_name = os.path.splitext(os.path.basename(file_path))[0]
+figure_name: str = str(file_name + '.pdf')
 
 plt.savefig(
     fname = figure_name,
