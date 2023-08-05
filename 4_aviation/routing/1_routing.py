@@ -51,21 +51,23 @@ def extract_coordinates_from_csv(
         df: pd.DataFrame,
         column_name: str = 'Position'
 ) -> pd.DataFrame:
-    df_coords: pd.DataFrame = df[column_name].str.split(',', expand=True)
+    df_coords: pd.DataFrame = df[column_name].str.split(',', expand=True).astype(float)
     df_coords.columns = ['lat', 'lon']
     ls_coords = sgeom.LineString(
         zip(
-            df_coords['lon'].astype(float),
-            df_coords['lat'].astype(float)
+            df_coords['lon'],
+            df_coords['lat']
         )
     )
-    return ls_coords
+    lat_cities: list = [df_coords['lat'].iloc[0], df_coords['lat'].iloc[-1]]
+    lon_cities: list = [df_coords['lon'].iloc[0], df_coords['lon'].iloc[-1]]
+    return ls_coords, lat_cities, lon_cities
 
-finnair_coords = extract_coordinates_from_csv(
+finnair_track, lat_finnair, lon_finnair = extract_coordinates_from_csv(
     df = df_finnair,
     column_name = 'Position'
 )
-british_coords = extract_coordinates_from_csv(
+british_track, lat_british, lon_british = extract_coordinates_from_csv(
     df = df_british,
     column_name = 'Position'
 )
@@ -74,19 +76,24 @@ british_coords = extract_coordinates_from_csv(
 
 # SETUP ######################
 
+# https://stackoverflow.com/a/60724892/
+plateCr = ccrs.PlateCarree()
+plateCr._threshold = plateCr._threshold/10.
+
 fig = plt.figure(
     num = 'main',
     dpi = 300,
     figsize=(30*cm, 10*cm), # A4=(210x297)mm
 )
 ax = plt.subplot(
-    projection=ccrs.PlateCarree(),
+    projection=plateCr,
 )
 
 # https://scitools.org.uk/cartopy/docs/latest/gallery/lines_and_polygons/features.html#features
 ax.add_feature(cfeature.BORDERS, alpha=0.25)
 ax.add_feature(cfeature.LAKES, alpha=0.5)
 ax.add_feature(cfeature.COASTLINE)
+ax.set_global()
 
 # DATA #######################
 
@@ -101,17 +108,31 @@ ax.add_feature(cfeature.COASTLINE)
 # PLOTTING ###################
 
 ax.add_geometries(
-    geoms = finnair_coords,
+    geoms = finnair_track,
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
     edgecolor = 'red',
     linewidth = 1
 )
 ax.add_geometries(
-    geoms = british_coords,
+    geoms = british_track,
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
     edgecolor = 'red',
+    linewidth = 1
+)
+ax.plot(
+    lon_finnair,
+    lat_finnair,
+    color='blue',
+    transform=ccrs.Geodetic(),
+    linewidth = 1
+)
+ax.plot(
+    lon_british,
+    lat_british,
+    color='blue',
+    transform=ccrs.Geodetic(),
     linewidth = 1
 )
 
