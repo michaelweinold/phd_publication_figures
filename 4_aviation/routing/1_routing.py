@@ -143,7 +143,7 @@ ax.add_geometries(
 )
 ax.add_geometries(
     geoms = pal_track,
-    crs = ccrs.Geodetic(),
+    crs = ccrs.Geodetic(), # https://stackoverflow.com/a/67730772
     facecolor = 'none',
     edgecolor = 'red',
     linewidth = 1
