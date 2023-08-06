@@ -27,7 +27,7 @@ from pathlib import PurePath, Path
 plt.rcParams.update({
     "text.usetex": False,
     "font.family": "Arial",
-    'font.size': 11
+    'font.size': 10
 })
 
 # DATA IMPORT ###################################
@@ -204,7 +204,7 @@ legend_elements = [
         ydata = [0],
         color = 'red',
         linestyle = '-',
-        label='Track'
+        label='Aircraft Track'
     ),
 ]
 
