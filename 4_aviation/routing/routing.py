@@ -119,6 +119,8 @@ ax.set_global()
 
 # AXIS LIMITS ################
 
+ax.set_ylim(-70,70)
+
 # TICKS AND LABELS ###########
 
 # GRIDS ######################
