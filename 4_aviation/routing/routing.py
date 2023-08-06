@@ -44,14 +44,20 @@ df_british = pd.read_csv(
     header = 'infer',
     index_col = False,
 )
-df_pal= pd.read_csv(
+df_pal = pd.read_csv(
     filepath_or_buffer = 'data/PR102_3056874f.csv',
     sep = ',',
     header = 'infer',
     index_col = False,
 )
-df_airfrance= pd.read_csv(
+df_airfrance = pd.read_csv(
     filepath_or_buffer = 'data/3138ab42.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
+df_quantas = pd.read_csv(
+    filepath_or_buffer = 'data/QF63_3025161d.csv',
     sep = ',',
     header = 'infer',
     index_col = False,
@@ -89,6 +95,10 @@ pal_track, lat_pal, lon_pal = extract_coordinates_from_csv(
 )
 airfrance_track, lat_airfrance, lon_airfrance = extract_coordinates_from_csv(
     df = df_airfrance,
+    column_name = 'Position'
+)
+quantas_track, lat_quantas, lon_quantas = extract_coordinates_from_csv(
+    df = df_quantas,
     column_name = 'Position'
 )
 
@@ -157,6 +167,13 @@ ax.add_geometries(
     edgecolor = 'red',
     linewidth = 1
 )
+ax.add_geometries(
+    geoms = quantas_track,
+    crs = ccrs.PlateCarree(),
+    facecolor = 'none',
+    edgecolor = 'red',
+    linewidth = 1
+)
 
 ax.plot(
     lon_finnair,
@@ -182,6 +199,13 @@ ax.plot(
 ax.plot(
     lon_airfrance,
     lat_airfrance,
+    color='blue',
+    transform=ccrs.Geodetic(),
+    linewidth = 1
+)
+ax.plot(
+    lon_quantas,
+    lat_quantas,
     color='blue',
     transform=ccrs.Geodetic(),
     linewidth = 1
