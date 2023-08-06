@@ -39,6 +39,30 @@ df_japan = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'Japan',
     usecols = lambda column: column in [
+        'distance bin [km]',
+        'distance mean [km]',
+        'rail [%]',
+        'car [%]',
+        'air [%]',
+        'other [%]',
+        'year'
+    ],
+    dtype={
+        'distance bin [km]': str,
+        'distance mean [km]': float,
+        'rail [%]': float,
+        'car [%]': float,
+        'air [%]': float,
+        'other [%]': float,
+        'year': str
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
+df_eu = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'EU',
+    usecols = lambda column: column in [
         'distance [km]',
         'rail [%]',
         'car [%]',
@@ -62,14 +86,24 @@ df_japan = pd.read_excel(
 
 df_japan = df_japan[df_japan['year'] == '2019?']
 
+mypol = np.polynomial.polynomial.Polynomial.fit(
+    x = df_japan['distance mean [km]'],
+    y = df_japan['rail [%]'],
+    deg = 3,
+    domain=None
+)
+
 # FIGURE ########################################
 
 # SETUP ######################
 
-fig, ax = plt.subplots(
+fig, axes = plt.subplots(
     num = 'main',
+    sharey = True,
+    sharex = True,
     nrows = 1,
     ncols = 3,
+    gridspec_kw = {'wspace': 0.1},
     dpi = 300,
     figsize=(30*cm, 10*cm), # A4=(210x297)mm,
 )
@@ -83,7 +117,14 @@ for ax in axes.flat:
 
 # TICKS AND LABELS ###########
 
-labels = df_japan['distance [km]']
+labels = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+for ax in axes.flat:
+    ax.set_xticks(
+        ticks = labels,
+        labels = labels,
+        rotation=45,
+        ha='right'
+    )
 
 # GRIDS ######################
 
@@ -93,58 +134,50 @@ for ax in axes.flat:
 
 # AXIS LABELS ################
 
+axes[0].set_ylabel("Modal Share [\%]")
 for ax in axes.flat:
     ax.set_xlabel("Trip Distance [km]")
-    ax.set_ylabel("Modal Share [\%]")
+
+# TITLE ######################
+
+axes[0].set_title("EU (2015)", pad=7.5)
+axes[1].set_title("Japan (2019)", pad=7.5)
+axes[2].set_title("USA (2001)", pad=7.5)
 
 # PLOTTING ###################
 
 width = 0.4
-x = np.arange(len(df_japan['distance [km]']))
-ax.set_xticks(x, df_japan['distance [km]'])
+x = np.arange(len(labels))
+axes[0].set_xticks(x, labels)
 
-plot_bars(
-    list_of_countries = ['japan', 'eu'],
-    list_of_colors = ['darkorange', 'royalblue', 'brown', 'grey'],
-    list_of_modes = ['rail', 'car', 'air', 'other'],
-    list_of_dataframes = [df_japan, df_eu],
-)
-
-def plot_bars(
-    list_of_countries: list,
-    list_of_colors: list,
-    list_of_modes: list,
-    list_of_dataframes: list,
-):
-    
-# Japan
-ax.bar(
+# EU
+axes[0].bar(
     x = x,
-    height = df_japan['rail [%]'],
+    height = df_eu['rail [%]'],
     width = width,
     label = 'Rail',
     color = 'darkorange',
 )
-ax.bar(
+axes[0].bar(
     x = x,
-    bottom = df_japan['rail [%]'],
-    height = df_japan['air [%]'],
+    bottom = df_eu['rail [%]'],
+    height = df_eu['air [%]'],
     width = width,
     label = 'Air',
     color = 'royalblue',
 )
-ax.bar(
+axes[0].bar(
     x = x,
-    bottom = df_japan['rail [%]'] + df_japan['air [%]'],
-    height = df_japan['car [%]'],
+    bottom = df_eu['rail [%]'] + df_eu['air [%]'],
+    height = df_eu['car [%]'],
     width = width,
     label = 'Car',
     color = 'brown',
 )
-ax.bar(
+axes[0].bar(
     x = x,
-    bottom = df_japan['rail [%]'] + df_japan['air [%]'] + df_japan['car [%]'],
-    height = df_japan['other [%]'],
+    bottom = df_eu['rail [%]'] + df_eu['air [%]'] + df_eu['car [%]'],
+    height = df_eu['other [%]'],
     width = width,
     label = 'Other',
     color = 'grey',
@@ -152,8 +185,8 @@ ax.bar(
 
 # LEGEND ####################
 
-ax.legend(
-    loc = 'upper left',
+axes[0].legend(
+    loc = 'lower left',
 )
 
 # EXPORT #########################################
@@ -168,3 +201,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
