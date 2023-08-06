@@ -30,6 +30,11 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
+# see also this StackOverflow questions:
+# https://stackoverflow.com/q/22787209
+# https://stackoverflow.com/q/69242928
+# it will be best to have separate plots for each country
+
 df_japan = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'Japan',
@@ -62,19 +67,19 @@ df_japan = df_japan[df_japan['year'] == '2019?']
 # SETUP ######################
 
 fig, ax = plt.subplots(
-        num = 'main',
-        nrows = 1,
-        ncols = 1,
-        dpi = 300,
-        figsize=(30*cm, 10*cm), # A4=(210x297)mm,
-    )
+    num = 'main',
+    nrows = 1,
+    ncols = 3,
+    dpi = 300,
+    figsize=(30*cm, 10*cm), # A4=(210x297)mm,
+)
 
 # AXIS SCALING ###############
 
 # AXIS LIMITS ################
 
-# ax.set_ylim(0, 100)
-# ax.set_xlim(0, 1000)
+for ax in axes.flat:
+    ax.set_ylim(0, 100)
 
 # TICKS AND LABELS ###########
 
@@ -82,13 +87,15 @@ labels = df_japan['distance [km]']
 
 # GRIDS ######################
 
-ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
+for ax in axes.flat:
+    ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+    ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_xlabel("Trip Distance [km]")
-ax.set_ylabel("Modal Share [\%]")
+for ax in axes.flat:
+    ax.set_xlabel("Trip Distance [km]")
+    ax.set_ylabel("Modal Share [\%]")
 
 # PLOTTING ###################
 
@@ -96,6 +103,21 @@ width = 0.4
 x = np.arange(len(df_japan['distance [km]']))
 ax.set_xticks(x, df_japan['distance [km]'])
 
+plot_bars(
+    list_of_countries = ['japan', 'eu'],
+    list_of_colors = ['darkorange', 'royalblue', 'brown', 'grey'],
+    list_of_modes = ['rail', 'car', 'air', 'other'],
+    list_of_dataframes = [df_japan, df_eu],
+)
+
+def plot_bars(
+    list_of_countries: list,
+    list_of_colors: list,
+    list_of_modes: list,
+    list_of_dataframes: list,
+):
+    
+# Japan
 ax.bar(
     x = x,
     height = df_japan['rail [%]'],
@@ -111,9 +133,28 @@ ax.bar(
     label = 'Air',
     color = 'royalblue',
 )
+ax.bar(
+    x = x,
+    bottom = df_japan['rail [%]'] + df_japan['air [%]'],
+    height = df_japan['car [%]'],
+    width = width,
+    label = 'Car',
+    color = 'brown',
+)
+ax.bar(
+    x = x,
+    bottom = df_japan['rail [%]'] + df_japan['air [%]'] + df_japan['car [%]'],
+    height = df_japan['other [%]'],
+    width = width,
+    label = 'Other',
+    color = 'grey',
+)
 
 # LEGEND ####################
 
+ax.legend(
+    loc = 'upper left',
+)
 
 # EXPORT #########################################
 
