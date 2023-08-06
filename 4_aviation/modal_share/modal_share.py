@@ -81,17 +81,79 @@ df_eu = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
+df_usa = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'USA',
+    usecols = lambda column: column in [
+        'distance (air) [miles]',
+        'air [%]',
+        'distance (car) [miles]',
+        'car [%]',
+    ],
+    dtype={
+        'distance (air) [miles]': float,
+        'air [%]': float,
+        'distance (car) [miles]': float,
+        'car [%]': float,
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
 		
 # DATA MANIPULATION #############################
 
+unified_distance = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+
 df_japan = df_japan[df_japan['year'] == '2019?']
 
-mypol = np.polynomial.polynomial.Polynomial.fit(
-    x = df_japan['distance mean [km]'],
-    y = df_japan['rail [%]'],
-    deg = 3,
-    domain=None
+def interpolate_japan(
+    df: pd.DataFrame,
+    columns: list[str],
+    new_x: list[float]
+) -> pd.DataFrame:
+    df_interpolated = pd.DataFrame()
+    df_interpolated['distance [km]'] = new_x
+    for col in columns:
+        mypol = np.polynomial.polynomial.Polynomial.fit(
+            x = df['distance mean [km]'],
+            y = df[col],
+            deg = 5,
+        )
+        df_interpolated[col] = [mypol(xval) for xval in new_x]
+    return df_interpolated
+
+def interpolate_usa(
+    df: pd.DataFrame,
+    column_pairs: dict,
+    new_x: list[float]
+) -> pd.DataFrame:
+    df_interpolated = pd.DataFrame()
+    df_interpolated['distance [km]'] = new_x
+    for old_x in column_pairs.keys():
+        mypol = np.polynomial.polynomial.Polynomial.fit(
+            x = df[old_x].dropna(),
+            y = df[column_pairs[old_x]].dropna(),
+            deg = 5,
+        )
+        df_interpolated[column_pairs[old_x]] = [mypol(xval) for xval in new_x]
+    return df_interpolated
+
+df_japan = interpolate_japan(
+    df = df_japan,
+    columns = ['rail [%]', 'car [%]', 'air [%]', 'other [%]'],
+    new_x = unified_distance
 )
+
+df_usa = interpolate_usa(
+    df = df_usa,
+    column_pairs = {
+        'distance (air) [miles]': 'air [%]',
+        'distance (car) [miles]': 'car [%]'
+    },
+    new_x = unified_distance
+)
+
+df_usa['other [%]'] = 100 - (df_usa['air [%]'] + df_usa['car [%]'])
 
 # FIGURE ########################################
 
@@ -117,7 +179,7 @@ for ax in axes.flat:
 
 # TICKS AND LABELS ###########
 
-labels = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+labels = unified_distance
 for ax in axes.flat:
     ax.set_xticks(
         ticks = labels,
@@ -178,6 +240,64 @@ axes[0].bar(
     x = x,
     bottom = df_eu['rail [%]'] + df_eu['air [%]'] + df_eu['car [%]'],
     height = df_eu['other [%]'],
+    width = width,
+    label = 'Other',
+    color = 'grey',
+)
+
+# Japan
+axes[1].bar(
+    x = x,
+    height = df_japan['rail [%]'],
+    width = width,
+    label = 'Rail',
+    color = 'darkorange',
+)
+axes[1].bar(
+    x = x,
+    bottom = df_japan['rail [%]'],
+    height = df_japan['air [%]'],
+    width = width,
+    label = 'Air',
+    color = 'royalblue',
+)
+axes[1].bar(
+    x = x,
+    bottom = df_japan['rail [%]'] + df_japan['air [%]'],
+    height = df_japan['car [%]'],
+    width = width,
+    label = 'Car',
+    color = 'brown',
+)
+axes[1].bar(
+    x = x,
+    bottom = df_japan['rail [%]'] + df_japan['air [%]'] + df_japan['car [%]'],
+    height = df_japan['other [%]'],
+    width = width,
+    label = 'Other',
+    color = 'grey',
+)
+
+# USA
+axes[2].bar(
+    x = x,
+    height = df_usa['air [%]'],
+    width = width,
+    label = 'Air',
+    color = 'royalblue',
+)
+axes[2].bar(
+    x = x,
+    bottom = df_usa['air [%]'],
+    height = df_usa['car [%]'],
+    width = width,
+    label = 'Car',
+    color = 'brown',
+)
+axes[2].bar(
+    x = x,
+    bottom = df_usa['air [%]'] + df_usa['car [%]'],
+    height = df_usa['other [%]'],
     width = width,
     label = 'Other',
     color = 'grey',
