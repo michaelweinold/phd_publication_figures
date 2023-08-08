@@ -167,13 +167,6 @@ ax.add_geometries(
     edgecolor = 'red',
     linewidth = 1
 )
-ax.add_geometries(
-    geoms = quantas_track,
-    crs = ccrs.PlateCarree(),
-    facecolor = 'none',
-    edgecolor = 'red',
-    linewidth = 1
-)
 
 ax.plot(
     lon_finnair,
@@ -199,13 +192,6 @@ ax.plot(
 ax.plot(
     lon_airfrance,
     lat_airfrance,
-    color='blue',
-    transform=ccrs.Geodetic(),
-    linewidth = 1
-)
-ax.plot(
-    lon_quantas,
-    lat_quantas,
     color='blue',
     transform=ccrs.Geodetic(),
     linewidth = 1

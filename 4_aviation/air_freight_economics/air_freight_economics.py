@@ -63,7 +63,7 @@ fig, ax = plt.subplots(
         nrows = 1,
         ncols = 1,
         dpi = 300,
-        figsize=(15*cm, 10*cm), # A4=(210x297)mm,
+        figsize=(13*cm, 10*cm), # A4=(210x297)mm,
     )
 
 # AXIS SCALING ###############
