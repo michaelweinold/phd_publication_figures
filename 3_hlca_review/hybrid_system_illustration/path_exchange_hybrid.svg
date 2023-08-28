@@ -24,9 +24,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="1.3299045"
-     inkscape:cx="344.76159"
-     inkscape:cy="742.91046"
+     inkscape:zoom="1.7655093"
+     inkscape:cx="350.89026"
+     inkscape:cy="142.16861"
      inkscape:window-width="1728"
      inkscape:window-height="1051"
      inkscape:window-x="0"
@@ -2465,6 +2465,25 @@
          d="M 5.77,0 -2.88,5 V -5 Z"
          id="path19-34-6-1" />
     </marker>
+    <marker
+       style="overflow:visible"
+       id="marker19-5-0-0"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="0.75"
+       markerHeight="0.75"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path19-6-5-5" />
+    </marker>
   </defs>
   <g
      inkscape:label="Layer 1"
@@ -4191,94 +4210,110 @@
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
-       x="53.390091"
-       y="24.939537"
+       x="14.711129"
+       y="18.182062"
        id="text24"><tspan
          sodipodi:role="line"
          id="tspan24"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
-         x="53.390091"
-         y="24.939537">Downstream Flow</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+         x="14.711129"
+         y="18.182062">Downstream Flow</tspan></text>
     <path
        style="fill:none;stroke:#0017ff;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5)"
-       d="m 10.500001,32.499998 3.999999,-4"
+       d="m 7.5583805,27.44162 3.9999995,-4"
        id="path24-5"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#ff0000;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5-6)"
-       d="m 10.500001,24.999999 3.999999,-4"
+       d="m 7.5583805,19.941621 3.9999995,-4"
        id="path24-5-9"
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
-       x="47.081955"
-       y="32.403511"
+       x="14.077404"
+       y="25.68206"
        id="text24-9"><tspan
          sodipodi:role="line"
          id="tspan24-1"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
-         x="47.081955"
-         y="32.403511">Upstream Flow</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+         x="14.077404"
+         y="25.68206">Upstream Flow</tspan></text>
     <path
        style="fill:none;stroke:#ff6400;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5-0)"
-       d="M 10.500001,40.000001 14.5,35.999998"
+       d="M 7.5583805,34.941623 11.55838,30.94162"
        id="path24-5-1"
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
-       x="71.008987"
-       y="40.011841"
+       x="14.711129"
+       y="33.233566"
        id="text24-9-8"><tspan
          sodipodi:role="line"
          id="tspan24-1-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
-         x="71.008987"
-         y="40.011841">Potential Double-Counting</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+         x="14.711129"
+         y="33.233566">Potential Double-Counting</tspan></text>
+    <path
+       style="fill:none;stroke:#bfbfbf;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5-0-0)"
+       d="M 7.5583805,42.430789 11.55838,38.430786"
+       id="path24-5-1-7"
+       sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
-       x="70.095352"
-       y="47.337677"
+       x="13.835558"
+       y="40.733566"
+       id="text24-9-8-80"><tspan
+         sodipodi:role="line"
+         id="tspan24-1-9-6"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+         x="13.835558"
+         y="40.733566">&quot;Inactive Flow&quot; (shown only for ref.) </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
+       x="14.659625"
+       y="48.430626"
        id="text24-9-8-4"><tspan
          sodipodi:role="line"
          id="tspan24-1-9-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
-         x="70.095352"
-         y="47.337677">Start of Path (Edge No.1)</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+         x="14.659625"
+         y="48.430626">Start of Path (Edge No.1)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
-       x="62.882538"
-       y="54.886841"
+       x="14.659625"
+       y="55.733566"
        id="text24-9-8-8"><tspan
          sodipodi:role="line"
          id="tspan24-1-9-3"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
-         x="62.882538"
-         y="54.886841">Sector of the Economy</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+         x="14.659625"
+         y="55.733566">Sector of the Economy</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
-       x="55.683136"
-       y="62.444038"
+       x="14.711129"
+       y="63.18206"
        id="text24-9-8-8-4"><tspan
          sodipodi:role="line"
          id="tspan24-1-9-3-1"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
-         x="55.683136"
-         y="62.444038">Production Process</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+         x="14.711129"
+         y="63.18206">Production Process</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect103"
        width="5"
        height="4.9999995"
-       x="10.5"
-       y="50.000008" />
+       x="7.5000005"
+       y="52.5" />
     <g
        id="g117"
-       transform="translate(-142.25359,-47.288309)">
+       transform="translate(-145.2536,-44.788309)">
       <rect
          style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
          id="rect104"
@@ -4329,7 +4364,7 @@
          y="10.286098">Systems</tspan></text>
     <g
        id="g118"
-       transform="translate(-147.53997,-79.460022)">
+       transform="translate(-150,-77.000001)">
       <path
          style="fill:none;stroke:#000000;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5-0-3)"
          d="m 158,127 4,-4"
