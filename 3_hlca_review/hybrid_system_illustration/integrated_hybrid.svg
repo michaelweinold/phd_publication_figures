@@ -24,9 +24,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="1.2494334"
-     inkscape:cx="170.07709"
-     inkscape:cy="521.83653"
+     inkscape:zoom="2.3090726"
+     inkscape:cx="179.5093"
+     inkscape:cy="140.31607"
      inkscape:window-width="1728"
      inkscape:window-height="1051"
      inkscape:window-x="0"
@@ -1023,7 +1023,7 @@
          y="18.307062">Downstream Flow</tspan></text>
     <path
        style="fill:none;stroke:#0017ff;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5)"
-       d="m 7.5583801,27.56662 3.9999999,-4"
+       d="m 7.5000004,24.999999 3.9999996,-4"
        id="path24-5"
        sodipodi:nodetypes="cc" />
     <path
@@ -1035,103 +1035,110 @@
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
        x="14.077404"
-       y="25.80706"
+       y="23.18206"
        id="text24-9"><tspan
          sodipodi:role="line"
          id="tspan24-1"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
          x="14.077404"
-         y="25.80706">Upstream Flow</tspan></text>
+         y="23.18206">Upstream Flow</tspan></text>
     <path
        style="fill:none;stroke:#ff6400;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5-0-31)"
-       d="M 7.5583801,35.066623 11.55838,31.06662"
+       d="M 7.5000004,30.000002 11.5,25.999999"
        id="path24-5-1"
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
        x="14.711129"
-       y="33.358566"
+       y="28.233564"
        id="text24-9-8"><tspan
          sodipodi:role="line"
          id="tspan24-1-9"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
          x="14.711129"
-         y="33.358566">Potential Double-Counting</tspan></text>
+         y="28.233564">Potential Double-Counting</tspan></text>
     <path
        style="fill:none;stroke:#bfbfbf;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5-0-0)"
-       d="M 7.5583801,42.555789 11.55838,38.555786"
+       d="M 7.5000004,35.000002 11.5,30.999999"
        id="path24-5-1-7"
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
        x="13.835558"
-       y="40.858566"
+       y="33.430626"
        id="text24-9-8-80"><tspan
          sodipodi:role="line"
          id="tspan24-1-9-6"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
          x="13.835558"
-         y="40.858566">&quot;Inactive Flow&quot; (shown only for ref.) </tspan></text>
+         y="33.430626">&quot;Inactive Flow&quot; (shown only for ref.) </tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
        x="14.659625"
-       y="48.555626"
+       y="38.430626"
        id="text24-9-8-4"><tspan
          sodipodi:role="line"
          id="tspan24-1-9-9"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
          x="14.659625"
-         y="48.555626">Start of Path (Edge No.1)</tspan></text>
+         y="38.430626">Start of Path (Edge No.1)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
        x="14.659625"
-       y="55.858566"
+       y="45.733566"
        id="text24-9-8-8"><tspan
          sodipodi:role="line"
          id="tspan24-1-9-3"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
          x="14.659625"
-         y="55.858566">Sector of the Economy</tspan></text>
+         y="45.733566">Sector of the Economy</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
        x="14.711129"
-       y="63.30706"
+       y="50.68206"
        id="text24-9-8-8-4"><tspan
          sodipodi:role="line"
          id="tspan24-1-9-3-1"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
          x="14.711129"
-         y="63.30706">Production Process</tspan></text>
+         y="50.68206">Production Process</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.58611px;line-height:0.9;font-family:'DIN Next W1G';-inkscape-font-specification:'DIN Next W1G';text-align:end;text-anchor:end;fill:none;stroke:#ff0000;stroke-width:0.264999;stroke-dasharray:none;stroke-opacity:1"
+       x="14.659625"
+       y="55.733566"
+       id="text24-9-8-8-4-0"><tspan
+         sodipodi:role="line"
+         id="tspan24-1-9-3-1-1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.265"
+         x="14.659625"
+         y="55.733566">System Boundary</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect103"
-       width="5"
-       height="4.9999995"
-       x="7.500001"
-       y="52.625" />
-    <g
-       id="g117"
-       transform="translate(-145.2536,-44.663309)">
-      <rect
-         style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
-         id="rect104"
-         width="5"
-         height="4.9999995"
-         x="152.7536"
-         y="104.78831" />
-      <ellipse
-         style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
-         id="path104"
-         cx="155.2536"
-         cy="107.28831"
-         rx="2.5"
-         ry="2.4999998" />
-    </g>
+       width="3.4999998"
+       height="3.4999988"
+       x="9.000001"
+       y="42.5" />
+    <rect
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:0.249999, 0.249999;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect103-7"
+       width="3.4999998"
+       height="3.4999988"
+       x="9"
+       y="52.5" />
+    <rect
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
+       id="rect103-2"
+       width="3.4999998"
+       height="3.4999988"
+       x="9"
+       y="47.5" />
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:500;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif Medium Italic';text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:0;stroke:#0000ff;stroke-width:0.1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -1156,7 +1163,7 @@
          y="10.411098">Systems</tspan></text>
     <g
        id="g118"
-       transform="translate(-150,-76.875001)">
+       transform="translate(-150.5,-87.000001)">
       <path
          style="fill:none;stroke:#000000;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-5-0-3)"
          d="m 158,127 4,-4"
@@ -1210,244 +1217,244 @@
        id="rect36-7-2-0"
        width="7.5"
        height="7.5"
-       x="54.499985"
-       y="102.40414" />
+       x="155"
+       y="32.5" />
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect37-4-83-1"
        width="7.5"
        height="7.5"
-       x="69.499992"
-       y="87.404137" />
+       x="170.00002"
+       y="17.499998" />
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect36-7-8-1-6-6-7"
        width="7.5"
        height="7.5"
-       x="69.499992"
-       y="102.40414" />
+       x="170.00002"
+       y="32.5" />
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect36-7-8-1-6-8-0-6"
        width="7.5"
        height="7.5"
-       x="84.499992"
-       y="102.40414" />
+       x="185.00002"
+       y="32.5" />
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:500;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif Medium Italic';text-align:end;text-anchor:end;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
-       x="59.100773"
-       y="107.30412"
+       x="159.6008"
+       y="37.399986"
        id="text74-71-0"><tspan
          sodipodi:role="line"
          id="tspan74-33-0"
          style="font-size:3.88056px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
-         x="59.100773"
-         y="107.30412">1</tspan></text>
+         x="159.6008"
+         y="37.399986">1</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:500;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif Medium Italic';text-align:end;text-anchor:end;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
-       x="73.958656"
-       y="107.40569"
+       x="174.45868"
+       y="37.501556"
        id="text74-4-9-9"><tspan
          sodipodi:role="line"
          id="tspan74-5-0-5"
          style="font-size:3.88056px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
-         x="73.958656"
-         y="107.40569">3</tspan></text>
+         x="174.45868"
+         y="37.501556">3</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:500;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif Medium Italic';text-align:end;text-anchor:end;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
-       x="89.000023"
-       y="106.9022"
+       x="189.50005"
+       y="36.998062"
        id="text74-2-4-6"><tspan
          sodipodi:role="line"
          id="tspan74-1-7-2"
          style="font-size:3.88056px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
-         x="89.000023"
-         y="106.9022">4</tspan></text>
+         x="189.50005"
+         y="36.998062">4</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:500;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif Medium Italic';text-align:end;text-anchor:end;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
-       x="74.002235"
-       y="92.403809"
+       x="174.50226"
+       y="22.49967"
        id="text74-7-4-8"><tspan
          sodipodi:role="line"
          id="tspan74-9-18-5"
          style="font-size:3.88056px;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-dasharray:none;stroke-opacity:1"
-         x="74.002235"
-         y="92.403809">2</tspan></text>
+         x="174.50226"
+         y="22.49967">2</tspan></text>
     <circle
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="path95-0-2-9"
-       cx="88.250023"
-       cy="106.15414"
+       cx="188.75005"
+       cy="36.25"
        r="3.75" />
     <circle
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="path95-3-43"
-       cx="58.250019"
-       cy="106.15413"
+       cx="158.75005"
+       cy="36.249992"
        r="3.75" />
     <circle
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="path95-7-0-9"
-       cx="73.249992"
-       cy="91.154137"
+       cx="173.75002"
+       cy="21.249998"
        r="3.75" />
     <circle
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="path95-5-6-0"
-       cx="73.249992"
-       cy="106.15414"
+       cx="173.75002"
+       cy="36.25"
        r="3.75" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-06)"
-       d="m 62.249991,106.15413 h 7.25"
+       d="m 162.75001,36.249992 h 7.25"
        id="path98-5" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-06-7)"
-       d="m 77.249991,106.15413 h 7.25"
+       d="m 177.75001,36.249992 h 7.25"
        id="path98-5-7" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-23-59-7)"
-       d="m 73.250001,94.697423 v 7.500007"
+       d="m 173.75002,24.793285 v 7.500007"
        id="path100-6-3-3" />
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect36-7-2-8-8"
        width="7.5"
        height="7.5"
-       x="9.8810501"
-       y="102.46734" />
+       x="114.63106"
+       y="32.217339" />
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect37-4-83-9-9-4"
        width="7.5"
        height="7.5"
-       x="10"
-       y="87.5" />
+       x="114.75"
+       y="17.25" />
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect37-4-83-4-7-6-1"
        width="7.5"
        height="7.5"
-       x="24.999977"
-       y="87.5" />
+       x="129.74998"
+       y="17.25" />
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1"
        id="rect37-4-83-7-1-3-7"
        width="7.5"
        height="7.5"
-       x="24.999977"
-       y="102.49999" />
+       x="129.74998"
+       y="32.249992" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-17-0-54)"
-       d="m 24.999981,89.999948 h -7.5"
+       d="m 129.74998,19.749948 h -7.5"
        id="path99-5-2-1" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-17-0-54)"
-       d="m 17.499981,92.499953 h 7.5"
+       d="m 122.24998,22.249953 h 7.5"
        id="path100-9-3-87" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-25-2-1-55)"
-       d="m 24.999981,104.99995 h -7.5"
+       d="m 129.74998,34.74995 h -7.5"
        id="path99-4-7-6-8" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-25-2-1-55)"
-       d="m 17.499981,107.49995 h 7.5"
+       d="m 122.24998,37.24995 h 7.5"
        id="path100-7-5-9-77" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-25-2-1-55-7)"
-       d="m 32.500001,105 h 7.5"
+       d="m 137.25,34.75 h 7.5"
        id="path100-7-5-9-77-4" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-25-2-1-55-5)"
-       d="m 92.000021,106.15413 h 7.5"
+       d="m 192.50004,36.249992 h 7.5"
        id="path100-7-5-9-77-8" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-27-0-1-18)"
-       d="m 27.499981,94.999953 v 7.499997"
+       d="M 132.24998,24.749953 V 32.24995"
        id="path99-40-5-5-44" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-27-0-1-18)"
-       d="M 29.999981,102.49995 V 94.999953"
+       d="M 134.74998,32.24995 V 24.749953"
        id="path100-5-4-4-9" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-23-7-9-3)"
-       d="M 14.999981,102.49995 V 94.999953"
+       d="M 119.74998,32.24995 V 24.749953"
        id="path99-3-0-2-15" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-23-7-9-3)"
-       d="m 12.499981,94.999953 v 7.499997"
+       d="M 117.24998,24.749953 V 32.24995"
        id="path100-6-8-1-5" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker19-17-0-54);marker-end:url(#marker19-17-0-54)"
-       d="m 24.999981,102.49994 -7.5,-7.499997"
+       d="m 129.74998,32.24994 -7.5,-7.499997"
        id="path101-73-7-5" />
     <path
        style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker19-6-4-7-26);marker-end:url(#marker19-6-4-7-26)"
-       d="m 17.499981,102.49995 7.5,-7.499997"
+       d="m 122.24998,32.24995 7.5,-7.499997"
        id="path101-7-7-1-8" />
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Serif Extra';-inkscape-font-specification:'CMU Serif Extra Italic';text-align:end;text-anchor:end;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       x="15.100777"
-       y="92.543022"
+       x="119.85078"
+       y="22.293022"
        id="text112-2"><tspan
          sodipodi:role="line"
          id="tspan112-98"
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
-         x="15.100777"
-         y="92.543022">A</tspan></text>
+         x="119.85078"
+         y="22.293022">A</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Serif Extra';-inkscape-font-specification:'CMU Serif Extra Italic';text-align:end;text-anchor:end;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       x="30.319168"
-       y="92.479546"
+       x="135.06917"
+       y="22.229546"
        id="text112-5-2"><tspan
          sodipodi:role="line"
          id="tspan112-0-0"
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
-         x="30.319168"
-         y="92.479546">B</tspan></text>
+         x="135.06917"
+         y="22.229546">B</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Serif Extra';-inkscape-font-specification:'CMU Serif Extra Italic';text-align:end;text-anchor:end;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       x="14.707268"
-       y="107.48642"
+       x="119.45728"
+       y="37.23642"
        id="text112-5-3-7"><tspan
          sodipodi:role="line"
          id="tspan112-0-7-4"
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
-         x="14.707268"
-         y="107.48642">C</tspan></text>
+         x="119.45728"
+         y="37.23642">C</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:0.9;font-family:'CMU Serif Extra';-inkscape-font-specification:'CMU Serif Extra Italic';text-align:end;text-anchor:end;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-       x="30.179947"
-       y="107.46462"
+       x="134.92995"
+       y="37.214622"
        id="text112-5-31-8"><tspan
          sodipodi:role="line"
          id="tspan112-0-71-5"
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
-         x="30.179947"
-         y="107.46462">D</tspan></text>
+         x="134.92995"
+         y="37.214622">D</tspan></text>
     <path
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker19-68-2-2);paint-order:normal"
-       d="m 12.750001,87.75 v -2.5 h -5 v 5 h 2.5"
+       d="M 117.5,17.5 V 15 h -5 v 5 h 2.5"
        id="path114-8-9" />
     <path
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker19-7-6-5);paint-order:normal"
-       d="m 30.250001,87.75 v -2.5 h 5 v 5 h -2.5"
+       d="M 135,17.5 V 15 h 5 v 5 h -2.5"
        id="path114-7-1-7" />
     <path
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker19-9-4-6);paint-order:normal"
-       d="m 30.250001,110.25 v 2.5 h 5 v -5 h -2.5"
+       d="m 135,40 v 2.5 h 5 v -5 h -2.5"
        id="path114-75-3-3" />
     <path
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker19-3-1-5);paint-order:normal"
-       d="m 12.750001,110.25 v 2.5 h -5 v -5 h 2.5"
+       d="m 117.5,40 v 2.5 h -5 v -5 h 2.5"
        id="path114-3-4-7" />
     <path
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker19-68-2-2-8);paint-order:normal"
@@ -1476,5 +1483,67 @@
          style="font-size:3.88056px;fill:#081e00;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none"
          x="41.176041"
          y="122.64948">The entire economy</tspan></text>
+    <rect
+       style="fill:#0000ff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:0.249999, 0.249999;stroke-dashoffset:0"
+       id="rect1"
+       width="42.499985"
+       height="27.75"
+       x="152.50002"
+       y="14.75"
+       ry="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:3.175px;line-height:0.9;font-family:'CMU Serif Extra';-inkscape-font-specification:'CMU Serif Extra Italic';fill:#0000ff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:0.249999, 0.249999;stroke-dashoffset:0"
+       x="112.41164"
+       y="49.702965"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="112.41164"
+         y="49.702965">The entire economy is</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="112.41164"
+         y="52.560463"
+         id="tspan3">represented by four</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="112.41164"
+         y="55.417965"
+         id="tspan4">aggregate sectors.</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:3.175px;line-height:0.9;font-family:'CMU Serif Extra';-inkscape-font-specification:'CMU Serif Extra Italic';fill:#0000ff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:0.249999, 0.249999;stroke-dashoffset:0"
+       x="152.41164"
+       y="49.702965"
+       id="text2-5"><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="152.41164"
+         y="49.702965"
+         id="tspan4-9">The value chain of the process</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="152.41164"
+         y="52.560463"
+         id="tspan6">under investigation inside the </tspan><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="152.41164"
+         y="55.417965"
+         id="tspan7">system boundary is represented</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5"
+         x="152.41164"
+         y="58.275463"
+         id="tspan8">by four processes.</tspan></text>
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path8"
+       cx="10.75"
+       cy="49.249996"
+       rx="1.75"
+       ry="1.7499999" />
   </g>
 </svg>
