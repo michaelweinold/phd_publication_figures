@@ -27,9 +27,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="1.345031"
-     inkscape:cx="207.8019"
-     inkscape:cy="215.60841"
+     inkscape:zoom="1.7255043"
+     inkscape:cx="281.94655"
+     inkscape:cy="151.26012"
      inkscape:window-width="1728"
      inkscape:window-height="1051"
      inkscape:window-x="0"
@@ -404,7 +404,7 @@
        id="text24-6"><tspan
          sodipodi:role="line"
          id="tspan24-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="2.2812364"
          y="12.447742">Flow Direction</tspan></text>
     <text
@@ -415,7 +415,7 @@
        id="text24-6-6"><tspan
          sodipodi:role="line"
          id="tspan24-9-7"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="49.76199"
          y="12.786098">Sectors and Processes</tspan></text>
     <text
@@ -426,7 +426,7 @@
        id="text24-6-6-0"><tspan
          sodipodi:role="line"
          id="tspan24-9-7-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="99.761993"
          y="12.786098">IO-System</tspan></text>
     <text
@@ -457,7 +457,7 @@
        id="path24-5"
        sodipodi:nodetypes="cc" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.5;stroke-dasharray:0.25, 0.25;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;stroke:#000000;stroke-width:0.5;stroke-dasharray:1.5,0.5;stroke-dashoffset:0;stroke-opacity:1"
        d="m 2.5218767,31.251262 2.5,-2.5"
        id="path24-5-91"
        sodipodi:nodetypes="cc" />
@@ -607,7 +607,7 @@
        id="text111"><tspan
          sodipodi:role="line"
          id="tspan111"
-         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="13.867668"
          y="5.2425175">Legend</tspan></text>
     <text
@@ -618,7 +618,7 @@
        id="text111-8"><tspan
          sodipodi:role="line"
          id="tspan111-8"
-         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="113.23974"
          y="5.286098">Systems</tspan></text>
     <path
@@ -723,15 +723,15 @@
        cy="81.499992"
        r="3.75" />
     <path
-       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-06)"
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:1.49999696,0.49999899;stroke-opacity:1;marker-end:url(#marker19-06);stroke-dashoffset:0"
        d="m 110.24999,81.499989 h 7.25"
        id="path98-5" />
     <path
-       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-06-7)"
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:1.49999696,0.49999899;stroke-opacity:1;marker-end:url(#marker19-06-7);stroke-dashoffset:0"
        d="m 125.24999,81.499989 h 7.25"
        id="path98-5-7" />
     <path
-       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker19-23-59-7)"
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:1.49999696,0.49999899;stroke-opacity:1;marker-end:url(#marker19-23-59-7);stroke-dashoffset:0"
        d="m 121.25,70.043282 v 7.500007"
        id="path100-6-3-3" />
     <rect
@@ -783,7 +783,7 @@
        d="m 124.75,39.750001 h 7.5"
        id="path100-7-5-9-77-4" />
     <path
-       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#ArrowWide)"
+       style="fill:#ffffff;fill-opacity:0;stroke:#000000;stroke-width:0.499999;stroke-dasharray:1.49999696,0.49999899;stroke-opacity:1;marker-end:url(#ArrowWide);stroke-dashoffset:0"
        d="m 140.00002,81.499989 h 7.5"
        id="path100-7-5-9-77-8" />
     <path
@@ -891,7 +891,7 @@
        id="text24-6-5"><tspan
          sodipodi:role="line"
          id="tspan24-9-6"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="2.2812364"
          y="26.48736">Flow Information Origin</tspan></text>
     <text
@@ -902,7 +902,7 @@
        id="text24-6-5-7"><tspan
          sodipodi:role="line"
          id="tspan24-9-6-5"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="2.2593598"
          y="40.277782">Flow Annotations</tspan></text>
     <text
@@ -913,7 +913,7 @@
        id="text24-6-5-7-0"><tspan
          sodipodi:role="line"
          id="tspan24-9-6-5-9"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="2.3093598"
          y="50.827785">Special Flows</tspan></text>
     <g
@@ -975,7 +975,7 @@
        id="text24-6-6-1"><tspan
          sodipodi:role="line"
          id="tspan24-9-7-5"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;font-family:'CMU Classical Serif';-inkscape-font-specification:'CMU Classical Serif';text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.1;stroke-dasharray:none;stroke-opacity:1"
          x="99.805573"
          y="52.786098">Process-Based System</tspan></text>
   </g>
