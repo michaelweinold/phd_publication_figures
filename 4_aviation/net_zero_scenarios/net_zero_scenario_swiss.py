@@ -15,6 +15,7 @@ from datetime import datetime
 # data science
 import numpy as np
 import pandas as pd
+import scipy
 
 # i/o
 from pathlib import PurePath, Path
@@ -39,30 +40,57 @@ df_swiss = pd.read_excel(
 
 # DATA MANIPULATION #############################
 
+list_of_years: list[int] = [i for i in range(2025, 2050+1)]
+
 def interpolate_df(
     df: pd.DataFrame,
-    columns: list[str],
-    new_x: list[float]
+    old_x: str,
+    old_y: str,
+    new_x: list[int],
+    deg: int,
 ) -> pd.DataFrame:
     df_interpolated = pd.DataFrame()
     df_interpolated['year'] = new_x
-    for col in columns:
-        mypol = np.polynomial.polynomial.Polynomial.fit(
-            x = df['distance mean [km]'],
-            y = df[col],
-            deg = 5,
-        )
-        df_interpolated[col] = [mypol(xval) for xval in new_x]
+    mypol = np.polynomial.polynomial.Polynomial.fit(
+        x = df[old_x].dropna(),
+        y = df[old_y].dropna(),
+        deg = deg,
+    )
+    df_interpolated[old_y + '_interp'] = [mypol(xval) for xval in new_x]
     return df_interpolated
 
-interpolate_df(
-    df = df_swiss,,
-    columns = ['rail [%]', 'car [%]', 'air [%]', 'other [%]'],
-    new_x = np.linspace(
-        start = 2015,
-        stop = 2050,
-        num = 2050-2015
+
+def interpolate_1d_df(
+    df: pd.DataFrame,
+    old_x: str,
+    old_y: str,
+    new_x: list[int],
+    deg: int,
+) -> pd.DataFrame:
+    df_interpolated = pd.DataFrame()
+    df_interpolated['year'] = new_x
+    mypol = scipy.interpolate.interp1d(
+        x = df[old_x].dropna(),
+        y = df[old_y].dropna(),
     )
+    df_interpolated[old_y + '_interp'] = [mypol(xval) for xval in new_x]
+    return df_interpolated
+
+
+test = interpolate_df(
+    df = df_swiss,
+    old_x = 'offset_x',
+    old_y = 'offset_y',
+    new_x = list_of_years,
+    deg = 9,
+)
+
+test1 = interpolate_1d_df(
+    df = df_swiss,
+    old_x = 'offset_x',
+    old_y = 'offset_y',
+    new_x = list_of_years,
+    deg = 9,
 )
 
 # FIGURE ########################################
@@ -81,16 +109,9 @@ fig, ax = plt.subplots(
 
 # AXIS LIMITS ################
 
-ax.set_ylim(0, 100)
 
 # TICKS AND LABELS ###########
 
-ax.set_xticks(
-    ticks = labels,
-    labels = labels,
-    rotation=45,
-    ha='right'
-)
 
 # GRIDS ######################
 
@@ -99,27 +120,17 @@ ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_ylabel("Modal Share [\%]")
-ax.set_xlabel("Trip Distance [km]")
 
 # PLOTTING ###################
 
-width = 0.4
-x = np.arange(len(labels))
-ax.set_xticks(x, labels)
 
-# Japan
-axes[1].bar(
-    x = x,
-    height = df_japan['rail [%]'],
-    width = width,
-    label = 'Rail',
-    color = 'darkorange',
-)
+ax.plot(test['year'], test['offset_y_interp'], label = 'Economy', color = 'tab:blue')
+ax.plot(test1['year'], test1['offset_y_interp'], label = 'Economy', color = 'tab:blue')
+
 
 # LEGEND ####################
 
-axes[0].legend(
+ax.legend(
     loc = 'lower left',
 )
 
@@ -135,3 +146,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
