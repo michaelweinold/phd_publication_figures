@@ -11,6 +11,8 @@ import matplotlib.font_manager as font_manager
 cm = 1/2.54 # for inches-cm conversion
 # time manipulation
 from datetime import datetime
+# country manipulation
+import country_converter as coco
 
 # data science
 import numpy as np
@@ -51,11 +53,101 @@ df_main = pd.read_excel(
     },
     header = 0,
     engine = 'openpyxl',
+    keep_default_na=False, na_values=['_'] # otherwise "NA" (Namibia) is read as "NaN", https://stackoverflow.com/a/33952294
 )
 
 # DATA MANIPULATION #############################
 
-df_total = df_main.groupby('year').sum().reset_index()
+# compare https://en.wikipedia.org/wiki/United_Nations_geoscheme
+# compare https://www.iso.org/obp/ui/#iso:pub:PUB500001:en
+historical_country_dict = {
+    'AN': 'Western Europe', # https://en.wikipedia.org/wiki/Netherlands_Antilles
+    'DD': 'Western Europe', # haha, communism failed!
+    'SU': 'Eastern Europe', # haha, communism failed!
+    'YU': 'Eastern Europe', # haha, communism failed!
+    'KA': 'Middle Africa', # https://en.wikipedia.org/wiki/State_of_Katanga
+    'GK': 'Western Europe', # https://en.wikipedia.org/wiki/Guernsey
+    'TP': 'Southeastern Asia', # https://en.wikipedia.org/wiki/East_Timor
+}
+
+# get list either from Wikipedia https://en.wikipedia.org/wiki/United_Nations_geoscheme
+# of from coco.CountryConverter().UNregion['UNregion'].unique().tolist()
+my_regions_dict = {
+    'Southern Asia': 'Asia',
+    'Northern Europe': 'Europe',
+    'Southern Europe': 'Europe',
+    'Northern Africa': 'Africa',
+    'Polynesia': 'Oceania',
+    'Middle Africa': 'Africa',
+    'Caribbean': 'Central and South America',
+    'Antarctica': 'Central and South America',
+    'South America': 'Central and South America',
+    'Western Asia': 'Asia',
+    'Australia and New Zealand': 'Oceania',
+    'Western Europe': 'Europe',
+    'Eastern Europe': 'Europe',
+    'Central America': 'Central and South America',
+    'Western Africa': 'Africa',
+    'Northern America': 'North America',
+    'Southern Africa': 'Africa',
+    'Eastern Africa': 'Africa',
+    'South-eastern Asia': 'Asia',
+    'Eastern Asia': 'Asia',
+    'Melanesia': 'Oceania',
+    'Micronesia': 'Oceania',
+    'Central Asia': 'Asia',
+}
+my_regions_list = list(set(my_regions_dict.values()))
+
+def add_country_classifications(
+    df: pd.DataFrame,
+    country_code_column: str,
+    coco_classification: str,
+) -> pd.DataFrame:
+    """
+    Group countries according to a country-converter ("coco") supported classification,
+    then sum the values of the relevant columns.
+
+    See Also
+    --------
+    https://github.com/IndEcol/country_converter?tab=readme-ov-file#classification-schemes
+    """
+    column_name_country_classification: str = 'country_classification_' + coco_classification
+    df[column_name_country_classification] = coco.convert(
+        names = df[country_code_column].tolist(),
+        to = coco_classification,
+        not_found = None,
+    )
+    df[column_name_country_classification] = df[column_name_country_classification].replace(historical_country_dict)
+    return df
+
+def fill_empty_years(
+    df: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Fill empty years with 0.
+    """
+    all_years = pd.DataFrame({'year': range(1950, 2030)})
+    df = pd.merge(
+        all_years,
+        df,
+        on='year',
+        how='left'
+    ).fillna(0)
+    return df
+
+
+
+df_grouped_unregion = add_country_classifications(
+    df = df_main,
+    country_code_column = 'country_iso',
+    coco_classification = 'UNregion',
+)
+
+df_grouped_region = df_grouped_unregion.copy()
+df_grouped_region['region'] = df_grouped_unregion['country_classification_UNregion'].replace(my_regions_dict)
+df_grouped_region = df_grouped_region[['year', 'region', 'sum(countAc)']].groupby(['year', 'region']).sum().reset_index()
+
 
 # FIGURE ########################################
 
@@ -100,12 +192,65 @@ ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 # PLOTTING ###################
 
 
+df_north_america = df_grouped_region[df_grouped_region['region'] == 'North America']
+df_north_america = fill_empty_years(df_north_america)
+
+df_south_america = df_grouped_region[df_grouped_region['region'] == 'Central and South America']
+df_south_america = fill_empty_years(df_south_america)
+
+df_europe = df_grouped_region[df_grouped_region['region'] == 'Europe']
+df_europe = fill_empty_years(df_europe)
+
+df_asia = df_grouped_region[df_grouped_region['region'] == 'Asia']
+df_asia = fill_empty_years(df_asia)
+
+df_oceania = df_grouped_region[df_grouped_region['region'] == 'Oceania']
+df_oceania = fill_empty_years(df_oceania)
+
+df_africa = df_grouped_region[df_grouped_region['region'] == 'Africa']
+df_africa = fill_empty_years(df_africa)
+
 ax.bar(
-    x = df_total['year'],
-    height = df_total['sum(countAc)'],
-    label = 'Total',
-    color = 'blue'
+    x = df_north_america['year'],
+    height=df_north_america['sum(countAc)'],
+    label = 'North America',
 )
+ax.bar(
+    x = df_south_america['year'],
+    height=df_south_america['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'],
+    label = 'Centraral and South America',
+)
+
+ax.bar(
+    x = df_europe['year'],
+    height=df_europe['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'],
+    label = 'Europe',
+)
+
+ax.bar(
+    x = df_asia['year'],
+    height=df_asia['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_europe['sum(countAc)'],
+    label = 'Asia',
+)
+
+ax.bar(
+    x = df_oceania['year'],
+    height=df_oceania['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_europe['sum(countAc)'] + df_asia['sum(countAc)'],
+    label = 'Oceania',
+)
+
+ax.bar(
+    x = df_africa['year'],
+    height=df_africa['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_europe['sum(countAc)'] + df_asia['sum(countAc)'] + df_oceania['sum(countAc)'],
+    label = 'Africa',
+)
+
+
 
 
 # LEGEND ####################
