@@ -219,7 +219,7 @@ ax.bar(
     x = df_south_america['year'],
     height=df_south_america['sum(countAc)'],
     bottom=df_north_america['sum(countAc)'],
-    label = 'Centraral and South America',
+    label = 'Central and South America',
 )
 
 ax.bar(
@@ -249,8 +249,6 @@ ax.bar(
     bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_europe['sum(countAc)'] + df_asia['sum(countAc)'] + df_oceania['sum(countAc)'],
     label = 'Africa',
 )
-
-
 
 
 # LEGEND ####################
