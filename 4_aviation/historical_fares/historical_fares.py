@@ -21,6 +21,7 @@ from pathlib import PurePath, Path
 
 # SETUP #########################################
 
+
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",

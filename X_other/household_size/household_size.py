@@ -107,7 +107,6 @@ ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 # AXIS LABELS ################
 
 ax.set_ylabel("Persons per Household")
-ax.set_xlabel("Year")
 
 # TITLE ######################
 
@@ -141,7 +140,7 @@ ax.plot(
     df_EN['x'],
     df_EN['y'],
     marker = '^',
-    label = 'UK',
+    label = 'England',
 )
 ax.plot(
     df_US['x'],
