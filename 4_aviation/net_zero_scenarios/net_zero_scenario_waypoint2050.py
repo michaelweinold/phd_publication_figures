@@ -154,19 +154,11 @@ ax.set_ylabel("Aviation Emissions \n (Global) [Mt(CO$_2$)]")
 
 ax.bar(
     x = df_WayPoint2050_reduced['year'],
-    height = df_WayPoint2050_MarketBased_Measure['y'] - df_WayPoint2050_reduced['y'],
-    bottom = df_WayPoint2050_reduced['y'], 
+    height = df_WayPoint2050_Technology['y'] - df_WayPoint2050_Operations_and_Infrastructure['y'],
+    bottom = df_WayPoint2050_Operations_and_Infrastructure['y'], 
     width=0.8,
-    color = 'red',
-    label = 'Market Measures',
-)
-ax.bar(
-    x = df_WayPoint2050_reduced['year'],
-    height = df_WayPoint2050_SAF['y'] - df_WayPoint2050_MarketBased_Measure['y'],
-    bottom = df_WayPoint2050_MarketBased_Measure['y'], 
-    width=0.8,
-    color = 'green',
-    label = 'SAF',
+    color = 'blue',
+    label = 'Technology',
 )
 ax.bar(
     x = df_WayPoint2050_reduced['year'],
@@ -178,12 +170,21 @@ ax.bar(
 )
 ax.bar(
     x = df_WayPoint2050_reduced['year'],
-    height = df_WayPoint2050_Technology['y'] - df_WayPoint2050_Operations_and_Infrastructure['y'],
-    bottom = df_WayPoint2050_Operations_and_Infrastructure['y'], 
+    height = df_WayPoint2050_SAF['y'] - df_WayPoint2050_MarketBased_Measure['y'],
+    bottom = df_WayPoint2050_MarketBased_Measure['y'], 
     width=0.8,
-    color = 'blue',
-    label = 'Technology',
+    color = 'green',
+    label = 'SAF',
 )
+ax.bar(
+    x = df_WayPoint2050_reduced['year'],
+    height = df_WayPoint2050_MarketBased_Measure['y'] - df_WayPoint2050_reduced['y'],
+    bottom = df_WayPoint2050_reduced['y'], 
+    width=0.8,
+    color = 'red',
+    label = 'Market Measures',
+)
+
 
 ax.plot(
     df_WayPoint2050_Technology['year'],

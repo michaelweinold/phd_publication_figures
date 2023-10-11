@@ -24,7 +24,7 @@ from pathlib import PurePath, Path
 # SETUP #########################################
 
 plt.rcParams.update({
-    # "text.usetex": True,
+    "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
     'font.size': 11
@@ -33,7 +33,7 @@ plt.rcParams.update({
 # DATA IMPORT ###################################
 
 df_Swiss = pd.read_excel(
-    io = r'C:\Users\franz\OneDrive - Alte Kantonsschule Aarau\Praktikum PSI\data\data.xlsx',
+    io = './data/data.xlsx',
     sheet_name = 'Swiss',
     usecols = lambda column: column in [
         'efficiency (x)',
@@ -85,7 +85,7 @@ def interpolate_1d_dataframe(
         x = df[name_of_column_to_interpolate_x].dropna(), # 'NaN' values usually cause problems, so we remove them here
         y = df[name_of_column_to_interpolate_y].dropna(), # 'NaN' values usually cause problems, so we remove them here
     )
-    df_interpolated[name_of_column_to_interpolate_y + '_interpolated'] = [interpolation_polynomial(x_value) for x_value in new_x_values]
+    df_interpolated['y'] = [interpolation_polynomial(x_value) for x_value in new_x_values]
     return df_interpolated
 
 df_Swiss_efficiency: pd.DataFrame = interpolate_1d_dataframe(
@@ -131,7 +131,6 @@ df_Swiss_econ: pd.DataFrame = interpolate_1d_dataframe(
 )
 
 
-
 # FIGURE ########################################
 
 # SETUP ######################
@@ -148,6 +147,8 @@ fig, ax = plt.subplots(
 
 # AXIS LIMITS ################
 
+ax.set_ylim(0, 7)
+ax.set_xlim(2013, 2051)
 
 # TICKS AND LABELS ###########
 
@@ -159,53 +160,69 @@ ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
+ax.set_ylabel("Aviation Emissions \n (Switzerland) [Mt(CO$_2$)]")
 
 # PLOTTING ###################
 
-
-
-
-ax.plot(
-    df_Swiss_efficiency['year'],
-    df_Swiss_efficiency['efficiency (y)_interpolated'],
-    label = 'efficiency',
-    color = 'red'
+ax.bar(
+    x = df_Swiss_econ['year'],
+    height = df_Swiss_econ['y'] - df_Swiss_ops['y'],
+    bottom = df_Swiss_ops['y'], 
+    width=0.8,
+    color = 'red',
+    label = 'Market Measures',
 )
 
-ax.plot(
-    df_Swiss_ops['year'],
-    df_Swiss_ops['ops (y)_interpolated'],
-    label = 'ops',
-    color = 'yellow'
+
+ax.bar(
+    x = df_Swiss_ops['year'],
+    height = df_Swiss_ops['y'] - df_Swiss_efficiency['y'],
+    bottom = df_Swiss_efficiency['y'], 
+    width=0.8,
+    color = 'orange',
+    label = 'Operations and Infrastructure',
 )
 
-ax.plot(
-    df_Swiss_offset['year'],
-    df_Swiss_offset['offset (y)_interpolated'],
-    label = 'offset',
-    color = 'blue'
+ax.bar(
+    x = df_Swiss_efficiency['year'],
+    height = df_Swiss_efficiency['y'] - df_Swiss_saf['y'],
+    bottom = df_Swiss_saf['y'], 
+    width=0.8,
+    color = 'blue',
+    label = 'Technology',
 )
 
-ax.plot(
-    df_Swiss_saf['year'],
-    df_Swiss_saf['saf (y)_interpolated'],
-    label = 'saf',
-    color = 'purple'
+ax.bar(
+    x = df_Swiss_saf['year'],
+    height = df_Swiss_saf['y'] - df_Swiss_offset['y'],
+    bottom = df_Swiss_offset['y'], 
+    width=0.8,
+    color = 'green',
+    label = 'SAF',
 )
 
-ax.plot(
-    df_Swiss_reduced['year'],
-    df_Swiss_reduced['reduced (y)_interpolated'],
-    label = 'reduced',
-    color = 'grey'
-)
 
+ax.bar(
+    x = df_Swiss_offset['year'],
+    height = df_Swiss_offset['y'] - df_Swiss_reduced['y'],
+    bottom = df_Swiss_reduced['y'], 
+    width=0.8,
+    color = 'lightgrey',
+    label = 'Offsetting',
+)
 
 ax.plot(
     df_Swiss_econ['year'],
-    df_Swiss_econ['econ (y)_interpolated'],
-    label = 'econ',
-    color = 'green'
+    df_Swiss_econ['y'],
+    label = 'Reference Scenario (BAU)',
+    color = 'red',
+    linestyle = '-.',
+)
+ax.plot(
+    df_Swiss_reduced['year'],
+    df_Swiss_reduced['y'],
+    label = 'Net Emissions',
+    color = 'black'
 )
 
 # LEGEND ####################
