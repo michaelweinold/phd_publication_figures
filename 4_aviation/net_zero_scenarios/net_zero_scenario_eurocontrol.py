@@ -24,7 +24,7 @@ from pathlib import PurePath, Path
 # SETUP #########################################
 
 plt.rcParams.update({
-    # "text.usetex": True,
+    "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
     'font.size': 11
@@ -33,7 +33,7 @@ plt.rcParams.update({
 # DATA IMPORT ###################################
 
 df_eurocontrol = pd.read_excel(
-    io = r'C:\Users\franz\OneDrive - Alte Kantonsschule Aarau\Praktikum PSI\data\data.xlsx',
+    io = './data/data.xlsx',
     sheet_name = 'Eurocontrol',
     usecols = lambda column: column in [
         'best_case (x)',
@@ -85,7 +85,7 @@ def interpolate_1d_dataframe(
         x = df[name_of_column_to_interpolate_x].dropna(), # 'NaN' values usually cause problems, so we remove them here
         y = df[name_of_column_to_interpolate_y].dropna(), # 'NaN' values usually cause problems, so we remove them here
     )
-    df_interpolated[name_of_column_to_interpolate_y + '_interpolated'] = [interpolation_polynomial(x_value) for x_value in new_x_values]
+    df_interpolated['y'] = [interpolation_polynomial(x_value) for x_value in new_x_values]
     return df_interpolated
 
 df_eurocontrol_Fleet_evol: pd.DataFrame = interpolate_1d_dataframe(
@@ -146,11 +146,15 @@ fig, ax = plt.subplots(
 
 # AXIS SCALING ###############
 
+ax.set_ylim(0, 300)
+ax.set_xlim(2013, 2051)
+
 # AXIS LIMITS ################
 
 
 # TICKS AND LABELS ###########
 
+ax.set_ylabel("Aviation Emissions \n (ECAC Region) [Mt(CO$_2$)]")
 
 # GRIDS ######################
 
@@ -162,47 +166,55 @@ ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 # PLOTTING ###################
 
+ax.bar(
+    x = df_eurocontrol_Fleet_evol['year'],
+    height = df_eurocontrol_Fleet_evol['y'] - df_eurocontrol_ATM['y'],
+    bottom = df_eurocontrol_ATM['y'], 
+    width=0.8,
+    color = 'blue',
+    label = 'Technology',
+)
+
+
+ax.bar(
+    x = df_eurocontrol_ATM['year'],
+    height = df_eurocontrol_ATM['y'] - df_eurocontrol_SAF['y'],
+    bottom = df_eurocontrol_SAF['y'], 
+    width=0.8,
+    color = 'orange',
+    label = 'Operations and Infrastructure',
+)
+
+ax.bar(
+    x = df_eurocontrol_SAF['year'],
+    height = df_eurocontrol_SAF['y'] - df_eurocontrol_Other['y'],
+    bottom = df_eurocontrol_Other['y'], 
+    width=0.8,
+    color = 'green',
+    label = 'SAF',
+)
+
+ax.bar(
+    x = df_eurocontrol_Other['year'],
+    height = df_eurocontrol_Other['y'] - df_eurocontrol_best_case['y'],
+    bottom = df_eurocontrol_best_case['y'], 
+    width=0.8,
+    color = 'red',
+    label = 'Market Measures and CCS',
+)
 
 ax.plot(
     df_eurocontrol_Fleet_evol['year'],
-    df_eurocontrol_Fleet_evol['Fleet_evol (y)_interpolated'],
-    label = 'Fleet_evol',
-    color = 'blue'
+    df_eurocontrol_Fleet_evol['y'],
+    label = 'Reference Scenario (BAU)',
+    color = 'red',
+    linestyle = '-.',
 )
-
 ax.plot(
     df_eurocontrol_best_case['year'],
-    df_eurocontrol_best_case['best_case (y)_interpolated'],
-    label = 'best_case',
-    color = 'green'
-)
-
-ax.plot(
-    df_eurocontrol_Other['year'],
-    df_eurocontrol_Other['Other (y)_interpolated'],
-    label = 'Other',
-    color = 'red'
-)
-
-ax.plot(
-    df_eurocontrol_SAF['year'],
-    df_eurocontrol_SAF['SAF (y)_interpolated'],
-    label = 'SAF',
-    color = 'yellow'
-)
-
-ax.plot(
-    df_eurocontrol_ATM['year'],
-    df_eurocontrol_ATM['ATM (y)_interpolated'],
-    label = 'ATM',
-    color = 'orange'
-)
-
-ax.plot(
-    df_eurocontrol_Fleet_revol['year'],
-    df_eurocontrol_Fleet_revol['Fleet_revol (y)_interpolated'],
-    label = 'Fleet_revol',
-    color = 'purple'
+    df_eurocontrol_best_case['y'],
+    label = 'Net Emissions',
+    color = 'black'
 )
 
 
