@@ -11,6 +11,8 @@ import matplotlib.font_manager as font_manager
 cm = 1/2.54 # for inches-cm conversion
 # time manipulation
 from datetime import datetime
+# country manipulation
+import country_converter as coco
 
 # data science
 import numpy as np
@@ -30,165 +32,188 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
+df_pop = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Population (2022)',
+    usecols = lambda column: column in [
+        'country code (iso)',
+        'Population (2021)'
+    ],
+    # dtype={'country code (iso)': str, 2021: 'Int64'}, this does not work for some reason
+    header = 0,
+    engine = 'openpyxl',
+    na_values=['..', '']
+)
 df_gdp = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'GDP (2022USD)',
-    usecols = lambda column: column in ['country code (iso)', 2021],
-    dtype={'country code (iso)': str, '2021': float},
+    usecols = lambda column: column in [
+        'country code (iso)',
+        'GDP (2021)'
+    ],
+    # dtype={'country code (iso)': str, 2021: 'Int64'}, this does not work for some reason
     header = 0,
-    engine = 'openpyxl'
+    engine = 'openpyxl',
+    na_values=['..', '']
 )
-df_countrycodes = pd.read_excel(
+df_gdpcapita = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'UN Country Codes',
-    usecols = ['country code (m49)', 'country code (iso)'],
-    dtype={'country code (m49)': str, 'country code (iso)': str},
+    sheet_name = 'GDPperCapita (2022USD)',
+    usecols = lambda column: column in [
+        'country code (iso)',
+        'GDPperCapita (2021)'
+    ],
+    # dtype={'country code (iso)': str, 2021: 'Int64'}, this does not work for some reason
     header = 0,
-    engine = 'openpyxl'
-)
-df_regions = pd.read_excel(
-    io = 'data/data.xlsx',
-    sheet_name = 'UN Country Code Regions',
-    usecols = ['country code (m49)', 'my region'],
-    dtype={'country code (m49)': str, 'my region': str},
-    header = 0,
-    engine = 'openpyxl'
+    engine = 'openpyxl',
+    na_values=['..', '']
 )
 df_pax = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'Passengers (pax-km)',
-    usecols = lambda column: column in ['country code (m49)', 2021],
-    dtype={'country code (m49)': str, '2021': int},
+    usecols = lambda column: column in [
+        'country code (m49)',
+        'PAX (2021)'
+    ],
+    # dtype={'country code (m49)': str, 2021: int},
     header = 0,
-    engine = 'openpyxl'
-)
-df_freight = pd.read_excel(
-    io = 'data/data.xlsx',
-    sheet_name = 'Air Freight (mio. t-km)',
-    usecols = lambda column: column in ['country code (iso)', 2021],
-    dtype={'country code (iso)': str, '2021': float},
-    header = 0,
-    engine = 'openpyxl'
+    engine = 'openpyxl',
+    na_values=['..', '']
 )
 
 # DATA MANIPULATION #############################
 
-def match_countrycodes_and_geography(df_countrycodes: pd.DataFrame, df_regions: pd.DataFrame) -> pd.DataFrame:
-
-    df_return = pd.merge(
-        left = df_countrycodes,
-        right = df_regions,
-        how = 'inner',
-        on = ['country code (m49)']
-    )
-    
-    return df_return
-
-def match_freight_and_gdp(
-    df_freight: pd.DataFrame,
-    df_gdp: pd.DataFrame,
-    df_countrycodes: pd.DataFrame,
-    year: int) -> pd.DataFrame:
+def add_country_classifications(
+    df: pd.DataFrame,
+    country_code_column: str,
+) -> pd.DataFrame:
     """
-    Matches freight and gdp data by year and country.
+    Add country classifications and corresponding regions to dataframe.
+
+    See Also
+    --------
+    https://github.com/IndEcol/country_converter?tab=readme-ov-file#classification-schemes
     """
-
-    df_freight['2021_freight'] = pd.to_numeric(
-        df_freight[year],
-        errors='coerce'
+    df['countrycode_iso3'] = coco.convert(
+        names = df[country_code_column].tolist(),
+        to = 'ISO3',
+        not_found = None,
     )
-    df_gdp['2021_gdp'] = pd.to_numeric(
-        df_gdp[year],
-        errors='coerce'
-    )
+    df.drop(columns = country_code_column, inplace = True)
+    return df
 
-    # merge country codes
-    df_freight = pd.merge(
-        left = df_freight[['country code (iso)', '2021_freight']],
-        right = df_countrycodes[['country code (iso)', 'my region']],
-        how = 'inner',
-        on = 'country code (iso)'
-    )
 
-    df_return = pd.merge(
-        left = df_freight[['country code (iso)', 'my region', '2021_freight']],
-        right = df_gdp[['country code (iso)', '2021_gdp']],
-        how = 'inner',
-        on = ['country code (iso)']
-    )
-    return df_return
-
-def match_pax_and_gdp(
-    df_pax: pd.DataFrame,
-    df_countrycodes: pd.DataFrame,
-    df_gdp: pd.DataFrame,
-    year: int) -> pd.DataFrame:
-    """
-    Matches passengers and gdp data by year and country.
-    """
-
-    df_pax['2021_passengers'] = pd.to_numeric(
-        df_pax[year],
-        errors='coerce'
-    )
-    df_gdp['2021_gdp'] = pd.to_numeric(
-        df_gdp[year],
-        errors='coerce'
-    )
-
-    # merge country codes
-    df_pax = pd.merge(
-        left = df_pax[['country code (m49)', '2021_passengers']],
-        right = df_countrycodes[['country code (m49)', 'country code (iso)', 'my region']],
-        how = 'inner',
-        on = 'country code (m49)'
-    )
-
-    df_return = pd.merge(
-        left = df_pax[['country code (iso)', 'my region', '2021_passengers']],
-        right = df_gdp[['country code (iso)', '2021_gdp']],
-        how = 'inner',
-        on = ['country code (iso)']
-    )
-    return df_return
-
-df_countrycodes: pd.DataFrame = match_countrycodes_and_geography(df_countrycodes, df_regions)
-
-df_plot_pax: pd.DataFrame = match_pax_and_gdp(
-    df_pax,
-    df_countrycodes,
-    df_gdp,
-    2021
+df_pop = add_country_classifications(
+    df = df_pop,
+    country_code_column = 'country code (iso)'
 )
-df_plot_freight: pd.DataFrame = match_freight_and_gdp(
-    df_freight,
-    df_gdp,
-    df_countrycodes,
-    2021
+
+df_gdp = add_country_classifications(
+    df = df_gdp,
+    country_code_column = 'country code (iso)'
 )
+
+df_gdpcapita = add_country_classifications(
+    df = df_gdpcapita,
+    country_code_column = 'country code (iso)'
+)
+
+df_pax = add_country_classifications(
+    df = df_pax,
+    country_code_column = 'country code (m49)'
+)
+
+df_combined_pax = pd.concat(
+    [
+        df_pax.set_index('countrycode_iso3'),
+        df_gdp.set_index('countrycode_iso3')
+    ],
+    axis=1,
+    join='inner'
+).reset_index()
+
+df_combined_paxcapita = pd.concat(
+    [
+        df_pax.set_index('countrycode_iso3'),
+        df_gdpcapita.set_index('countrycode_iso3')
+    ],
+    axis=1,
+    join='inner'
+).reset_index()
+
+df_combined_paxcapita = pd.concat(
+    [
+        df_combined_paxcapita.set_index('countrycode_iso3'),
+        df_pop.set_index('countrycode_iso3')
+    ],
+    axis=1,
+    join='inner'
+).reset_index()
+
+df_combined_pax = df_combined_pax[~df_combined_pax['PAX (2021)'].isna()]
+df_combined_pax = df_combined_pax[~df_combined_pax['GDP (2021)'].isna()]
+
+df_combined_paxcapita = df_combined_paxcapita[~df_combined_paxcapita['PAX (2021)'].isna()]
+df_combined_paxcapita = df_combined_paxcapita[~df_combined_paxcapita['GDPperCapita (2021)'].isna()]
+df_combined_paxcapita = df_combined_paxcapita[~df_combined_paxcapita['Population (2021)'].isna()]
+
+df_combined_paxcapita['region'] = coco.convert(
+        names = df_combined_paxcapita['countrycode_iso3'].tolist(),
+        to = 'UNregion',
+        not_found = None,
+)
+
+# get list either from Wikipedia https://en.wikipedia.org/wiki/United_Nations_geoscheme
+# of from coco.CountryConverter().UNregion['UNregion'].unique().tolist()
+my_regions_dict = {
+    'Southern Asia': 'Asia',
+    'Northern Europe': 'Europe',
+    'Southern Europe': 'Europe',
+    'Northern Africa': 'Africa',
+    'Polynesia': 'Oceania',
+    'Middle Africa': 'Africa',
+    'Caribbean': 'Central and South America',
+    'Antarctica': 'Central and South America',
+    'South America': 'Central and South America',
+    'Western Asia': 'Asia',
+    'Australia and New Zealand': 'Oceania',
+    'Western Europe': 'Europe',
+    'Eastern Europe': 'Europe',
+    'Central America': 'Central and South America',
+    'Western Africa': 'Africa',
+    'Northern America': 'North America',
+    'Southern Africa': 'Africa',
+    'Eastern Africa': 'Africa',
+    'South-eastern Asia': 'Asia',
+    'Eastern Asia': 'Asia',
+    'Melanesia': 'Oceania',
+    'Micronesia': 'Oceania',
+    'Central Asia': 'Asia',
+}
+my_regions_list = list(set(my_regions_dict.values()))
+
+df_combined_paxcapita['region'] = df_combined_paxcapita['region'].replace(my_regions_dict)
+
 
 # FIGURE ########################################
 
 # SETUP ######################
 
-fig, ax1 = plt.subplots(
+fig, ax = plt.subplots(
         num = 'main',
         nrows = 1,
         ncols = 1,
         dpi = 300,
         figsize=(30*cm, 10*cm), # A4=(210x297)mm
 )
-ax2 = ax1.twinx()
 
 # DATA #######################
 
-df_plot_pax['2021_passengers_Mkm'] = df_plot_pax['2021_passengers'] / 1e9
 
 # AXIS SCALE #################
 
-ax1.set_yscale('log')
-ax2.set_yscale('log')
-ax1.set_xscale('log')
+ax.set_yscale('log')
+ax.set_xscale('log')
 
 # AXIS LIMITS ################
 
@@ -196,69 +221,90 @@ ax1.set_xscale('log')
 
 # TICKS AND LABELS ###########
 
-ax1.minorticks_on()
-ax1.tick_params(axis='x', which='both', bottom=False)
-ax1.tick_params(axis='y', which='both', bottom=False)
+ax.minorticks_on()
+ax.tick_params(axis='x', which='both', bottom=False)
+ax.tick_params(axis='y', which='both', bottom=False)
 
 # GRIDS ######################
 
-ax1.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax1.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
+ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax.grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax1.set_xlabel("GDP [2022 USD]")
-ax1.set_ylabel("Air Transport (Passengers) [Mkm]")
-ax2.set_ylabel("Air Transport (Freight) [Mtkm]")
+ax.set_xlabel("GDP/Capita [2022 USD]")
+ax.set_ylabel("Air Transport (Passengers) [Mkm]")
 
 # PLOTTING ###################
 
-ax1.scatter(
-    df_plot_pax['2021_gdp'],
-    df_plot_pax['2021_passengers_Mkm'],
-    color = 'black',
-    marker = 'o',
-    label = 'Passengers'
-)
-ax2.scatter(
-    df_plot_freight['2021_gdp'],
-    df_plot_freight['2021_freight'],
-    color = 'blue',
-    marker = 's',
-    label = 'Freight'
+colors_for_plotting = {
+    'North America':'red',
+    'Central and South America': 'orange',
+    'Asia': 'blue',
+    'Europe':'green',
+    'Africa':'black',
+    'Oceania': 'magenta',
+}
+
+scaling_factor = 0.000001 # determined by experimentation and visual inspection
+df_combined_paxcapita['markersize'] = df_combined_paxcapita['Population (2021)'] * scaling_factor
+
+myplot = ax.scatter(
+    x = df_combined_paxcapita['GDPperCapita (2021)'],
+    y = df_combined_paxcapita['PAX (2021)'],
+    s = df_combined_paxcapita['markersize'],
+    c = df_combined_paxcapita['region'].map(colors_for_plotting) # replaces regions with corresponding color
 )
 
 # LEGEND ####################
 
-lines, labels = ax1.get_legend_handles_labels()
-lines2, labels2 = ax2.get_legend_handles_labels()
-ax2.legend(
-    lines + lines2,
-    labels + labels2,
-    loc='upper left',
-)
+colors_for_legend = {
+    'N. America':'red',
+    'C.+S. America': 'orange',
+    'Asia': 'blue',
+    'Europe':'green',
+    'Africa':'black',
+    'Oceania': 'magenta',
+}
+from matplotlib.patches import Patch # https://matplotlib.org/stable/api/_as_gen/matplotlib.patches.Patch.html
+legend1_symbols = [
+    Patch(
+        color = color,
+        label = continent,
+    )
+    for continent, color in colors_for_legend.items()
+]
 
+legend1 = plt.legend(
+    handles = legend1_symbols,
+    loc = 'lower right',
+    title="Region",
+)
+ax.add_artist(legend1) # https://matplotlib.org/stable/users/explain/axes/legend_guide.html#multiple-legends-on-the-same-axes
+
+kw = dict(
+    prop="sizes",
+    num=[10, 100, 500, 1000],
+    #func=lambda s: s/scaling_factor,
+    alpha=0.5
+)
+plt.legend(
+    *myplot.legend_elements(**kw), # https://matplotlib.org/stable/api/collections_api.html#matplotlib.collections.PathCollection.legend_elements
+    loc="upper left",
+    title="Population [Mio.]",
+)
 
 # TITLE #####################
 
-title_text = 'All Countries, 2021'
-ax2.text(
-    0.2, 0.9825,
-    title_text,
-    fontsize=12,
-    fontweight='bold',
-    ha='left',
-    transform=ax1.transAxes,
-    bbox=dict(facecolor='white', edgecolor='black', boxstyle='round'),
-    zorder=10
-)
 
 # ANNOTATION ################
 
 
 # EXPORT #########################################
 
-figure_name: str = str(Path.cwd().stem + '.pdf')
+file_path = os.path.abspath(__file__)
+file_name = os.path.splitext(os.path.basename(file_path))[0]
+figure_name: str = str(file_name + '.pdf')
 
 plt.savefig(
     fname = figure_name,
@@ -266,6 +312,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
-
 # %%
