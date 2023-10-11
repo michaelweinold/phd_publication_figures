@@ -15,6 +15,7 @@ from datetime import datetime
 # data science
 import numpy as np
 import pandas as pd
+from scipy.interpolate import interp1d
 
 # i/o
 from pathlib import PurePath, Path
@@ -34,39 +35,150 @@ path_dir_data_bars: PurePath = Path.cwd().joinpath('data/bars')
 path_dir_data_lines: PurePath = Path.cwd().joinpath('data/lines')
 
 # DATA IMPORT ###################################
-'''
-Create a dictionary of dataframes from csv files in the data directory:
-dict_files: dict = {'file_name_1': pd.DataFrame, 'file_name_2': pd.DataFrame, ...}
-list_files: list = ['file_name_1', 'file_name_2', ...]
-'''
 
-dict_files_bars: dict = dict()
-list_filenames_bars: list = list()
-for file in path_dir_data_bars.glob('*.csv'):
-    dict_files_bars[file.stem] = pd.read_csv(
-        filepath_or_buffer = file,
-        skipinitialspace = True
-    )
-    list_filenames_bars.append(file.stem)
+df_destination2050 = pd.read_excel(
+    io = './data/data.xlsx',
+    sheet_name = 'Destination2050',
+    usecols = lambda column: column in [
+        'hypothetical_reference (x)',
+        'hypothetical_reference (y)',
+        'kerosene (x)',
+        'kerosene (y)',
+        'hydrogen (x)',
+        'hydrogen (y)',
+        'effect_hydrogen (x)',
+        'effect_hydrogen (y)',
+        'improved_ATM_and_operations (x)',
+        'improved_ATM_and_operations (y)',
+        'SAF (x)',
+        'SAF (y)',
+        'effect_SAF (x)',
+        'effect_SAF (y)',
+        'economic_measures (x)',
+        'economic_measures (y)',
+        'effect_economic_measures (x)',
+        'effect_economic_measures (y)',
+        'Net_CO2_emissions (x)',
+        'Net_CO2_emissions (y)'
+    ],
+    dtype={
+        'hypothetical_reference (x)': float,
+        'hypothetical_reference (y)': float,
+        'kerosene (x)': float,
+        'kerosene (y)': float,
+        'hydrogen (x)': float,
+        'hydrogen (y)': float,
+        'effect_hydrogen (x)': float,
+        'effect_hydrogen (y)': float,
+        'improved_ATM_and_operations (x)': float,
+        'improved_ATM_and_operations (y)': float,
+        'SAF (x)': float,
+        'SAF (y)': float,
+        'effect_SAF (x)': float,
+        'effect_SAF (y)': float,
+        'economic_measures (x)': float,
+        'economic_measures (y)': float,
+        'effect_economic_measures (x)': float,
+        'effect_economic_measures (y)': float,
+        'Net_CO2_emissions (x)': float,
+        'Net_CO2_emissions (y)': float
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal=','
+)
 
-dict_files_lines: dict = dict()
-list_filenames_lines: list = list()
-for file in path_dir_data_lines.glob('*.csv'):
-    dict_files_lines[file.stem] = pd.read_csv(
-        filepath_or_buffer = file,
-        skipinitialspace = True
-    )
-    list_filenames_lines.append(file.stem)
 
 # DATA MANIPULATION #############################
-'''
 
-'''
+# this is the new list of years
+list_of_years: list[int] = [i for i in range(2018, 2050+1)]
 
-for file in list_files:
-    df: pd.DataFrame = dict_files_bars[file]
-    df['data_absolute'] = df['lower_bar_position'] + df['bar_value']
-    dict_files_bars[file] = df
+def interpolate_1d_dataframe(
+    df: pd.DataFrame,
+    name_of_column_to_interpolate_x: str,
+    name_of_column_to_interpolate_y: str,
+    new_x_values: list[int],
+) -> pd.DataFrame:
+    df_interpolated = pd.DataFrame()
+    df_interpolated['year'] = new_x_values
+    interpolation_polynomial = interp1d(
+        x = df[name_of_column_to_interpolate_x].dropna(), # 'NaN' values usually cause problems, so we remove them here
+        y = df[name_of_column_to_interpolate_y].dropna(), # 'NaN' values usually cause problems, so we remove them here
+    )
+    df_interpolated['y'] = [interpolation_polynomial(x_value) for x_value in new_x_values]
+    return df_interpolated
+
+df_destination2050_net: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='Net_CO2_emissions (x)',
+    name_of_column_to_interpolate_y ='Net_CO2_emissions (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_reference: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='hypothetical_reference (x)',
+    name_of_column_to_interpolate_y ='hypothetical_reference (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_kerosene: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='kerosene (x)',
+    name_of_column_to_interpolate_y ='kerosene (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_hydrogen: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='hydrogen (x)',
+    name_of_column_to_interpolate_y ='hydrogen (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_effect_hydrogen: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='effect_hydrogen (x)',
+    name_of_column_to_interpolate_y ='effect_hydrogen (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_improved_ATM_and_operations: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='improved_ATM_and_operations (x)',
+    name_of_column_to_interpolate_y ='improved_ATM_and_operations (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_SAF: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='SAF (x)',
+    name_of_column_to_interpolate_y ='SAF (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_effect_SAF: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='effect_SAF (x)',
+    name_of_column_to_interpolate_y ='effect_SAF (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_economic_measures: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='economic_measures (x)',
+    name_of_column_to_interpolate_y ='economic_measures (y)',
+    new_x_values = list_of_years,
+)
+
+df_destination2050_effect_economic_measures: pd.DataFrame = interpolate_1d_dataframe(
+    df = df_destination2050,
+    name_of_column_to_interpolate_x ='effect_economic_measures (x)',
+    name_of_column_to_interpolate_y ='effect_economic_measures (y)',
+    new_x_values = list_of_years,
+)
+
 
 # FIGURE ########################################
 
@@ -82,17 +194,12 @@ fig, ax = plt.subplots(
 
 # DATA #######################
 
-x = dict_files_bars['sustainable_aviation_fuels']['year']
-y = dict_files_bars['sustainable_aviation_fuels']['data_absolute']
-
 # AXIS LIMITS ################
 
-plt.xlim(2000, 2051)
+ax.set_ylim(0, 300)
+ax.set_xlim(2013, 2051)
 
 # TICKS AND LABELS ###########
-
-ax.minorticks_on()
-ax.tick_params(axis='x', which='minor', bottom=False)
 
 # GRIDS ######################
 
@@ -101,88 +208,57 @@ ax.grid(which='both', axis='y', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_xlabel("Year")
-ax.set_ylabel("Aviation Emissions \n (EU27+UK+EFTA) [Mt(CO$_2$)]")
+ax.set_ylabel("Aviation Emissions \n (EU27 $\cup$ UK $\cup$ EFTA) [Mt(CO$_2$)]")
+
 
 # PLOTTING ###################
 
-ax.bar(
-    x = x,
-    height = dict_files_bars['kerosene']['bar_value'],
-    bottom = dict_files_bars['kerosene']['lower_bar_position'],
-    width=0.8,
-    color = 'darkblue',
-    label = 'Innovation: Kerosene',
-)
-ax.bar(
-    x = x,
-    height = dict_files_bars['hydrogen']['bar_value'],
-    bottom = dict_files_bars['hydrogen']['lower_bar_position'],
-    width=0.8,
-    color = 'royalblue',
-    label = 'Innovation: Hydrogen',
-)
-ax.bar(
-    x = x,
-    height = dict_files_bars['hydrogen_on_demand']['bar_value'],
-    bottom = dict_files_bars['hydrogen_on_demand']['lower_bar_position'],
-    width=0.8,
-    color = 'cadetblue',
-    label = 'Demand Effect: Hydrogen',
-)
-ax.bar(
-    x = x,
-    height = dict_files_bars['operations']['bar_value'],
-    bottom = dict_files_bars['operations']['lower_bar_position'],
-    width=0.8,
-    color = 'gray',
-    label = 'Operations',
-)
-ax.bar(
-    x = x,
-    height = dict_files_bars['sustainable_aviation_fuels']['bar_value'],
-    bottom = dict_files_bars['sustainable_aviation_fuels']['lower_bar_position'],
-    width=0.8,
-    color = 'lightsteelblue',
-    label = 'SAF',
-)
-ax.bar(
-    x = x,
-    height = dict_files_bars['sustainable_aviation_fuels_on_demand']['bar_value'],
-    bottom = dict_files_bars['sustainable_aviation_fuels_on_demand']['lower_bar_position'],
-    width=0.8,
-    color = 'mediumseagreen',
-    label = 'Demand Effect: SAF',
-)
-ax.bar(
-    x = x,
-    height = dict_files_bars['economic_measures']['bar_value'],
-    bottom = dict_files_bars['economic_measures']['lower_bar_position'],
-    width=0.8,
-    color = 'green',
-    label = 'Economic Measures',
-)
-ax.bar(
-    x = x,
-    height = dict_files_bars['economic_measures_on_demand']['bar_value'],
-    bottom = dict_files_bars['economic_measures_on_demand']['lower_bar_position'],
-    width=0.8,
-    color = 'darkolivegreen',
-    label = 'Demand Effect: Economic Measures',
-)
-
 ax.plot(
-    dict_files_lines['reference_scenario']['year'],
-    dict_files_lines['reference_scenario']['data'],
-    color = 'red',
+    df_destination2050_reference['year'],
+    df_destination2050_reference['y'],
     label = 'Reference Scenario (BAU)',
+    color = 'red',
     linestyle = '-.',
 )
 ax.plot(
-    dict_files_lines['co2_emissions']['year'],
-    dict_files_lines['co2_emissions']['data'],
-    color = 'black',
-    label = 'Net CO$_2$ Emissions',
+    df_destination2050_net['year'],
+    df_destination2050_net['y'],
+    label = 'Net Emissions',
+    color = 'black'
+)
+
+
+ax.bar(
+    x = df_destination2050_effect_SAF['year'],
+    height = df_destination2050_effect_SAF['y'] - df_destination2050_net['y'],
+    bottom = df_destination2050_net['y'], 
+    width=0.8,
+    color = 'red',
+    label = 'Market Measures',
+)
+ax.bar(
+    x = df_destination2050_SAF['year'],
+    height = df_destination2050_SAF['y'] - df_destination2050_effect_SAF['y'],
+    bottom = df_destination2050_effect_SAF['y'], 
+    width=0.8,
+    color = 'green',
+    label = 'SAF',
+)
+ax.bar(
+    x = df_destination2050_effect_hydrogen['year'],
+    height = df_destination2050_effect_hydrogen['y'] - df_destination2050_SAF['y'],
+    bottom = df_destination2050_SAF['y'], 
+    width=0.8,
+    color = 'orange',
+    label = 'Operations and Infrastructure',
+)
+ax.bar(
+    x = df_destination2050_reference['year'],
+    height = df_destination2050_reference['y'] - df_destination2050_effect_hydrogen['y'],
+    bottom = df_destination2050_effect_hydrogen['y'], 
+    width=0.8,
+    color = 'blue',
+    label = 'Technology',
 )
 
 # LEGEND ####################
@@ -193,7 +269,10 @@ ax.legend(
 
 # EXPORT #########################################
 
-figure_name: str = str(Path.cwd().stem + '.pdf')
+import os 
+file_path = os.path.abspath(__file__)
+file_name = os.path.splitext(os.path.basename(file_path))[0]
+figure_name: str = str(file_name + '.pdf')
 
 plt.savefig(
     fname = figure_name,
