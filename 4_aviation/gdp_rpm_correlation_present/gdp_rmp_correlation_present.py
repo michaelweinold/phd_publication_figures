@@ -222,8 +222,17 @@ ax.set_xscale('log')
 # TICKS AND LABELS ###########
 
 ax.minorticks_on()
-ax.tick_params(axis='x', which='both', bottom=False)
-ax.tick_params(axis='y', which='both', bottom=False)
+ax.tick_params(axis='x', which='both', bottom=True)
+ax.tick_params(axis='y', which='both', bottom=True)
+
+import matplotlib.ticker as ticker
+def thousand_formatter(value, tick_number):
+    """
+    Formats the tick label with thousand separators: 1000 = 1'000.
+    """
+    return f"{int(value):,}".replace(",", "'")
+
+ax.xaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
 
 # GRIDS ######################
 
