@@ -174,8 +174,8 @@ ax.bar(
 ax.plot(
     dict_files_lines['reference_scenario']['year'],
     dict_files_lines['reference_scenario']['data'],
-    color = 'black',
-    label = 'Reference Scenario (No Policy)',
+    color = 'red',
+    label = 'Reference Scenario (BAU)',
     linestyle = '-.',
 )
 ax.plot(
