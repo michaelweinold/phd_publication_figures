@@ -27,20 +27,62 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
+df_co2 = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'CO2',
+    usecols = lambda column: column in [
+        'Authors (Label)',
+        'ERF Average [mW/m2]',
+        'ERF Lower Errorbar [mW/m2]',
+        'ERF Upper Errorbar [mW/m2]',
+    ],
+    dtype={
+        'Authors (Label)': str,
+        'ERF Average [mW/m2]': float,
+        'ERF Lower Errorbar [mW/m2]': float,
+        'ERF Upper Errorbar [mW/m2]': float,
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal='.'
+)
+
+df_aerosols_rad = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Aerosols-Radiation',
+    usecols = lambda column: column in [
+        'Authors (Label)',
+        'ERF Average [mW/m2]',
+        'ERF Lower Errorbar [mW/m2]',
+        'ERF Upper Errorbar [mW/m2]',
+        'Effect',
+    ],
+    dtype={
+        'Authors (Label)': str,
+        'ERF Average [mW/m2]': float,
+        'ERF Lower Errorbar [mW/m2]': float,
+        'ERF Upper Errorbar [mW/m2]': float,
+        'Effect': str,
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal='.'
+)
+
 df_aerosols = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'Aerosols',
     usecols = lambda column: column in [
         'Authors (Label)',
-        'RF Average [mW/m2]',
-        'RF Lower Errorbar [mW/m2]',
-        'RF Upper Errorbar [mW/m2]',
+        'ERF Average [mW/m2]',
+        'ERF Lower Errorbar [mW/m2]',
+        'ERF Upper Errorbar [mW/m2]',
     ],
     dtype={
         'Authors (Label)': str,
-        'RF Average [mW/m2]': float,
-        'RF Lower Errorbar [mW/m2]': float,
-        'RF Upper Errorbar [mW/m2]': float,
+        'ERF Average [mW/m2]': float,
+        'ERF Lower Errorbar [mW/m2]': float,
+        'ERF Upper Errorbar [mW/m2]': float,
     },
     header = 0,
     engine = 'openpyxl',
@@ -64,8 +106,9 @@ fig, axes = plt.subplots(
 
 # AXIS LIMITS ################
 
-axes[0].set_xlim(-400,150)
-axes[0].set_ylim(-1,1)
+for ax in axes:
+    ax.set_xlim(-150,150)
+    ax.set_ylim(-1,1)
 
 # TICKS AND LABELS ###########
 
@@ -82,18 +125,80 @@ plt.xlabel("Effective Radiative Forcing [mW/m$^2$]")
 
 # PLOTTING ###################
 
-axes[0].scatter(
-    x = df_aerosols['RF Average [mW/m2]'],
+# CO2
+
+axes[0].barh(
     y = 0,
-    s = 5,
-    marker = 'o',
-    color = 'black',
-    label = df_aerosols['Authors (Label)'],
+    width = df_co2['ERF Average [mW/m2]'],
+    height = 1.5,
+    align='center',
+    color = 'red',
+    edgecolor = 'black'
 )
+
+# https://stackoverflow.com/a/33857966
+average = df_co2['ERF Average [mW/m2]']
+lower = df_co2['ERF Lower Errorbar [mW/m2]']
+upper = df_co2['ERF Upper Errorbar [mW/m2]']
 axes[0].errorbar(
-    x = df_aerosols['RF Average [mW/m2]'],
+    x = average,
     y = 0,
-    xerr = (df_aerosols['RF Lower Errorbar [mW/m2]'], df_aerosols['RF Upper Errorbar [mW/m2]']),
+    xerr = (
+        abs(average - lower),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+
+# Aerosols-Radiation
+
+axes[1].barh(
+    y = 0,
+    width = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Average [mW/m2]'],
+    height = 1.5,
+    align='center',
+    color = 'red',
+    edgecolor = 'black'
+)
+
+average = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Average [mW/m2]']
+lower = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Lower Errorbar [mW/m2]']
+upper = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Upper Errorbar [mW/m2]']
+axes[1].errorbar(
+    x = average,
+    y = 0,
+    xerr = (
+        abs(average - lower),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+
+axes[2].barh(
+    y = 0,
+    width = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Average [mW/m2]'],
+    height = 1.5,
+    align='center',
+    color = 'blue',
+    edgecolor = 'black'
+)
+
+average = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Average [mW/m2]']
+lower = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Lower Errorbar [mW/m2]']
+upper = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Upper Errorbar [mW/m2]']
+axes[2].errorbar(
+    x = average,
+    y = 0,
+    xerr = (
+        abs(average - lower),
+        abs(average - upper)
+    ),
     fmt = 'none',
     capsize = 2,
     ecolor = 'black',
