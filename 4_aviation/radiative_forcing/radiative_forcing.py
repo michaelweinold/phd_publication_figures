@@ -47,6 +47,26 @@ df_co2 = pd.read_excel(
     decimal='.'
 )
 
+df_h2o = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Water Vapor',
+    usecols = lambda column: column in [
+        'Authors (Label)',
+        'ERF Average [mW/m2]',
+        'ERF Lower Errorbar [mW/m2]',
+        'ERF Upper Errorbar [mW/m2]',
+    ],
+    dtype={
+        'Authors (Label)': str,
+        'ERF Average [mW/m2]': float,
+        'ERF Lower Errorbar [mW/m2]': float,
+        'ERF Upper Errorbar [mW/m2]': float,
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal='.'
+)
+
 df_aerosols_rad = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'Aerosols-Radiation',
@@ -145,12 +165,35 @@ axes[0].errorbar(
     y = 0,
     xerr = (
         abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+axes[0].errorbar(
+    x = average,
+    y = 0,
+    xerr = (
+        pd.Series([0]),
         abs(average - upper)
     ),
     fmt = 'none',
     capsize = 2,
     ecolor = 'black',
     elinewidth = 1,
+)
+
+
+axes[0].text(
+    x=-140,
+    y=0,
+    s=r'\textbf{CO$_2$ Emissions} (' + df_co2['Authors (Label)'][0] + ')',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
 )
 
 # Aerosols-Radiation
@@ -172,12 +215,34 @@ axes[1].errorbar(
     y = 0,
     xerr = (
         abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+axes[1].errorbar(
+    x = average,
+    y = 0,
+    xerr = (
+        pd.Series([0]),
         abs(average - upper)
     ),
     fmt = 'none',
     capsize = 2,
     ecolor = 'black',
     elinewidth = 1,
+)
+
+axes[1].text(
+    x=-140,
+    y=0,
+    s=r'\textbf{Soot/Radiation} (' + df_co2['Authors (Label)'][0] + ')',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
 )
 
 axes[2].barh(
@@ -196,13 +261,84 @@ axes[2].errorbar(
     x = average,
     y = 0,
     xerr = (
+        pd.Series([0]),
+        abs(average - upper),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+axes[2].errorbar(
+    x = average,
+    y = 0,
+    xerr = (
         abs(average - lower),
+        pd.Series([0])
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+
+axes[2].text(
+    x=-140,
+    y=0,
+    s=r'\textbf{Sulfur/Radiation} (' + df_co2['Authors (Label)'][0] + ')',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
+)
+
+# Water Vapor (H2O)
+
+axes[3].barh(
+    y = 0,
+    width = df_h2o['ERF Average [mW/m2]'],
+    height = 1.5,
+    align='center',
+    color = 'red',
+    edgecolor = 'black'
+)
+
+average = df_h2o['ERF Average [mW/m2]']
+lower = df_h2o['ERF Lower Errorbar [mW/m2]']
+upper = df_h2o['ERF Upper Errorbar [mW/m2]']
+axes[3].errorbar(
+    x = average,
+    y = 0,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+axes[3].errorbar(
+    x = average,
+    y = 0,
+    xerr = (
+        pd.Series([0]),
         abs(average - upper)
     ),
     fmt = 'none',
     capsize = 2,
     ecolor = 'black',
     elinewidth = 1,
+)
+
+axes[3].text(
+    x=-140,
+    y=0,
+    s=r'\textbf{Water Vapor} (' + df_co2['Authors (Label)'][0] + ')',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
 )
 
 # LEGEND ####################
