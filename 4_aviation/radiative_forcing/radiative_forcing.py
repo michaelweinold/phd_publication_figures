@@ -115,24 +115,48 @@ df_aerosols = pd.read_excel(
 
 # SETUP ######################
 
-fig, axes = plt.subplots(
-        num = 'main',
-        nrows = 5,
-        ncols = 1,
-        sharex=True,
-        dpi = 300,
-        figsize=(16.5*cm, 5*cm), # A4=(210x297)mm
-    )
+# see also:
+# https://matplotlib.org/stable/gallery/subplots_axes_and_figures/subfigures.html
+
+fig = plt.figure(
+    dpi = 300,
+    figsize=(16.5*cm, 10*cm), # A4=(210x297)mm
+)
+subfigs = fig.subfigures(
+    nrows = 2,
+    ncols = 1,
+    hspace = None,
+    wspace = None
+)
+subfig_0_subplots_0 = subfigs[0].subplots(
+    nrows = 4,
+    ncols = 1,
+    sharex=True,
+)
+subfigs[0].suptitle(
+    t = 'Long-Term Effects',
+    fontsize = 'large'
+)
+
+subfig_1_subplots_0 = subfigs[1].subplots(
+    nrows = 3,
+    ncols = 1,
+    sharex=True,
+)
+subfigs[1].suptitle(
+    t = 'Short-Term Effects',
+    fontsize = 'large'
+)
 
 # AXIS LIMITS ################
 
-for ax in axes:
+for ax in subfig_0_subplots_0:
     ax.set_xlim(-150,150)
     ax.set_ylim(-1,1)
 
 # TICKS AND LABELS ###########
 
-for ax in axes:
+for ax in subfig_0_subplots_0:
     ax.set_yticklabels([])
     ax.tick_params(axis='y', which='both', length=0)
 
@@ -147,7 +171,7 @@ plt.xlabel("Effective Radiative Forcing [mW/m$^2$]")
 
 # CO2
 
-axes[0].barh(
+subfig_0_subplots_0[0].barh(
     y = 0,
     width = df_co2['ERF Average [mW/m2]'],
     height = 1.5,
@@ -160,7 +184,7 @@ axes[0].barh(
 average = df_co2['ERF Average [mW/m2]']
 lower = df_co2['ERF Lower Errorbar [mW/m2]']
 upper = df_co2['ERF Upper Errorbar [mW/m2]']
-axes[0].errorbar(
+subfig_0_subplots_0[0].errorbar(
     x = average,
     y = 0,
     xerr = (
@@ -172,7 +196,7 @@ axes[0].errorbar(
     ecolor = 'white',
     elinewidth = 1,
 )
-axes[0].errorbar(
+subfig_0_subplots_0[0].errorbar(
     x = average,
     y = 0,
     xerr = (
@@ -186,7 +210,7 @@ axes[0].errorbar(
 )
 
 
-axes[0].text(
+subfig_0_subplots_0[0].text(
     x=-140,
     y=0,
     s=r'\textbf{CO$_2$ Emissions} (' + df_co2['Authors (Label)'][0] + ')',
@@ -198,7 +222,7 @@ axes[0].text(
 
 # Aerosols-Radiation
 
-axes[1].barh(
+subfig_0_subplots_0[1].barh(
     y = 0,
     width = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Average [mW/m2]'],
     height = 1.5,
@@ -210,7 +234,7 @@ axes[1].barh(
 average = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Average [mW/m2]']
 lower = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Lower Errorbar [mW/m2]']
 upper = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Upper Errorbar [mW/m2]']
-axes[1].errorbar(
+subfig_0_subplots_0[1].errorbar(
     x = average,
     y = 0,
     xerr = (
@@ -222,7 +246,7 @@ axes[1].errorbar(
     ecolor = 'white',
     elinewidth = 1,
 )
-axes[1].errorbar(
+subfig_0_subplots_0[1].errorbar(
     x = average,
     y = 0,
     xerr = (
@@ -235,7 +259,7 @@ axes[1].errorbar(
     elinewidth = 1,
 )
 
-axes[1].text(
+subfig_0_subplots_0[1].text(
     x=-140,
     y=0,
     s=r'\textbf{Soot/Radiation} (' + df_co2['Authors (Label)'][0] + ')',
@@ -245,7 +269,7 @@ axes[1].text(
     color='black',
 )
 
-axes[2].barh(
+subfig_0_subplots_0[2].barh(
     y = 0,
     width = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Average [mW/m2]'],
     height = 1.5,
@@ -257,7 +281,7 @@ axes[2].barh(
 average = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Average [mW/m2]']
 lower = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Lower Errorbar [mW/m2]']
 upper = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Upper Errorbar [mW/m2]']
-axes[2].errorbar(
+subfig_0_subplots_0[2].errorbar(
     x = average,
     y = 0,
     xerr = (
@@ -269,7 +293,7 @@ axes[2].errorbar(
     ecolor = 'white',
     elinewidth = 1,
 )
-axes[2].errorbar(
+subfig_0_subplots_0[2].errorbar(
     x = average,
     y = 0,
     xerr = (
@@ -282,7 +306,7 @@ axes[2].errorbar(
     elinewidth = 1,
 )
 
-axes[2].text(
+subfig_0_subplots_0[2].text(
     x=-140,
     y=0,
     s=r'\textbf{Sulfur/Radiation} (' + df_co2['Authors (Label)'][0] + ')',
@@ -294,7 +318,7 @@ axes[2].text(
 
 # Water Vapor (H2O)
 
-axes[3].barh(
+subfig_0_subplots_0[3].barh(
     y = 0,
     width = df_h2o['ERF Average [mW/m2]'],
     height = 1.5,
@@ -306,7 +330,7 @@ axes[3].barh(
 average = df_h2o['ERF Average [mW/m2]']
 lower = df_h2o['ERF Lower Errorbar [mW/m2]']
 upper = df_h2o['ERF Upper Errorbar [mW/m2]']
-axes[3].errorbar(
+subfig_0_subplots_0[3].errorbar(
     x = average,
     y = 0,
     xerr = (
@@ -318,7 +342,7 @@ axes[3].errorbar(
     ecolor = 'white',
     elinewidth = 1,
 )
-axes[3].errorbar(
+subfig_0_subplots_0[3].errorbar(
     x = average,
     y = 0,
     xerr = (
@@ -331,7 +355,7 @@ axes[3].errorbar(
     elinewidth = 1,
 )
 
-axes[3].text(
+subfig_0_subplots_0[3].text(
     x=-140,
     y=0,
     s=r'\textbf{Water Vapor} (' + df_co2['Authors (Label)'][0] + ')',
