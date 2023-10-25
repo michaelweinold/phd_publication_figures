@@ -251,7 +251,7 @@ subfig_0_subplots_0.text(
     fontsize=8,
     color='black',
 )
-subfig_0_subplots_0.set_title('Long-Term Effects')
+subfig_0_subplots_0.set_title('Long-Term Effects (Cumulative)')
 
 # NOx
 
@@ -259,7 +259,7 @@ bar_y = 0.5
 subfig_1_subplots_0.barh(
     y = bar_y,
     width = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]'],
-    height = bar_y,
+    height = 0.5,
     align='center',
     color = 'red',
     edgecolor = 'black'
