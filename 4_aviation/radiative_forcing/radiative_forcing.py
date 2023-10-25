@@ -55,12 +55,14 @@ df_nox = pd.read_excel(
         'ERF Average [mW/m2]',
         'ERF Lower Errorbar [mW/m2]',
         'ERF Upper Errorbar [mW/m2]',
+        'Effect',
     ],
     dtype={
         'Authors (Label)': str,
         'ERF Average [mW/m2]': float,
         'ERF Lower Errorbar [mW/m2]': float,
         'ERF Upper Errorbar [mW/m2]': float,
+        'Effect': str,
     },
     header = 0,
     engine = 'openpyxl',
@@ -140,33 +142,25 @@ df_aerosols = pd.read_excel(
 
 fig = plt.figure(
     dpi = 300,
-    figsize=(16.5*cm, 10*cm), # A4=(210x297)mm
+    figsize=(30*cm, 10*cm), # A4=(210x297)mm
 )
 subfigs = fig.subfigures(
     nrows = 3,
     ncols = 1,
     hspace = None,
     wspace = None,
-    height_ratios = [0.95,3,3],
+    height_ratios = [0.5,1.85,3],
 )
 subfig_0_subplots_0 = subfigs[0].subplots(
     nrows = 1,
     ncols = 1,
     sharex=True,
 )
-subfigs[0].suptitle(
-    t = 'Long-Term Effects',
-    fontsize = 'medium'
-)
 
 subfig_1_subplots_0 = subfigs[1].subplots(
-    nrows = 3,
+    nrows = 1,
     ncols = 1,
     sharex=True,
-)
-subfigs[1].suptitle(
-    t = 'Medium/Short-Term Effects',
-    fontsize = 'medium'
 )
 
 subfig_2_subplots_0 = subfigs[2].subplots(
@@ -174,19 +168,14 @@ subfig_2_subplots_0 = subfigs[2].subplots(
     ncols = 1,
     sharex=True,
 )
-subfigs[2].suptitle(
-    t = 'Short-Term Effects',
-    fontsize = 'medium'
-)
 
 # AXIS LIMITS ################
 
 subfig_0_subplots_0.set_xlim(-150,150)
 subfig_0_subplots_0.set_ylim(-1,1)
 
-for ax in subfig_1_subplots_0:
-    ax.set_xlim(-150,150)
-    ax.set_ylim(-1,1)
+subfig_1_subplots_0.set_xlim(-150,150)
+subfig_1_subplots_0.set_ylim(-1,1)
 
 for ax in subfig_2_subplots_0:
     ax.set_xlim(-150,150)
@@ -197,9 +186,8 @@ for ax in subfig_2_subplots_0:
 subfig_0_subplots_0.set_yticklabels([])
 subfig_0_subplots_0.tick_params(axis='y', which='both', length=0)
 
-for ax in subfig_1_subplots_0:
-    ax.set_yticklabels([])
-    ax.tick_params(axis='y', which='both', length=0)
+subfig_1_subplots_0.set_yticklabels([])
+subfig_1_subplots_0.tick_params(axis='y', which='both', length=0)
 
 for ax in subfig_2_subplots_0:
     ax.set_yticklabels([])
@@ -219,7 +207,7 @@ plt.xlabel("Effective Radiative Forcing [mW/m$^2$]")
 subfig_0_subplots_0.barh(
     y = 0,
     width = df_co2['ERF Average [mW/m2]'],
-    height = 1.5,
+    height = 0.75,
     align='center',
     color = 'red',
     edgecolor = 'black'
@@ -258,6 +246,201 @@ subfig_0_subplots_0.text(
     x=-140,
     y=0,
     s=r'\textbf{CO$_2$ Emissions}',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
+)
+subfig_0_subplots_0.set_title('Long-Term Effects')
+
+# NOx
+
+bar_y = 0.5
+subfig_1_subplots_0.barh(
+    y = bar_y,
+    width = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]'],
+    height = bar_y,
+    align='center',
+    color = 'red',
+    edgecolor = 'black'
+)
+
+average = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]']
+lower = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Lower Errorbar [mW/m2]']
+upper = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Upper Errorbar [mW/m2]']
+subfig_1_subplots_0.errorbar(
+    x = average,
+    y = bar_y,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+subfig_1_subplots_0.errorbar(
+    x = average,
+    y = bar_y,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+
+subfig_1_subplots_0.text(
+    x=-140,
+    y=bar_y,
+    s=r'\textbf{NO$_x$ (Ozone)}',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
+)
+
+bar_y = 0.0
+subfig_1_subplots_0.barh(
+    y = bar_y,
+    width = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Average [mW/m2]'],
+    height = bar_y,
+    align='center',
+    color = 'blue',
+    edgecolor = 'black'
+)
+
+average = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Average [mW/m2]']
+lower = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Lower Errorbar [mW/m2]']
+upper = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Upper Errorbar [mW/m2]']
+subfig_1_subplots_0.errorbar(
+    x = average,
+    y = bar_y,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+subfig_1_subplots_0.errorbar(
+    x = average,
+    y = bar_y,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+
+subfig_1_subplots_0.text(
+    x=-140,
+    y=bar_y,
+    s=r'\textbf{NO$_x$ (Ozone)}',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
+)
+
+bar_y = -0.5
+subfig_1_subplots_0.barh(
+    y = bar_y,
+    width = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Average [mW/m2]'],
+    height = bar_y,
+    align='center',
+    color = 'blue',
+    edgecolor = 'black'
+)
+
+average = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Average [mW/m2]']
+lower = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Lower Errorbar [mW/m2]']
+upper = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Upper Errorbar [mW/m2]']
+subfig_1_subplots_0.errorbar(
+    x = average,
+    y = bar_y,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+subfig_1_subplots_0.errorbar(
+    x = average,
+    y = bar_y,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+
+subfig_1_subplots_0.text(
+    x=-140,
+    y=bar_y,
+    s=r'\textbf{NO$_x$ (Methane)}',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
+)
+
+bar_y = -0.7
+subfig_1_subplots_0.barh(
+    y = bar_y,
+    width = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Average [mW/m2]'],
+    height = bar_y,
+    align='center',
+    color = 'blue',
+    edgecolor = 'black'
+)
+
+average = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Average [mW/m2]']
+lower = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Lower Errorbar [mW/m2]']
+upper = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Upper Errorbar [mW/m2]']
+subfig_1_subplots_0.errorbar(
+    x = average,
+    y = bar_y,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+subfig_1_subplots_0.errorbar(
+    x = average,
+    y = bar_y,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+
+subfig_1_subplots_0.text(
+    x=-140,
+    y=bar_y,
+    s=r'\textbf{NO$_x$ (Water)}',
     ha='left',
     va='center',
     fontsize=8,
