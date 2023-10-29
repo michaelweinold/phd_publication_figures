@@ -410,7 +410,7 @@ ax1.text(
 # Soot/Radiation
 
 ax2 = fig.add_axes(
-    rect = (0,-0.55,1,0.1), # (left, bottom, width, height)
+    rect = (0,-0.58,1,0.1), # (left, bottom, width, height)
     label = 'soot-radiation',
     sharex = ax0
 )
@@ -418,6 +418,12 @@ ax2.set_ylim(0,1)
 ax2.set_yticklabels([]) # no y-tick labels
 ax2.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
 ax2.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax2.set_title(
+    label = 'Short-Term Effects',
+    fontsize = 10,
+    fontweight = 'bold',
+)
 
 ax2.barh(
     y = 0.5,
@@ -468,7 +474,7 @@ ax2.text(
 # Sulfur/Radiation
 
 ax3 = fig.add_axes(
-    rect = (0,-0.6,1,0.1), # (left, bottom, width, height)
+    rect = (0,-0.7,1,0.1), # (left, bottom, width, height)
     label = 'sulfur-radiation',
     sharex = ax0
 )
@@ -525,7 +531,7 @@ ax3.text(
 # Water Vapor (H2O)
 
 ax4 = fig.add_axes(
-    rect = (0,-0.8,1,0.1), # (left, bottom, width, height)
+    rect = (0,-0.82,1,0.1), # (left, bottom, width, height)
     label = 'water',
     sharex = ax0
 )
