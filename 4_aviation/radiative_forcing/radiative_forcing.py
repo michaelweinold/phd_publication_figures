@@ -144,82 +144,49 @@ fig = plt.figure(
     dpi = 300,
     figsize=(30*cm, 10*cm), # A4=(210x297)mm
 )
-subfigs = fig.subfigures(
-    nrows = 3,
-    ncols = 1,
-    hspace = None,
-    wspace = None,
-    height_ratios = [0.5,1.85,3],
-)
-subfig_0_subplots_0 = subfigs[0].subplots(
-    nrows = 1,
-    ncols = 1,
-    sharex=True,
-)
-
-subfig_1_subplots_0 = subfigs[1].subplots(
-    nrows = 1,
-    ncols = 1,
-    sharex=True,
-)
-
-subfig_2_subplots_0 = subfigs[2].subplots(
-    nrows = 3,
-    ncols = 1,
-    sharex=True,
-)
 
 # AXIS LIMITS ################
 
-subfig_0_subplots_0.set_xlim(-150,150)
-subfig_0_subplots_0.set_ylim(-1,1)
 
-subfig_1_subplots_0.set_xlim(-150,150)
-subfig_1_subplots_0.set_ylim(-1,1)
-
-for ax in subfig_2_subplots_0:
-    ax.set_xlim(-150,150)
-    ax.set_ylim(-1,1)
-
-# TICKS AND LABELS ###########
-
-subfig_0_subplots_0.set_yticklabels([])
-subfig_0_subplots_0.tick_params(axis='y', which='both', length=0)
-
-subfig_1_subplots_0.set_yticklabels([])
-subfig_1_subplots_0.tick_params(axis='y', which='both', length=0)
-
-for ax in subfig_2_subplots_0:
-    ax.set_yticklabels([])
-    ax.tick_params(axis='y', which='both', length=0)
-
-# GRIDS ######################
-
-
-# AXIS LABELS ################
-
-plt.xlabel("Effective Radiative Forcing [mW/m$^2$]")
 
 # PLOTTING ###################
 
+# see also:
+# https://matplotlib.org/stable/users/explain/axes/arranging_axes.html#fixed-size-axes
+
 # CO2
 
-subfig_0_subplots_0.barh(
-    y = 0,
+ax0 = fig.add_axes(
+    rect = (0,0,1,0.1), # (left, bottom, width, height)
+    label = 'CO2',
+)
+ax0.set_xlim(-150,150)
+ax0.set_ylim(0,1)
+ax0.set_yticklabels([]) # no y-tick labels
+ax0.tick_params(labelbottom = False) # no x-tick labels, https://stackoverflow.com/a/50037830
+ax0.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax0.set_title(
+    label = 'Long-Term Effects (Cumulative)',
+    fontsize = 10,
+    fontweight = 'bold',
+)
+
+ax0.barh(
+    y = 0.5,
     width = df_co2['ERF Average [mW/m2]'],
-    height = 0.75,
+    height = 0.8,
     align='center',
     color = 'red',
     edgecolor = 'black'
 )
-
 # https://stackoverflow.com/a/33857966
 average = df_co2['ERF Average [mW/m2]']
 lower = df_co2['ERF Lower Errorbar [mW/m2]']
 upper = df_co2['ERF Upper Errorbar [mW/m2]']
-subfig_0_subplots_0.errorbar(
+ax0.errorbar(
     x = average,
-    y = 0,
+    y = 0.5,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -229,9 +196,9 @@ subfig_0_subplots_0.errorbar(
     ecolor = 'white',
     elinewidth = 1,
 )
-subfig_0_subplots_0.errorbar(
+ax0.errorbar(
     x = average,
-    y = 0,
+    y = 0.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -241,36 +208,48 @@ subfig_0_subplots_0.errorbar(
     ecolor = 'black',
     elinewidth = 1,
 )
-
-subfig_0_subplots_0.text(
+ax0.text(
     x=-140,
-    y=0,
+    y=0.5,
     s=r'\textbf{CO$_2$ Emissions}',
     ha='left',
     va='center',
     fontsize=8,
     color='black',
 )
-subfig_0_subplots_0.set_title('Long-Term Effects (Cumulative)')
 
 # NOx
 
-bar_y = 0.5
-subfig_1_subplots_0.barh(
-    y = bar_y,
+ax1 = fig.add_axes(
+    rect = (0,-0.39,1,0.3), # (left, bottom, width, height)
+    label = 'nox',
+    sharex = ax0
+)
+ax1.set_ylim(0,3)
+ax1.set_yticklabels([]) # no y-tick labels
+ax1.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
+ax1.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax1.set_title(
+    label = 'Medium/Short-Term Effects',
+    fontsize = 10,
+    fontweight = 'bold',
+)
+
+ax1.barh(
+    y = 0.5,
     width = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]'],
-    height = 0.5,
+    height = 0.8,
     align='center',
     color = 'red',
     edgecolor = 'black'
 )
-
 average = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]']
 lower = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Lower Errorbar [mW/m2]']
 upper = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Upper Errorbar [mW/m2]']
-subfig_1_subplots_0.errorbar(
+ax1.errorbar(
     x = average,
-    y = bar_y,
+    y = 0.5,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -280,9 +259,9 @@ subfig_1_subplots_0.errorbar(
     ecolor = 'white',
     elinewidth = 1,
 )
-subfig_1_subplots_0.errorbar(
+ax1.errorbar(
     x = average,
-    y = bar_y,
+    y = 0.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -292,10 +271,9 @@ subfig_1_subplots_0.errorbar(
     ecolor = 'black',
     elinewidth = 1,
 )
-
-subfig_1_subplots_0.text(
+ax1.text(
     x=-140,
-    y=bar_y,
+    y=0.5,
     s=r'\textbf{NO$_x$ (Ozone)}',
     ha='left',
     va='center',
@@ -303,37 +281,35 @@ subfig_1_subplots_0.text(
     color='black',
 )
 
-bar_y = 0.0
-subfig_1_subplots_0.barh(
-    y = bar_y,
+ax1.barh(
+    y = 0.5,
     width = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Average [mW/m2]'],
-    height = bar_y,
+    height = 0.8,
     align='center',
     color = 'blue',
     edgecolor = 'black'
 )
-
 average = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Average [mW/m2]']
 lower = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Lower Errorbar [mW/m2]']
 upper = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Upper Errorbar [mW/m2]']
-subfig_1_subplots_0.errorbar(
+ax1.errorbar(
     x = average,
-    y = bar_y,
+    y = 0.5,
     xerr = (
-        abs(average - lower),
         pd.Series([0]),
+        abs(average - upper)
     ),
     fmt = 'none',
     capsize = 2,
     ecolor = 'white',
     elinewidth = 1,
 )
-subfig_1_subplots_0.errorbar(
+ax1.errorbar(
     x = average,
-    y = bar_y,
+    y = 0.5,
     xerr = (
+        abs(average - lower),
         pd.Series([0]),
-        abs(average - upper)
     ),
     fmt = 'none',
     capsize = 2,
@@ -341,57 +317,44 @@ subfig_1_subplots_0.errorbar(
     elinewidth = 1,
 )
 
-subfig_1_subplots_0.text(
-    x=-140,
-    y=bar_y,
-    s=r'\textbf{NO$_x$ (Ozone)}',
-    ha='left',
-    va='center',
-    fontsize=8,
-    color='black',
-)
-
-bar_y = -0.5
-subfig_1_subplots_0.barh(
-    y = bar_y,
+ax1.barh(
+    y = 1.5,
     width = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Average [mW/m2]'],
-    height = bar_y,
+    height = 0.8,
     align='center',
     color = 'blue',
     edgecolor = 'black'
 )
-
 average = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Average [mW/m2]']
 lower = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Lower Errorbar [mW/m2]']
 upper = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Upper Errorbar [mW/m2]']
-subfig_1_subplots_0.errorbar(
+ax1.errorbar(
     x = average,
-    y = bar_y,
-    xerr = (
-        abs(average - lower),
-        pd.Series([0]),
-    ),
-    fmt = 'none',
-    capsize = 2,
-    ecolor = 'white',
-    elinewidth = 1,
-)
-subfig_1_subplots_0.errorbar(
-    x = average,
-    y = bar_y,
+    y = 1.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
     ),
     fmt = 'none',
     capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax1.errorbar(
+    x = average,
+    y = 1.5,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
     ecolor = 'black',
     elinewidth = 1,
 )
-
-subfig_1_subplots_0.text(
+ax1.text(
     x=-140,
-    y=bar_y,
+    y=1.5,
     s=r'\textbf{NO$_x$ (Methane)}',
     ha='left',
     va='center',
@@ -399,47 +362,44 @@ subfig_1_subplots_0.text(
     color='black',
 )
 
-bar_y = -0.7
-subfig_1_subplots_0.barh(
-    y = bar_y,
+ax1.barh(
+    y = 2.5,
     width = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Average [mW/m2]'],
-    height = bar_y,
+    height = 0.8,
     align='center',
     color = 'blue',
     edgecolor = 'black'
 )
-
 average = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Average [mW/m2]']
 lower = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Lower Errorbar [mW/m2]']
 upper = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Upper Errorbar [mW/m2]']
-subfig_1_subplots_0.errorbar(
+ax1.errorbar(
     x = average,
-    y = bar_y,
-    xerr = (
-        abs(average - lower),
-        pd.Series([0]),
-    ),
-    fmt = 'none',
-    capsize = 2,
-    ecolor = 'white',
-    elinewidth = 1,
-)
-subfig_1_subplots_0.errorbar(
-    x = average,
-    y = bar_y,
+    y = 2.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
     ),
     fmt = 'none',
     capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax1.errorbar(
+    x = average,
+    y = 2.5,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
     ecolor = 'black',
     elinewidth = 1,
 )
-
-subfig_1_subplots_0.text(
+ax1.text(
     x=-140,
-    y=bar_y,
+    y=2.5,
     s=r'\textbf{NO$_x$ (Water)}',
     ha='left',
     va='center',
@@ -447,23 +407,33 @@ subfig_1_subplots_0.text(
     color='black',
 )
 
-# Aerosols-Radiation
+# Soot/Radiation
 
-subfig_2_subplots_0[0].barh(
-    y = 0,
+ax2 = fig.add_axes(
+    rect = (0,-0.55,1,0.1), # (left, bottom, width, height)
+    label = 'soot-radiation',
+    sharex = ax0
+)
+ax2.set_ylim(0,1)
+ax2.set_yticklabels([]) # no y-tick labels
+ax2.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
+ax2.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax2.barh(
+    y = 0.5,
     width = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Average [mW/m2]'],
-    height = 1.5,
+    height = 0.8,
     align='center',
     color = 'red',
     edgecolor = 'black'
 )
-
+# https://stackoverflow.com/a/33857966
 average = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Average [mW/m2]']
 lower = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Lower Errorbar [mW/m2]']
 upper = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Upper Errorbar [mW/m2]']
-subfig_2_subplots_0[0].errorbar(
+ax2.errorbar(
     x = average,
-    y = 0,
+    y = 0.5,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -473,9 +443,9 @@ subfig_2_subplots_0[0].errorbar(
     ecolor = 'white',
     elinewidth = 1,
 )
-subfig_2_subplots_0[0].errorbar(
+ax2.errorbar(
     x = average,
-    y = 0,
+    y = 0.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -485,70 +455,88 @@ subfig_2_subplots_0[0].errorbar(
     ecolor = 'black',
     elinewidth = 1,
 )
-
-subfig_2_subplots_0[0].text(
-    x=-140,
-    y=0,
-    s=r'\textbf{Soot/Radiation}',
-    ha='left',
-    va='center',
-    fontsize=8,
-    color='black',
+ax2.text(
+    x = -140,
+    y = 0.5,
+    s = r'\textbf{Soot-Radiation}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 8,
+    color = 'black',
 )
 
-subfig_2_subplots_0[1].barh(
-    y = 0,
+# Sulfur/Radiation
+
+ax3 = fig.add_axes(
+    rect = (0,-0.6,1,0.1), # (left, bottom, width, height)
+    label = 'sulfur-radiation',
+    sharex = ax0
+)
+ax3.set_ylim(0,1)
+ax3.set_yticklabels([]) # no y-tick labels
+ax3.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax3.barh(
+    y = 0.5,
     width = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Average [mW/m2]'],
-    height = 1.5,
+    height = 0.8,
     align='center',
     color = 'blue',
     edgecolor = 'black'
 )
-
+# https://stackoverflow.com/a/33857966
 average = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Average [mW/m2]']
 lower = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Lower Errorbar [mW/m2]']
 upper = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Upper Errorbar [mW/m2]']
-subfig_2_subplots_0[1].errorbar(
+ax3.errorbar(
     x = average,
-    y = 0,
-    xerr = (
-        pd.Series([0]),
-        abs(average - upper),
-    ),
-    fmt = 'none',
-    capsize = 2,
-    ecolor = 'white',
-    elinewidth = 1,
-)
-subfig_2_subplots_0[1].errorbar(
-    x = average,
-    y = 0,
+    y = 0.5,
     xerr = (
         abs(average - lower),
-        pd.Series([0])
+        pd.Series([0]),
     ),
     fmt = 'none',
     capsize = 2,
     ecolor = 'black',
     elinewidth = 1,
 )
-
-subfig_2_subplots_0[1].text(
-    x=-140,
-    y=0,
-    s=r'\textbf{Sulfur/Radiation}',
-    ha='left',
-    va='center',
-    fontsize=8,
-    color='black',
+ax3.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax3.text(
+    x = -140,
+    y = 0.5,
+    s = r'\textbf{Sulfur-Radiation}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 8,
+    color = 'black',
 )
 
 # Water Vapor (H2O)
 
-subfig_2_subplots_0[2].barh(
-    y = 0,
+ax4 = fig.add_axes(
+    rect = (0,-0.8,1,0.1), # (left, bottom, width, height)
+    label = 'water',
+    sharex = ax0
+)
+ax4.set_ylim(0,1)
+ax4.set_yticklabels([]) # no y-tick labels
+ax4.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax4.barh(
+    y = 0.5,
     width = df_h2o['ERF Average [mW/m2]'],
-    height = 1.5,
+    height = 0.8,
     align='center',
     color = 'red',
     edgecolor = 'black'
@@ -557,9 +545,9 @@ subfig_2_subplots_0[2].barh(
 average = df_h2o['ERF Average [mW/m2]']
 lower = df_h2o['ERF Lower Errorbar [mW/m2]']
 upper = df_h2o['ERF Upper Errorbar [mW/m2]']
-subfig_2_subplots_0[2].errorbar(
+ax4.errorbar(
     x = average,
-    y = 0,
+    y = 0.5,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -569,9 +557,9 @@ subfig_2_subplots_0[2].errorbar(
     ecolor = 'white',
     elinewidth = 1,
 )
-subfig_2_subplots_0[2].errorbar(
+ax4.errorbar(
     x = average,
-    y = 0,
+    y = 0.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -582,9 +570,9 @@ subfig_2_subplots_0[2].errorbar(
     elinewidth = 1,
 )
 
-subfig_2_subplots_0[2].text(
+ax4.text(
     x=-140,
-    y=0,
+    y=0.5,
     s=r'\textbf{Water Vapor}',
     ha='left',
     va='center',
