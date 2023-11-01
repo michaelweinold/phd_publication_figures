@@ -217,11 +217,11 @@ ax0.text(
 # NOx
 
 ax1 = fig.add_axes(
-    rect = (0,-0.39,1,0.3), # (left, bottom, width, height)
+    rect = (0,-0.49,1,0.4), # (left, bottom, width, height)
     label = 'nox',
     sharex = ax0
 )
-ax1.set_ylim(0,3)
+ax1.set_ylim(0,4)
 ax1.set_yticklabels([]) # no y-tick labels
 ax1.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
 ax1.tick_params(axis='y', which='both', length=0) # no y-ticks
@@ -248,14 +248,14 @@ ax1.imshow(
     aspect = 'auto',
     cmap = plt.get_cmap(cmap_name),
     extent = [
-        40,
-        60,
+        26.7-10, # https://doi.org/10.1088/1748-9326/ab5dd7
+        26.7+10,
         0.1,
         0.9
     ]
 )
 ax1.text(
-    x=60,
+    x=40,
     y=0.5,
     s=r'Grewe et al. (2019)',
     ha='left',
@@ -264,7 +264,14 @@ ax1.text(
     color='black',
 )
 
-ax1.fill_between([0, 100], 0, 4, color='grey', alpha=0.5, hatch="//")
+ax1.fill_between(
+    x = [-150, 150],
+    y1 = 1,
+    y2 = 4,
+    color='grey',
+    alpha=0.5,
+    hatch="//"
+)
 
 ax1.barh(
     y = 0.5,
@@ -304,7 +311,7 @@ ax1.errorbar(
 ax1.text(
     x=-140,
     y=0.5,
-    s=r'\textbf{NO$_x$ (Ozone)}',
+    s=r'\textbf{Net NO$_x$}',
     ha='left',
     va='center',
     fontsize=8,
@@ -312,9 +319,9 @@ ax1.text(
 )
 
 ax1.barh(
-    y = 1.3,
+    y = 1.5,
     width = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]'],
-    height = 0.4,
+    height = 0.8,
     align='center',
     color = 'red',
     edgecolor = 'black'
@@ -324,7 +331,7 @@ lower = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Lower Error
 upper = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Upper Errorbar [mW/m2]']
 ax1.errorbar(
     x = average,
-    y = 1.3,
+    y = 1.5,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -336,7 +343,7 @@ ax1.errorbar(
 )
 ax1.errorbar(
     x = average,
-    y = 1.3,
+    y = 1.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -348,7 +355,7 @@ ax1.errorbar(
 )
 ax1.text(
     x=-140,
-    y=1.3,
+    y=1.5,
     s=r'\textbf{NO$_x$ (Ozone)}',
     ha='left',
     va='center',
@@ -357,9 +364,9 @@ ax1.text(
 )
 
 ax1.barh(
-    y = 1.3,
+    y = 1.5,
     width = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Average [mW/m2]'],
-    height = 0.4,
+    height = 0.8,
     align='center',
     color = 'blue',
     edgecolor = 'black'
@@ -369,7 +376,7 @@ lower = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Lower Errorb
 upper = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Upper Errorbar [mW/m2]']
 ax1.errorbar(
     x = average,
-    y = 1.3,
+    y = 1.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -381,7 +388,7 @@ ax1.errorbar(
 )
 ax1.errorbar(
     x = average,
-    y = 1.3,
+    y = 1.5,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -393,9 +400,9 @@ ax1.errorbar(
 )
 
 ax1.barh(
-    y = 1.8,
+    y = 2.5,
     width = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Average [mW/m2]'],
-    height = 0.4,
+    height = 0.8,
     align='center',
     color = 'blue',
     edgecolor = 'black'
@@ -405,7 +412,7 @@ lower = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Lower Errorbar [mW/m
 upper = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Upper Errorbar [mW/m2]']
 ax1.errorbar(
     x = average,
-    y = 1.8,
+    y = 2.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -417,7 +424,7 @@ ax1.errorbar(
 )
 ax1.errorbar(
     x = average,
-    y = 1.8,
+    y = 2.5,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -429,7 +436,7 @@ ax1.errorbar(
 )
 ax1.text(
     x=-140,
-    y=1.8,
+    y=2.5,
     s=r'\textbf{NO$_x$ (Methane)}',
     ha='left',
     va='center',
@@ -438,9 +445,9 @@ ax1.text(
 )
 
 ax1.barh(
-    y = 2.3,
+    y = 3.5,
     width = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Average [mW/m2]'],
-    height = 0.4,
+    height = 0.8,
     align='center',
     color = 'blue',
     edgecolor = 'black'
@@ -450,7 +457,7 @@ lower = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Lower Errorbar [
 upper = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Upper Errorbar [mW/m2]']
 ax1.errorbar(
     x = average,
-    y = 2.3,
+    y = 3.5,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -462,7 +469,7 @@ ax1.errorbar(
 )
 ax1.errorbar(
     x = average,
-    y = 2.3,
+    y = 3.5,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -474,7 +481,7 @@ ax1.errorbar(
 )
 ax1.text(
     x=-140,
-    y=2.3,
+    y=3.5,
     s=r'\textbf{NO$_x$ (Water)}',
     ha='left',
     va='center',
@@ -485,7 +492,7 @@ ax1.text(
 # Soot/Radiation
 
 ax2 = fig.add_axes(
-    rect = (0,-0.58,1,0.1), # (left, bottom, width, height)
+    rect = (0,-0.68,1,0.1), # (left, bottom, width, height)
     label = 'soot-radiation',
     sharex = ax0
 )
@@ -549,12 +556,13 @@ ax2.text(
 # Sulfur/Radiation
 
 ax3 = fig.add_axes(
-    rect = (0,-0.7,1,0.1), # (left, bottom, width, height)
+    rect = (0,-0.8,1,0.1), # (left, bottom, width, height)
     label = 'sulfur-radiation',
     sharex = ax0
 )
 ax3.set_ylim(0,1)
 ax3.set_yticklabels([]) # no y-tick labels
+ax3.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
 ax3.tick_params(axis='y', which='both', length=0) # no y-ticks
 
 ax3.barh(
@@ -573,24 +581,24 @@ ax3.errorbar(
     x = average,
     y = 0.5,
     xerr = (
-        abs(average - lower),
-        pd.Series([0]),
-    ),
-    fmt = 'none',
-    capsize = 2,
-    ecolor = 'black',
-    elinewidth = 1,
-)
-ax3.errorbar(
-    x = average,
-    y = 0.5,
-    xerr = (
         pd.Series([0]),
         abs(average - upper)
     ),
     fmt = 'none',
     capsize = 2,
     ecolor = 'white',
+    elinewidth = 1,
+)
+ax3.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
     elinewidth = 1,
 )
 ax3.text(
@@ -606,7 +614,7 @@ ax3.text(
 # Water Vapor (H2O)
 
 ax4 = fig.add_axes(
-    rect = (0,-0.82,1,0.1), # (left, bottom, width, height)
+    rect = (0,-0.92,1,0.1), # (left, bottom, width, height)
     label = 'water',
     sharex = ax0
 )
