@@ -145,10 +145,6 @@ fig = plt.figure(
     figsize=(30*cm, 10*cm), # A4=(210x297)mm
 )
 
-# AXIS LIMITS ################
-
-
-
 # PLOTTING ###################
 
 # see also:
@@ -236,17 +232,51 @@ ax1.set_title(
     fontweight = 'bold',
 )
 
+# Create a custom colormap going from white to red to white
+from matplotlib.colors import LinearSegmentedColormap
+colors = [(1, 1, 1), (1, 0, 0), (1, 1, 1)]  # White -> Red -> White
+n_bins = 100  # Number of bins for the colormap
+cmap_name = 'white_red_white'
+# Register the colormap if it's not already registered
+if cmap_name not in plt.colormaps():
+    plt.register_cmap(cmap=LinearSegmentedColormap.from_list(cmap_name, colors, N=n_bins))
+
+gradient = np.linspace(0, 1, 256)  # Create a 1D array with 256 values evenly spaced between 0 and 1
+gradient = np.vstack((gradient, gradient))  # Stack the 1D array vertically to create a 2D array
+ax1.imshow(
+    gradient,
+    aspect = 'auto',
+    cmap = plt.get_cmap(cmap_name),
+    extent = [
+        40,
+        60,
+        0.1,
+        0.9
+    ]
+)
+ax1.text(
+    x=60,
+    y=0.5,
+    s=r'Grewe et al. (2019)',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
+)
+
+ax1.fill_between([0, 100], 0, 4, color='grey', alpha=0.5, hatch="//")
+
 ax1.barh(
     y = 0.5,
-    width = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]'],
+    width = df_nox[df_nox['Effect'] == 'Net NOx Emissions']['ERF Average [mW/m2]'],
     height = 0.8,
     align='center',
     color = 'red',
     edgecolor = 'black'
 )
-average = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]']
-lower = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Lower Errorbar [mW/m2]']
-upper = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Upper Errorbar [mW/m2]']
+average = df_nox[df_nox['Effect'] == 'Net NOx Emissions']['ERF Average [mW/m2]']
+lower = df_nox[df_nox['Effect'] == 'Net NOx Emissions']['ERF Lower Errorbar [mW/m2]']
+upper = df_nox[df_nox['Effect'] == 'Net NOx Emissions']['ERF Upper Errorbar [mW/m2]']
 ax1.errorbar(
     x = average,
     y = 0.5,
@@ -282,9 +312,54 @@ ax1.text(
 )
 
 ax1.barh(
-    y = 0.5,
+    y = 1.3,
+    width = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]'],
+    height = 0.4,
+    align='center',
+    color = 'red',
+    edgecolor = 'black'
+)
+average = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Average [mW/m2]']
+lower = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Lower Errorbar [mW/m2]']
+upper = df_nox[df_nox['Effect'] == 'Short-Term Ozone Increase']['ERF Upper Errorbar [mW/m2]']
+ax1.errorbar(
+    x = average,
+    y = 1.3,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax1.errorbar(
+    x = average,
+    y = 1.3,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 2,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+ax1.text(
+    x=-140,
+    y=1.3,
+    s=r'\textbf{NO$_x$ (Ozone)}',
+    ha='left',
+    va='center',
+    fontsize=8,
+    color='black',
+)
+
+ax1.barh(
+    y = 1.3,
     width = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Average [mW/m2]'],
-    height = 0.8,
+    height = 0.4,
     align='center',
     color = 'blue',
     edgecolor = 'black'
@@ -294,7 +369,7 @@ lower = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Lower Errorb
 upper = df_nox[df_nox['Effect'] == 'Long-Term Ozone Decrease']['ERF Upper Errorbar [mW/m2]']
 ax1.errorbar(
     x = average,
-    y = 0.5,
+    y = 1.3,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -306,7 +381,7 @@ ax1.errorbar(
 )
 ax1.errorbar(
     x = average,
-    y = 0.5,
+    y = 1.3,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -318,9 +393,9 @@ ax1.errorbar(
 )
 
 ax1.barh(
-    y = 1.5,
+    y = 1.8,
     width = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Average [mW/m2]'],
-    height = 0.8,
+    height = 0.4,
     align='center',
     color = 'blue',
     edgecolor = 'black'
@@ -330,7 +405,7 @@ lower = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Lower Errorbar [mW/m
 upper = df_nox[df_nox['Effect'] == 'Methane Decrease']['ERF Upper Errorbar [mW/m2]']
 ax1.errorbar(
     x = average,
-    y = 1.5,
+    y = 1.8,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -342,7 +417,7 @@ ax1.errorbar(
 )
 ax1.errorbar(
     x = average,
-    y = 1.5,
+    y = 1.8,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -354,7 +429,7 @@ ax1.errorbar(
 )
 ax1.text(
     x=-140,
-    y=1.5,
+    y=1.8,
     s=r'\textbf{NO$_x$ (Methane)}',
     ha='left',
     va='center',
@@ -363,9 +438,9 @@ ax1.text(
 )
 
 ax1.barh(
-    y = 2.5,
+    y = 2.3,
     width = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Average [mW/m2]'],
-    height = 0.8,
+    height = 0.4,
     align='center',
     color = 'blue',
     edgecolor = 'black'
@@ -375,7 +450,7 @@ lower = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Lower Errorbar [
 upper = df_nox[df_nox['Effect'] == 'Water Vapor Decrease']['ERF Upper Errorbar [mW/m2]']
 ax1.errorbar(
     x = average,
-    y = 2.5,
+    y = 2.3,
     xerr = (
         pd.Series([0]),
         abs(average - upper)
@@ -387,7 +462,7 @@ ax1.errorbar(
 )
 ax1.errorbar(
     x = average,
-    y = 2.5,
+    y = 2.3,
     xerr = (
         abs(average - lower),
         pd.Series([0]),
@@ -399,7 +474,7 @@ ax1.errorbar(
 )
 ax1.text(
     x=-140,
-    y=2.5,
+    y=2.3,
     s=r'\textbf{NO$_x$ (Water)}',
     ha='left',
     va='center',
@@ -588,6 +663,17 @@ ax4.text(
 
 # LEGEND ####################
 
+legend_elements = [
+    Patch(facecolor='red', edgecolor='black', label='Average Warming'),
+    Patch(facecolor='blue', edgecolor='black', label='Average Cooling'),
+    #err,
+]
+
+# Displaying the custom legend
+fig.legend(
+    handles=legend_elements,
+    loc='lower right'
+)
 
 # EXPORT #########################################
 
