@@ -133,38 +133,38 @@ axes[0].text(
 )
 
 axes[0].fill_between(
-    x = xnew[0:40],
+    x = xnew[0:41],
     y1 = 0,
-    y2 = ynew[0:40],
-    color='blue',
+    y2 = ynew[0:41],
+    edgecolor='blue',
+    facecolor='none',
     hatch = '///',
     alpha=0.3,
     label = 'A'
 )
 axes[0].fill_between(
-    x = xnew[0:40],
+    x = xnew[0:41],
     y1 = 0,
-    y2 = [0.02 for i in xnew[0:40]],
+    y2 = [0.02 for i in xnew[0:41]],
     color='red',
     #hatch = '\\\\\\',
     alpha=0.3,
     label = 'B'
 )
 
-
-axes[1].plot(
-    xnew,
-    [0.005+ 0.0002*i for i in xnew],
-    color = 'red',
-    linewidth = 2,
-    label = 'Long-Lived Emissions'
-)
 axes[1].plot(
     xnew,
     [0.01 for i in xnew],
     color = 'blue',
     linewidth = 2,
     label = 'Short-Lived Emissions'
+)
+axes[1].plot(
+    xnew,
+    [0.005+ 0.0002*i for i in xnew],
+    color = 'red',
+    linewidth = 2,
+    label = 'Long-Lived Emissions'
 )
 axes[1].text(
     x=3,
