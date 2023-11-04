@@ -75,6 +75,25 @@ df_train = pd.read_excel(
     engine = 'openpyxl'
 )
 
+df_average = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Averages',
+    usecols = lambda column: column in [
+        'mode',
+        'energy intensity lower [kJ/pax-km]',
+        'energy intensity upper [kJ/pax-km]',
+        'energy intensity average [kJ/pax-km]',
+    ],
+    dtype={
+        'mode': str,
+        'energy intensity lower [kJ/pax-km]': float,
+        'energy intensity upper [kJ/pax-km]': float,
+        'energy intensity average [kJ/pax-km]': float,
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
+
 # DATA MANIPULATION #############################
 
 # FIGURE ########################################
@@ -84,33 +103,46 @@ df_train = pd.read_excel(
 fig, ax = plt.subplots(
     num = 'main',
     nrows = 1,
-    ncols = 1,
+    ncols = 2,
     dpi = 300,
     figsize=(30*cm, 10*cm), # A4=(210x297)mm,
+    gridspec_kw={'width_ratios': [9, 1]}
 )
+fig.subplots_adjust(wspace=0.05)  # Adjust horizontal spacing. Use a value that suits your needs.
+
 
 # AXIS SCALING ###############
 
 # AXIS LIMITS ################
 
-ax.set_xlim(1950, 2023)
+ax[0].set_xlim(1950, 2023)
+ax[0].set_ylim(0, 7000)
+
+ax[1].set_xlim(-0.5, 2.5)
+ax[1].set_ylim(0, 7000)
 
 # TICKS AND LABELS ###########
 
+ax[1].set_yticklabels([]) # no y-tick labels
+ax[1].set_xticks([])
+
 # GRIDS ######################
 
-ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
+for axis in ax:
+    axis.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+    axis.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_ylabel("Energy Intensity [kJ/pax-km]")
-ax.set_xlabel("Year")
+ax[0].set_ylabel("Energy Intensity [kJ/pax-km]")
+ax[0].set_xlabel("Year")
+
+ax[1].set_xlabel("2018 Averages")
 
 # PLOTTING ###################
 
 
-ax.plot(
+ax[0].plot(
     df_air['year'],
     df_air['energy intensity [kJ/pax-km]'],
     color = 'black',
@@ -118,7 +150,7 @@ ax.plot(
     linestyle = '-',
 )
 
-ax.plot(
+ax[0].plot(
     df_car['year'],
     df_car['energy intensity [kJ/pax-km]'],
     color = 'black',
@@ -126,7 +158,7 @@ ax.plot(
     linestyle = '--',
 )
 
-ax.plot(
+ax[0].plot(
     df_train['year'],
     df_train['energy intensity [kJ/pax-km]'],
     color = 'black',
@@ -134,10 +166,71 @@ ax.plot(
     linestyle = '-.',
 )
 
+labels = ['Air', 'Cars', 'Rail']  # replace with your actual labels
+
+ax[1].set_xticks(np.arange(len(labels)))  # set x-ticks at the positions of the labels
+ax[1].set_xticklabels(labels, rotation=90)  # set x-tick labels and rotate them 90 degrees
+ax[1].xaxis.tick_top()  # move x-ticks to the top
+
+ax[1].xaxis.set_tick_params(pad=-120)
+
+ax[1].plot(
+    0,
+    df_average[df_average['mode'] == 'air']['energy intensity average [kJ/pax-km]'],
+    color = 'black',
+    marker = 'o',
+)
+ax[1].errorbar(
+    x = 0,
+    y = df_average[df_average['mode'] == 'air']['energy intensity average [kJ/pax-km]'],
+    yerr = [
+        df_average[df_average['mode'] == 'air']['energy intensity lower [kJ/pax-km]'],
+        df_average[df_average['mode'] == 'air']['energy intensity upper [kJ/pax-km]'],
+    ],
+    color = 'black',
+    capsize = 3,
+    capthick = 1,
+)
+
+ax[1].plot(
+    1,
+    df_average[df_average['mode'] == 'car']['energy intensity average [kJ/pax-km]'],
+    color = 'black',
+    marker = 'o',
+)
+ax[1].errorbar(
+    x = 1,
+    y = df_average[df_average['mode'] == 'car']['energy intensity average [kJ/pax-km]'],
+    yerr = [
+        df_average[df_average['mode'] == 'car']['energy intensity lower [kJ/pax-km]'],
+        df_average[df_average['mode'] == 'car']['energy intensity upper [kJ/pax-km]'],
+    ],
+    color = 'black',
+    capsize = 3,
+    capthick = 1,
+)
+
+ax[1].plot(
+    2,
+    df_average[df_average['mode'] == 'rail']['energy intensity average [kJ/pax-km]'],
+    color = 'black',
+    marker = 'o',
+)
+ax[1].errorbar(
+    x = 2,
+    y = df_average[df_average['mode'] == 'rail']['energy intensity average [kJ/pax-km]'],
+    yerr = [
+        df_average[df_average['mode'] == 'rail']['energy intensity lower [kJ/pax-km]'],
+        df_average[df_average['mode'] == 'rail']['energy intensity upper [kJ/pax-km]'],
+    ],
+    color = 'black',
+    capsize = 3,
+    capthick = 1,
+)
  
 # LEGEND ####################
 
-ax.legend(
+ax[0].legend(
     loc = 'upper right',
 )
 
