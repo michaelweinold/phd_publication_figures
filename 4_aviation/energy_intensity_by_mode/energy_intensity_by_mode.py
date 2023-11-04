@@ -30,36 +30,46 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_average = pd.read_excel(
+df_air = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Average',
+    sheet_name = 'Aircraft',
     usecols = lambda column: column in [
-        'rail (MJ/pax-km)',
-        'bus (MJ/pax-km)',
-        'car (MJ/pax-km)',
-        'air (MJ/pax-km)'
+        'year',
+        'energy intensity [kJ/pax-km]'
     ],
     dtype={
-        'rail (MJ/pax-km)': float,
-        'bus (MJ/pax-km)': float,
-        'car (MJ/pax-km)': float,
-        'air (MJ/pax-km)': float
+        'year': int,
+        'energy intensity [kJ/pax-km]': float
     },
     header = 0,
     engine = 'openpyxl'
 )
-df_history_air = pd.read_excel(
+
+df_car = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Air',
+    sheet_name = 'Cars',
     usecols = lambda column: column in [
         'year',
-        'energy intensity (BTU/pax-mile)',
-        'energy intensity (kJ/pax-km)'
+        'energy intensity [kJ/pax-km]'
     ],
     dtype={
         'year': int,
-        'energy intensity (BTU/pax-mile)': float,
-        'energy intensity (kJ/pax-km)': float
+        'energy intensity [kJ/pax-km]': float
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
+
+df_train = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Trains',
+    usecols = lambda column: column in [
+        'year',
+        'energy intensity [kJ/pax-km]'
+    ],
+    dtype={
+        'year': int,
+        'energy intensity [kJ/pax-km]': float
     },
     header = 0,
     engine = 'openpyxl'
@@ -101,41 +111,34 @@ ax.set_xlabel("Year")
 
 
 ax.plot(
-    df_history_air['year'],
-    df_history_air['energy intensity (kJ/pax-km)'],
+    df_air['year'],
+    df_air['energy intensity [kJ/pax-km]'],
     color = 'black',
-    label = 'Air (U.S. Domestic)',
+    label = 'Air (U.S., Domestic Routes)',
     linestyle = '-',
 )
 
-width = 0.4
-x = np.arange(len(labels))
-ax.set_xticks(x, labels)
-# Japan
-ax.bar(
-    x = x,
-    height = df_japan['rail [%]'],
-    width = width,
-    label = 'Rail',
-    color = 'darkorange',
+ax.plot(
+    df_car['year'],
+    df_car['energy intensity [kJ/pax-km]'],
+    color = 'black',
+    label = 'Cars (U.S., \"Light-Duty\")',
+    linestyle = '--',
 )
 
-plt.errorbar(
-    2017,
-    y_bot,
-    yerr=(np.zeros_like(y_bot), y_dif),
-    capsize=10,
-    ecolor='black',
-    ls='',
-    lw=5,
-    capthick=5
+ax.plot(
+    df_train['year'],
+    df_train['energy intensity [kJ/pax-km]'],
+    color = 'black',
+    label = 'Rail (U.S., Inter-City Routes)',
+    linestyle = '-.',
 )
 
-
+ 
 # LEGEND ####################
 
-axes[0].legend(
-    loc = 'lower left',
+ax.legend(
+    loc = 'upper right',
 )
 
 # EXPORT #########################################
