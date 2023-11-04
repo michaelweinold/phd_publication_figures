@@ -145,7 +145,7 @@ ax[1].set_xlabel("2018 Averages")
 ax[0].plot(
     df_air['year'],
     df_air['energy intensity [kJ/pax-km]'],
-    color = 'black',
+    color = 'royalblue',
     label = 'Air (U.S., Domestic Routes)',
     linestyle = '-',
 )
@@ -153,7 +153,7 @@ ax[0].plot(
 ax[0].plot(
     df_car['year'],
     df_car['energy intensity [kJ/pax-km]'],
-    color = 'black',
+    color = 'brown',
     label = 'Cars (U.S., \"Light-Duty\")',
     linestyle = '--',
 )
@@ -161,7 +161,7 @@ ax[0].plot(
 ax[0].plot(
     df_train['year'],
     df_train['energy intensity [kJ/pax-km]'],
-    color = 'black',
+    color = 'darkorange',
     label = 'Rail (U.S., Inter-City Routes)',
     linestyle = '-.',
 )
@@ -177,7 +177,7 @@ ax[1].xaxis.set_tick_params(pad=-120)
 ax[1].plot(
     0,
     df_average[df_average['mode'] == 'air']['energy intensity average [kJ/pax-km]'],
-    color = 'black',
+    color = 'royalblue',
     marker = 'o',
 )
 ax[1].errorbar(
@@ -187,7 +187,7 @@ ax[1].errorbar(
         df_average[df_average['mode'] == 'air']['energy intensity lower [kJ/pax-km]'],
         df_average[df_average['mode'] == 'air']['energy intensity upper [kJ/pax-km]'],
     ],
-    color = 'black',
+    color = 'royalblue',
     capsize = 3,
     capthick = 1,
 )
@@ -195,7 +195,7 @@ ax[1].errorbar(
 ax[1].plot(
     1,
     df_average[df_average['mode'] == 'car']['energy intensity average [kJ/pax-km]'],
-    color = 'black',
+    color = 'brown',
     marker = 'o',
 )
 ax[1].errorbar(
@@ -205,7 +205,7 @@ ax[1].errorbar(
         df_average[df_average['mode'] == 'car']['energy intensity lower [kJ/pax-km]'],
         df_average[df_average['mode'] == 'car']['energy intensity upper [kJ/pax-km]'],
     ],
-    color = 'black',
+    color = 'brown',
     capsize = 3,
     capthick = 1,
 )
@@ -213,7 +213,7 @@ ax[1].errorbar(
 ax[1].plot(
     2,
     df_average[df_average['mode'] == 'rail']['energy intensity average [kJ/pax-km]'],
-    color = 'black',
+    color = 'darkorange',
     marker = 'o',
 )
 ax[1].errorbar(
@@ -223,7 +223,7 @@ ax[1].errorbar(
         df_average[df_average['mode'] == 'rail']['energy intensity lower [kJ/pax-km]'],
         df_average[df_average['mode'] == 'rail']['energy intensity upper [kJ/pax-km]'],
     ],
-    color = 'black',
+    color = 'darkorange',
     capsize = 3,
     capthick = 1,
 )
