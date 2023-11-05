@@ -36,7 +36,7 @@ plt.rcParams.update({
 
 df_fuels = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Energy Density Fuels',
+    sheet_name = 'Fuels',
     usecols = lambda column: column in [
         'substance',
         'Wh/kg',
@@ -52,7 +52,7 @@ df_fuels = pd.read_excel(
 )
 df_batteries_2011 = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Energy Density Batteries (2011)',
+    sheet_name = 'Batteries (General)',
     usecols = lambda column: column in [
         'technology',
         'range lower [Wh/kg]',
@@ -80,11 +80,12 @@ dict_battery_technologies: dict = {
     'Ni-Cd': 'green',
     'Ni-MH': 'orange',
     'Li-ion': 'blue',
-    'PLiON': 'purple',
-    'Li-metal': 'pink',
+    'Li-S': 'purple',
+    'Li-metal': 'brown',
 }
 
 import matplotlib.patches as patches
+import matplotlib.colors as colors
 
 def build_rectangles(
         dict_battery_technologies: dict,
@@ -99,12 +100,19 @@ def build_rectangles(
         x_max: float = df_row['range higher [Wh/kg]'].iloc[0]
         y_min: float = df_row['range lower [Wh/l]'].iloc[0]
         y_max: float = df_row['range higher [Wh/l]'].iloc[0]
+        
+        # Convert color name to RGB
+        rgb = colors.to_rgb(value)
+        
+        # Add alpha to create RGBA
+        rgba = (*rgb, 0.2)  # adjust alpha value to suit your needs
+
         rectangle = patches.Rectangle(
             xy = (x_min, y_min),
             width = x_max - x_min,
             height = y_max - y_min,
             edgecolor = value,
-            facecolor = 'none'
+            facecolor = rgba,
         )
         list_rectangles.append(rectangle)
 
@@ -239,6 +247,11 @@ for rectangle in battery_rectangles_2011:
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
+# Convert color name to RGB
+rgb = colors.to_rgb('black')
+# Add alpha to create RGBA
+rgba = (*rgb, 0.2)  # adjust alpha value to suit your needs
+
 legend_elements = [
     Line2D(
         xdata = [0],
@@ -251,7 +264,7 @@ legend_elements = [
         label='Fuels'
     ),
     Patch(
-        facecolor = 'none',
+        facecolor = rgba,
         edgecolor = 'black',
         label = 'Batteries'
     ),
@@ -259,7 +272,8 @@ legend_elements = [
 
 ax_Wh[0].legend(
     handles=legend_elements,
-    loc='upper right',
+    loc='lower left',
+    bbox_to_anchor=(0.1, 0.01),
 )
 
 # ANNOTATION ################
@@ -310,6 +324,7 @@ battery_rectangles_2011_copy = battery_rectangles_2011.copy()
 for rectangle in battery_rectangles_2011_inset:
     ax_battery_inset.add_patch(rectangle)
 
+
 # EXPORT #########################################
 
 file_path = os.path.abspath(__file__)
@@ -322,4 +337,3 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
