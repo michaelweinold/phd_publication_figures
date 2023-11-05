@@ -36,7 +36,7 @@ plt.rcParams.update({
 
 df_fuels = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Energy Density Fuels',
+    sheet_name = 'Fuels',
     usecols = lambda column: column in [
         'substance',
         'Wh/kg',
@@ -50,9 +50,9 @@ df_fuels = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
-df_batteries_2011 = pd.read_excel(
+df_batt_average = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Energy Density Batteries (2011)',
+    sheet_name = 'Batteries (General)',
     usecols = lambda column: column in [
         'technology',
         'range lower [Wh/kg]',
@@ -72,7 +72,7 @@ df_batteries_2011 = pd.read_excel(
 )
 df_acft_electrification_icct = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Aircraft Electrification (ICCT)',
+    sheet_name = 'Acft Replacement',
     usecols = lambda column: column in [
         'battery energy density, commuter traffic, current EMF [Wh/kg]',
         'replacable commuter traffic, current EMF [%]',
@@ -107,7 +107,7 @@ df_acft_electrification_icct = pd.read_excel(
 
 df_lion_historical = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Li-ion Historical',
+    sheet_name = 'Historical Li-Ion',
     usecols = lambda column: column in [
         'year',
         'Wh/kg (historical)',
@@ -126,6 +126,21 @@ df_lion_historical = pd.read_excel(
     engine = 'openpyxl'
 )
 
+df_batt_limits = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Batteries Limits',
+    usecols = lambda column: column in [
+        'chemistry',
+        'limit (practical) [Wh/kg]',
+    ],
+    dtype={
+        'chemistry': str,
+        'limit (practical) [Wh/kg]': float,
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
+
 # DATA MANIPULATION #############################
 
 # BUILD RECTANGLES ###############
@@ -135,31 +150,39 @@ dict_battery_technologies: dict = {
     'Ni-Cd': 'green',
     'Ni-MH': 'orange',
     'Li-ion': 'blue',
-    'PLiON': 'purple',
-    'Li-metal': 'pink',
+    'Li-metal': 'brown',
+    'Li-S': 'purple',
 }
 
 import matplotlib.patches as patches
+import matplotlib.colors as colors
 
 def build_rectangles(
         dict_battery_technologies: dict,
-        df_batteries: pd.DataFrame
+        df_batt_average: pd.DataFrame
 ) -> List:
     
     list_rectangles: List = []
 
     for key, value in dict_battery_technologies.items():
-        df_row: pd.DataFrame = df_batteries.loc[df_batteries['technology'] == key]
+        df_row: pd.DataFrame = df_batt_average.loc[df_batt_average['technology'] == key]
         x_min: float = df_row['range lower [Wh/kg]'].iloc[0]
         x_max: float = df_row['range higher [Wh/kg]'].iloc[0]
         y_min: float = df_row['range lower [Wh/l]'].iloc[0]
         y_max: float = df_row['range higher [Wh/l]'].iloc[0]
+
+        # Convert color name to RGB
+        rgb = colors.to_rgb(value)
+        
+        # Add alpha to create RGBA
+        rgba = (*rgb, 0.2)  # adjust alpha value to suit your needs
+
         rectangle = patches.Rectangle(
             xy = (x_min, y_min),
             width = x_max - x_min,
             height = y_max - y_min,
             edgecolor = value,
-            facecolor = 'none'
+            facecolor = rgba,
         )
         list_rectangles.append(rectangle)
 
@@ -182,7 +205,7 @@ def copy_rectangles_for_inset(list_rectangles: List) -> List:
 
 battery_rectangles_2011 = build_rectangles(
     dict_battery_technologies = dict_battery_technologies,
-    df_batteries = df_batteries_2011
+    df_batt_average = df_batt_average
 )
 
 battery_rectangles_2011_inset = copy_rectangles_for_inset(battery_rectangles_2011)
@@ -329,6 +352,65 @@ ax[0].scatter(
     edgecolors = 'blue'
 )
 
+ax[0].axvline(
+    x = df_batt_limits.loc[df_batt_limits['chemistry'] == 'Li-ion']['limit (practical) [Wh/kg]'].iloc[0],
+    color = 'blue',
+    ls = '--',
+)
+ax[0].axvline(
+    x = df_batt_limits.loc[df_batt_limits['chemistry'] == 'Li-metal']['limit (practical) [Wh/kg]'].iloc[0],
+    color = 'brown',
+    ls = '--',
+)
+ax[0].axvline(
+    x = df_batt_limits.loc[df_batt_limits['chemistry'] == 'Li-S']['limit (practical) [Wh/kg]'].iloc[0],
+    color = 'purple',
+    ls = '--',
+)
+ax[0].axvline(
+    x = df_batt_limits.loc[df_batt_limits['chemistry'] == 'Li-O2']['limit (practical) [Wh/kg]'].iloc[0],
+    color = 'black',
+)
+ax[0].axvline(
+    x = df_batt_limits.loc[df_batt_limits['chemistry'] == 'Zn-O2']['limit (practical) [Wh/kg]'].iloc[0],
+    color = 'black',
+)
+
+# Create a custom colormap going from white to red to white
+from matplotlib.colors import LinearSegmentedColormap
+cols = [(1, 1, 1), (0, 0, 0), (1, 1, 1)]  # White -> Red -> White
+n_bins = 100  # Number of bins for the colormap
+cmap_name = 'white_black_white'
+# Register the colormap if it's not already registered
+if cmap_name not in plt.colormaps():
+    plt.register_cmap(cmap=LinearSegmentedColormap.from_list(cmap_name, cols, N=n_bins))
+
+gradient = np.linspace(0, 1, 256)  # Create a 1D array with 256 values evenly spaced between 0 and 1
+gradient = np.vstack((gradient, gradient))  # Stack the 1D array vertically to create a 2D array
+ax[0].imshow(
+    gradient,
+    aspect = 'auto',
+    cmap = plt.get_cmap(cmap_name),
+    extent = [
+        350,
+        600,
+        320,
+        1000
+    ]
+)
+
+ax[0].text(
+    x=420,
+    y=650,
+    s=r'Electric Acft. \\ Batteries ($\sim$ 2023)',
+    ha='left',
+    va='center',
+    fontsize=11,
+    fontweight='bold',
+    color='white',
+)
+
+
 # ANNOTATION ################
 
 annotation_years_historical: list = [
@@ -369,6 +451,12 @@ for idx, row in df_lion_historical.iterrows():
 from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
+# Convert color name to RGB
+rgb = colors.to_rgb('black')
+# Add alpha to create RGBA
+rgba = (*rgb, 0.2)  # adjust alpha value to suit your needs
+
+
 legend_elements_categories = [
     Line2D(
         xdata = [0],
@@ -378,7 +466,7 @@ legend_elements_categories = [
         linestyle = 'None',
         markersize=4,
         marker='o',
-        label = 'Best Commercial (historical)'
+        label = 'Best Commercial'
     ),
     Line2D(
         xdata = [0],
@@ -391,24 +479,29 @@ legend_elements_categories = [
         label = 'Future Targets'
     ),
     Patch(
-        facecolor = 'none',
+        facecolor = rgba,
         edgecolor = 'black',
-        label = 'Average (around 2010)'
+        label = 'Commercial Average'
     ),
+    Line2D(
+        [0],
+        [0],
+        color='black',
+        lw=2,
+        ls='--',
+        label='Phys. Limits'
+    )
 ]
 
 legend_elements_battery_technology: list = []
 def add_battery_technology_color_legend():
     for technology, legend_color in dict_battery_technologies.items():
-        colored_line = Line2D(
-            xdata = [0],
-            ydata = [0],
-            marker='none',
-            color = legend_color,
-            linestyle = '-',
+        patch = Patch(
+            facecolor = legend_color,
+            edgecolor = 'none',
             label = technology
         )
-        legend_elements_battery_technology.append(colored_line)
+        legend_elements_battery_technology.append(patch)
 
 add_battery_technology_color_legend()
 
@@ -435,3 +528,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
