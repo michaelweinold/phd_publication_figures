@@ -270,18 +270,8 @@ axes[1].annotate(
         linewidth=2
     )
 )
-axes[1].plot(
-    target_x_2,
-    source_y,
-    marker='o',
-    color='black'
-)
-axes[1].plot(
-    source_x,
-    source_y,
-    marker='o',
-    color='black'
-)
+
+
 
 axes[1].annotate(
     '',
@@ -403,6 +393,13 @@ axes[1].text(
     target_y_1 + (target_y_2 - target_y_1)/2 -2,
     '$E_1 - E_1^*$ = Rebd. Losses',
     backgroundcolor='white'
+)
+
+axes[1].plot(
+    source_x,
+    source_y,
+    marker='o',
+    color='black'
 )
 
 # LEGEND ####################
