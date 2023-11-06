@@ -55,6 +55,19 @@ def find_x(y, x_coords, y_coords):
     
     return x
 
+
+def find_y(x, x_coords, y_coords):
+    # Calculate the slope of the line
+    m = (y_coords[1] - y_coords[0]) / (x_coords[1] - x_coords[0])
+    
+    # Calculate the y-intercept of the line
+    b = y_coords[0] - m * x_coords[0]
+    
+    # Calculate the corresponding y-coordinate
+    y = m * x + b
+    
+    return y
+
 # FIGURE ########################################
 
 # SETUP ######################
@@ -117,21 +130,21 @@ axes[0].plot(
     label='$\epsilon_2$, High Efficiency'
 )
 
+source_y = 65
+source_x = find_x(source_y, x_coords_steep, y_coords_steep)
+
+target_y = find_y(source_x, x_coords_flat, y_coords_flat)
+target_x = source_x
+
 axes[0].axhline(
     y=65,
     color='black'
 )
 
 axes[0].axhline(
-    y=35,
+    y=target_y,
     color='black'
 )
-
-source_y = 65
-source_x = find_x(source_y, x_coords_steep, y_coords_steep)
-
-target_y = 35
-target_x = find_x(source_y, x_coords_steep, y_coords_steep)
     
 axes[0].plot(
     (source_x, source_x),
@@ -190,7 +203,8 @@ axes[0].text(
 axes[0].text(
     source_x + 2,
     target_y + (source_y - target_y)/2 -2,
-    '$E_0 - E_1$ = Energy Savings'
+    '$E_0 - E_1$ = Energy Savings',
+    backgroundcolor='white'
 )
 
 axes[0].text(
@@ -203,13 +217,200 @@ axes[0].text(
     color='black',
 )
 
+axes[1].text(
+    x=2,
+    y=94,
+    s=r'\textbf{Rebound Effect}',
+    ha='left',
+    va='center',
+    fontsize=12,
+    color='black',
+)
+
+
+axes[1].plot(
+    x_coords_steep,
+    y_coords_steep,
+    color='red',
+    label='$\epsilon_1$, Low Efficiency'
+)
+
+axes[1].plot(
+    x_coords_flat,
+    y_coords_flat,
+    color='green',
+    #linestyle='--',
+    label='$\epsilon_2$, High Efficiency'
+)
+
+source_y = 65
+source_x = find_x(source_y, x_coords_steep, y_coords_steep)
+
+target_y_1 = find_y(source_x, x_coords_flat, y_coords_flat)
+target_x_1 = source_x
+
+target_x_2 = source_x + 30
+target_y_2 = find_y(target_x_2, x_coords_flat, y_coords_flat)
+
+
+
+axes[1].annotate(
+    '',
+    xytext=(
+        target_x_2,
+        source_y
+    ), # source point
+    xy=(
+        target_x_2,
+        target_y_2
+    ), # target point
+    arrowprops=dict(
+        arrowstyle='<->',
+        color='black',
+        linewidth=2
+    )
+)
+axes[1].plot(
+    target_x_2,
+    source_y,
+    marker='o',
+    color='black'
+)
+axes[1].plot(
+    source_x,
+    source_y,
+    marker='o',
+    color='black'
+)
+
+axes[1].annotate(
+    '',
+    xytext=(
+        target_x_2,
+        target_y_2
+    ), # source point
+    xy=(
+        target_x_2,
+        target_y
+    ), # target point
+    arrowprops=dict(
+        arrowstyle='<->',
+        color='black',
+        linewidth=2
+    )
+)
+axes[1].plot(
+    target_x_2,
+    target_y_2,
+    marker='o',
+    color='black'
+)
+axes[1].plot(
+    source_x,
+    source_y,
+    marker='o',
+    color='black'
+)
+
+axes[1].axhline(
+    y=65,
+    color='black'
+)
+
+axes[1].axhline(
+    y=target_y_2,
+    color='black'
+)
+
+axes[1].axhline(
+    y=target_y,
+    color='black',
+    linestyle='-.'
+)
+    
+axes[1].plot(
+    (source_x, source_x),
+    (0, source_y),
+    color='grey',
+    linestyle='--',
+)
+
+axes[1].plot(
+    (target_x_2, target_x_2),
+    (0, source_y),
+    color='grey',
+    linestyle='--',
+)
+
+
+axes[1].annotate(
+    '',
+    xytext=(
+        source_x,
+        5
+    ), # source point
+    xy=(
+        target_x_2,
+        5
+    ), # target point
+    arrowprops=dict(
+        arrowstyle='->',
+        color='grey',
+        linewidth=2
+    )
+)
+
+axes[1].text(
+    target_x + 2,
+    4,
+    '$S_0$',
+    backgroundcolor='white'
+)
+
+axes[1].text(
+    target_x_2 + 2,
+    4,
+    '$S_1$'
+)
+
+axes[1].text(
+    2,
+    source_y + 4,
+    '$E_0$'
+)
+
+axes[1].text(
+    2,
+    target_y_2 + 4,
+    '$E_1$'
+)
+
+axes[1].text(
+    2,
+    target_y + 4,
+    '$E_1^*$'
+)
+
+axes[1].text(
+    target_x_2 + 2,
+    target_y_2 + (source_y - target_y_2)/2 -2,
+    '$E_0 - E_1$ = E. Savings',
+    backgroundcolor='white'
+)
+
+axes[1].text(
+    target_x_2 + 2,
+    target_y_1 + (target_y_2 - target_y_1)/2 -2,
+    '$E_1 - E_1^*$ = Rebd. Losses',
+    backgroundcolor='white'
+)
+
 # LEGEND ####################
 
 axes[0].legend(
     loc='upper right',
     frameon = False
 )
-
 
 # EXPORT #########################################
 
