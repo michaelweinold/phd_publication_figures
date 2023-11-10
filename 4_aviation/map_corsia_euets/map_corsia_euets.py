@@ -11,6 +11,7 @@ import matplotlib.font_manager as font_manager
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import shapely.geometry as sgeom
+import cartopy.io.shapereader as shpreader
 # unit conversion
 cm = 1/2.54 # for inches-cm conversion
 # time manipulation
@@ -25,14 +26,32 @@ from pathlib import PurePath, Path
 # SETUP #########################################
 
 plt.rcParams.update({
-    "text.usetex": False,
+    "text.usetex": True,
     "font.family": "Arial",
-    'font.size': 10
+    "font.sans-serif": "Computer Modern",
+    'font.size': 12
 })
 
 # DATA IMPORT ###################################
 
-https://scitools.org.uk/cartopy/docs/latest/gallery/lines_and_polygons/hurricane_katrina.html
+df_finnair = pd.read_csv(
+    filepath_or_buffer = 'data/AY99_2f2a9256.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
+df_british = pd.read_csv(
+    filepath_or_buffer = 'data/BA57_301ab0b0.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
+df_airfrance = pd.read_csv(
+    filepath_or_buffer = 'data/3138ab42.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
 
 # DATA MANIPULATION #############################
 
@@ -60,16 +79,8 @@ british_track, lat_british, lon_british = extract_coordinates_from_csv(
     df = df_british,
     column_name = 'Position'
 )
-pal_track, lat_pal, lon_pal = extract_coordinates_from_csv(
-    df = df_pal,
-    column_name = 'Position'
-)
 airfrance_track, lat_airfrance, lon_airfrance = extract_coordinates_from_csv(
     df = df_airfrance,
-    column_name = 'Position'
-)
-quantas_track, lat_quantas, lon_quantas = extract_coordinates_from_csv(
-    df = df_quantas,
     column_name = 'Position'
 )
 
@@ -84,27 +95,27 @@ plateCr._threshold = plateCr._threshold/10.
 fig = plt.figure(
     num = 'main',
     dpi = 300,
-    figsize=(30*cm, 10*cm), # A4=(210x297)mm
+    figsize=(30*cm, 15*cm), # A4=(210x297)mm
 )
-ax = plt.subplot(
-    projection=plateCr,
+ax = plt.axes(
+    projection=ccrs.PlateCarree(),
 )
+ax.add_feature(cfeature.BORDERS, linestyle='-', alpha=1)
+ax.add_feature(cfeature.COASTLINE, linestyle='-', alpha=1)
+ax.add_feature(cfeature.OCEAN, facecolor=(0.5,0.5,0.5))
 
-# https://scitools.org.uk/cartopy/docs/latest/gallery/lines_and_polygons/features.html#features
-ax.add_feature(cfeature.BORDERS, alpha=0.25, linewidth=0.5)
-ax.add_feature(cfeature.LAKES, alpha=0.5, linewidth=0.5)
-ax.add_feature(cfeature.COASTLINE, linewidth=0.5)
-ax.set_global()
 
 # DATA #######################
 
 # AXIS LIMITS ################
 
-ax.set_ylim(-70,70)
+ax.set_extent ((-25, 50, 30, 65), None) # (x0, x1, y0, y1)
 
 # TICKS AND LABELS ###########
 
 # GRIDS ######################
+
+ax.gridlines()
 
 # AXIS LABELS ################
 
@@ -115,83 +126,92 @@ ax.add_geometries(
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
     edgecolor = 'red',
-    linewidth = 1
+    linewidth = 2
 )
 ax.add_geometries(
     geoms = british_track,
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
     edgecolor = 'red',
-    linewidth = 1
-)
-ax.add_geometries(
-    geoms = pal_track,
-    crs = ccrs.Geodetic(), # https://stackoverflow.com/a/67730772
-    facecolor = 'none',
-    edgecolor = 'red',
-    linewidth = 1
+    linewidth = 2
 )
 ax.add_geometries(
     geoms = airfrance_track,
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
     edgecolor = 'red',
-    linewidth = 1
+    linewidth = 2
 )
 
-ax.plot(
-    lon_finnair,
-    lat_finnair,
-    color='blue',
-    transform=ccrs.Geodetic(),
-    linewidth = 1,
+# https://github.com/IndEcol/country_converter?tab=readme-ov-file#classification-schemes
+import country_converter as coco
+cc = coco.CountryConverter()
+
+shpfilename = shpreader.natural_earth(
+    resolution='50m',
+    category='cultural',
+    name='admin_0_countries'
 )
-ax.plot(
-    lon_british,
-    lat_british,
-    color='blue',
-    transform=ccrs.Geodetic(),
-    linewidth = 1
-)
-ax.plot(
-    lon_pal,
-    lat_pal,
-    color='blue',
-    transform=ccrs.Geodetic(),
-    linewidth = 1
-)
-ax.plot(
-    lon_airfrance,
-    lat_airfrance,
-    color='blue',
-    transform=ccrs.Geodetic(),
-    linewidth = 1
-)
+reader = shpreader.Reader(shpfilename)
+
+countries = reader.records()
+for country in countries:
+    if country.attributes['ADM0_A3'] in cc.convert(cc.EU27['name_short'], to='ISO3'):
+        ax.add_geometries(
+            country.geometry,
+            ccrs.PlateCarree(),
+            facecolor='blue',
+            edgecolor='black',
+            linewidth=1
+        )
+
+countries = reader.records()
+for country in countries:
+    if country.attributes['ADM0_A3'] in ['CHE', 'NOR', 'LIE', 'ISL']:
+        ax.add_geometries(
+            country.geometry,
+            ccrs.PlateCarree(),
+            facecolor='green',
+            edgecolor='black',
+            linewidth=1
+        )
+
 
 # LEGEND ####################
 
+import matplotlib.patches as patches
 from matplotlib.lines import Line2D
 
 legend_elements = [
-    Line2D(
-        xdata = [0],
-        ydata = [0],
-        color = 'blue',
-        linestyle = '-',
-        label='Great Circle'
+    patches.Patch(
+        facecolor = 'blue',
+        edgecolor = 'black',
+        label = 'EU(27)'
+    ),
+    patches.Patch(
+        facecolor = 'green',
+        edgecolor = 'black',
+        label = 'Other ETS Countries'
     ),
     Line2D(
         xdata = [0],
         ydata = [0],
         color = 'red',
         linestyle = '-',
-        label='Aircraft Track'
+        label='ICAO CORSIA'
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'lightblue',
+        linestyle = '-',
+        label='EU ETS'
     ),
 ]
 
 ax.legend(
     handles=legend_elements,
-    loc='lower left',
+    loc='upper right',
 )
 
 # EXPORT #########################################
