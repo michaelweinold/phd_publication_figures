@@ -84,6 +84,8 @@ airfrance_track, lat_airfrance, lon_airfrance = extract_coordinates_from_csv(
     column_name = 'Position'
 )
 
+list_of_tracks = [finnair_track, british_track, airfrance_track]
+
 # FIGURE ########################################
 
 # SETUP ######################
@@ -109,7 +111,7 @@ ax.add_feature(cfeature.OCEAN, facecolor=(0.5,0.5,0.5))
 
 # AXIS LIMITS ################
 
-ax.set_extent ((-25, 50, 30, 65), None) # (x0, x1, y0, y1)
+ax.set_extent ((-45, 50, 30, 65), None) # (x0, x1, y0, y1)
 
 # TICKS AND LABELS ###########
 
@@ -120,6 +122,55 @@ ax.gridlines()
 # AXIS LABELS ################
 
 # PLOTTING ###################
+
+# https://github.com/IndEcol/country_converter?tab=readme-ov-file#classification-schemes
+import country_converter as coco
+cc = coco.CountryConverter()
+
+shpfilename = shpreader.natural_earth(
+    resolution='50m',
+    category='cultural',
+    name='admin_0_countries'
+)
+reader = shpreader.Reader(shpfilename)
+
+lines_list = []
+
+countries = reader.records()
+for country in countries:
+    if country.attributes['ADM0_A3'] in cc.convert(cc.EU27['name_short'], to='ISO3'):
+        for track in list_of_tracks:
+            lines_list.append(country.geometry.intersection(track))
+        ax.add_geometries(
+            country.geometry,
+            ccrs.PlateCarree(),
+            facecolor='blue',
+            edgecolor='black',
+            linewidth=1
+        )
+
+countries = reader.records()
+for country in countries:
+    if country.attributes['ADM0_A3'] in ['POL']:
+        ax.add_geometries(
+            country.geometry,
+            ccrs.PlateCarree(),
+            facecolor='blue',
+            edgecolor='black',
+            linewidth=1
+        )
+
+countries = reader.records()
+for country in countries:
+    if country.attributes['ADM0_A3'] in ['CHE', 'NOR', 'LIE', 'ISL']:
+        ax.add_geometries(
+            country.geometry,
+            ccrs.PlateCarree(),
+            facecolor='green',
+            edgecolor='black',
+            linewidth=1
+        )
+
 
 ax.add_geometries(
     geoms = finnair_track,
@@ -143,39 +194,14 @@ ax.add_geometries(
     linewidth = 2
 )
 
-# https://github.com/IndEcol/country_converter?tab=readme-ov-file#classification-schemes
-import country_converter as coco
-cc = coco.CountryConverter()
-
-shpfilename = shpreader.natural_earth(
-    resolution='50m',
-    category='cultural',
-    name='admin_0_countries'
-)
-reader = shpreader.Reader(shpfilename)
-
-countries = reader.records()
-for country in countries:
-    if country.attributes['ADM0_A3'] in cc.convert(cc.EU27['name_short'], to='ISO3'):
-        ax.add_geometries(
-            country.geometry,
-            ccrs.PlateCarree(),
-            facecolor='blue',
-            edgecolor='black',
-            linewidth=1
-        )
-
-countries = reader.records()
-for country in countries:
-    if country.attributes['ADM0_A3'] in ['CHE', 'NOR', 'LIE', 'ISL']:
-        ax.add_geometries(
-            country.geometry,
-            ccrs.PlateCarree(),
-            facecolor='green',
-            edgecolor='black',
-            linewidth=1
-        )
-
+for line_segment in lines_list:
+    ax.add_geometries(
+        geoms = line_segment,
+        crs = ccrs.PlateCarree(),
+        facecolor = 'none',
+        edgecolor = 'orange',
+        linewidth = 2
+    )
 
 # LEGEND ####################
 
@@ -203,7 +229,7 @@ legend_elements = [
     Line2D(
         xdata = [0],
         ydata = [0],
-        color = 'lightblue',
+        color = 'orange',
         linestyle = '-',
         label='EU ETS'
     ),
@@ -211,7 +237,7 @@ legend_elements = [
 
 ax.legend(
     handles=legend_elements,
-    loc='upper right',
+    loc='lower left',
 )
 
 # EXPORT #########################################
@@ -226,4 +252,3 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
