@@ -104,7 +104,6 @@ ax = plt.axes(
 )
 ax.add_feature(cfeature.BORDERS, linestyle='-', alpha=1)
 ax.add_feature(cfeature.COASTLINE, linestyle='-', alpha=1)
-ax.add_feature(cfeature.OCEAN, facecolor=(0.5,0.5,0.5))
 
 
 # DATA #######################
@@ -199,7 +198,7 @@ for line_segment in lines_list:
         geoms = line_segment,
         crs = ccrs.PlateCarree(),
         facecolor = 'none',
-        edgecolor = 'orange',
+        edgecolor = 'yellow',
         linewidth = 2
     )
 
@@ -207,6 +206,7 @@ for line_segment in lines_list:
 
 import matplotlib.patches as patches
 from matplotlib.lines import Line2D
+import matplotlib.patheffects as pe
 
 legend_elements = [
     patches.Patch(
@@ -229,9 +229,10 @@ legend_elements = [
     Line2D(
         xdata = [0],
         ydata = [0],
-        color = 'orange',
+        color = 'yellow',
         linestyle = '-',
-        label='EU ETS'
+        label='EU ETS',
+        path_effects=[pe.Stroke(linewidth=5, foreground='black'), pe.Normal()]
     ),
 ]
 
