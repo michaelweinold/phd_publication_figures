@@ -182,6 +182,36 @@ ax.bar(
     label = 'SAF+CORSIA',
 )
 
+plt.axvline(
+    x = 2024,
+    ymin = 0,
+    ymax = 1800,
+    color = 'black',
+    linestyle='--'
+)
+ax.annotate(
+    'Volontary',  # Text to display in the annotation box
+    xy=(2023, 250),  # Position of the upper end of the vertical line
+    ha='left',  # Horizontal alignment of the text
+    va='bottom',  # Vertical alignment of the text
+    backgroundcolor = 'white'
+)
+
+plt.axvline(
+    x = 2027,
+    ymin = 0,
+    ymax = 1800,
+    color = 'black',
+    linestyle='--'
+)
+ax.annotate(
+    'Mandatory',  # Text to display in the annotation box
+    xy=(2026, 70),  # Position of the upper end of the vertical line
+    ha='left',  # Horizontal alignment of the text
+    va='bottom',  # Vertical alignment of the text
+    backgroundcolor = 'white'
+)
+
 # LEGEND ####################
 
 ax.legend(
