@@ -82,6 +82,21 @@ df_emissions_hist = pd.read_excel(
     engine = 'openpyxl'
 )
 
+df_emissions_allowances = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'ETS',
+    usecols = lambda column: column in [
+        'year',
+        'allowances [% of baseline]'
+    ],
+    dtype={
+        'year': int,
+        'allowances [% of baseline]': float
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
+
 
 # DATA MANIPULATION #############################
 
@@ -111,23 +126,59 @@ df_emissions_proj: pd.DataFrame = interpolate_1d_dataframe(
     new_x_values = list_of_years,
 )
 loc_2019 = df_emissions_proj[df_emissions_proj['year'] == 2019].index
-df_emissions_proj['y'] = df_emissions_proj['y'] / df_emissions_proj['y'].loc[loc_2019]
+df_emissions_proj['y_norm'] = df_emissions_proj['y'] / df_emissions_proj['y'].loc[loc_2019].iloc[0]
+
+total_emissions_2019 = 0
+emissions_columns = [
+    'free allowances [t(CO2)]',
+    'state auction [t(CO2)]',
+    'EUA purchases [t(CO2)]',
+    'special reserve [t(CO2)]'
+]
+
+def sum_selected_row_elements(df, row_index, columns):
+    return df.loc[row_index, columns].sum().sum() # first .sum() just returns a series, second .sum() returns a scalar
+
+total_emissions_2019 = sum_selected_row_elements(
+    df = df_emissions_hist,
+    row_index = df_emissions_hist[df_emissions_hist['year'] == 2019].index,
+    columns = emissions_columns
+)
+
+df_emissions_proj['proj'] = df_emissions_proj['y_norm'] * total_emissions_2019
+
+allowances_baseline = sum_selected_row_elements(
+    df = df_emissions_hist,
+    row_index = df_emissions_hist[df_emissions_hist['year'] == 2018].index,
+    columns = [
+    'free allowances [t(CO2)]',
+    'state auction [t(CO2)]',
+    'special reserve [t(CO2)]'
+    ]
+)
+                  
+df_emissions_allowances['free allowances [t(CO2)]'] = df_emissions_allowances['allowances [% of baseline]']/100 * allowances_baseline * 0.82
+df_emissions_allowances['state auction [t(CO2)]'] = df_emissions_allowances['allowances [% of baseline]']/100 * allowances_baseline * 0.15
+df_emissions_allowances['special reserve [t(CO2)]'] = df_emissions_allowances['allowances [% of baseline]']/100 * allowances_baseline * 0.03
+
+df_emissions_proj_filtered = df_emissions_proj[df_emissions_proj['year'] >= 2021].reset_index()
+df_emissions_allowances['EUA purchases [t(CO2)]'] = df_emissions_proj_filtered['proj'] - df_emissions_allowances['allowances [% of baseline]']/100 * allowances_baseline
 
 # FIGURE ########################################
 
 # SETUP ######################
 
 fig, ax = plt.subplots(
-        num = 'main',
-        nrows = 2,
-        ncols = 1,
-        dpi = 300,
-        figsize=(30*cm, 10*cm), # A4=(210x297)mm,
-        gridspec_kw = dict(
-            height_ratios=[3,2],
-        ),
-        sharex=True
-    )
+    num = 'main',
+    nrows = 2,
+    ncols = 1,
+    dpi = 300,
+    figsize=(30*cm, 10*cm), # A4=(210x297)mm,
+    gridspec_kw = dict(
+        height_ratios=[3,2],
+    ),
+    sharex=True
+)
 
 # DATA #######################
 
@@ -138,7 +189,7 @@ ax[0].set_xlim(
     datetime.strptime('2050', '%Y')
 )
 
-ax[0].set_ylim(1,300)
+ax[0].set_ylim(1,100)
 
 ax[1].set_ylim(0, 100)
 
@@ -162,11 +213,51 @@ ax[1].set_ylabel("EUA Spot Price \n [EUR/t(CO$_2$)]")
 
 # PLOTTING ###################
 
+df_filtered = df_emissions_proj[df_emissions_proj['year'] < 2022]
 ax[0].plot(
-    pd.to_datetime(df_emissions_proj['year'], format='%Y'),
-    df_emissions_proj['y'],
+    pd.to_datetime(df_filtered['year'], format='%Y'),
+    df_filtered['proj']/(1E6),
     color = 'black',
     linewidth = 1,
+    label = 'Historical Emissions'
+)
+
+df_filtered = df_emissions_proj[df_emissions_proj['year'] >= 2021]
+ax[0].plot(
+    pd.to_datetime(df_filtered['year'], format='%Y'),
+    df_filtered['proj']/(1E6),
+    color = 'black',
+    linestyle = '--',
+    linewidth = 1,
+    label = 'Projected Emissions'
+)
+
+ax[0].bar(
+    x = pd.to_datetime(df_emissions_allowances['year'], format='%Y'),
+    height = df_emissions_allowances['free allowances [t(CO2)]']/(1E6),
+    width=250,
+    color = 'blue',
+)
+ax[0].bar(
+    x = pd.to_datetime(df_emissions_allowances['year'], format='%Y'),
+    height = df_emissions_allowances['state auction [t(CO2)]']/(1E6),
+    bottom = df_emissions_allowances['free allowances [t(CO2)]']/(1E6),
+    width=250,
+    color = 'orange',
+)
+ax[0].bar(
+    x = pd.to_datetime(df_emissions_allowances['year'], format='%Y'),
+    height = df_emissions_allowances['special reserve [t(CO2)]']/(1E6),
+    bottom = df_emissions_allowances['free allowances [t(CO2)]']/(1E6) + df_emissions_allowances['state auction [t(CO2)]']/(1E6),
+    width=250,
+    color = 'brown',
+)
+ax[0].bar(
+    x = pd.to_datetime(df_emissions_allowances['year'], format='%Y'),
+    height = df_emissions_allowances['EUA purchases [t(CO2)]']/(1E6),
+    bottom = df_emissions_allowances['free allowances [t(CO2)]']/(1E6) + df_emissions_allowances['state auction [t(CO2)]']/(1E6) + df_emissions_allowances['special reserve [t(CO2)]']/(1E6),
+    width=250,
+    color = 'green',
 )
 
 ax[0].bar(
