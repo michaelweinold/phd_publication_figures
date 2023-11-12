@@ -85,7 +85,7 @@ axes[0].grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 axes[0].set_ylabel("Share of Aviation Fuel [\%]")
 
-axes[1].set_ylabel("Share of Aviation Fuel [\%]")
+axes[1].set_ylabel("Amount of Aviation Fuel (EU) [Ml]")
 
 
 # PLOTTING ###################
@@ -102,7 +102,7 @@ axes[0].bar(
     x = df_eu['year'],
     height = df_eu['of which synth-fuel share [%]'],
     color = 'green',
-    hatch = '///',
+    hatch = '////',
     width = 2,
     label = 'of which Synth-Fuel',
     edgecolor = 'white',
