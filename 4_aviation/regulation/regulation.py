@@ -30,7 +30,7 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_eu = pd.read_excel(
+df_reg = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'ReFuelEU',
     usecols = lambda column: column in [
@@ -48,9 +48,29 @@ df_eu = pd.read_excel(
     decimal='.'
 )
 
+df_prod = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'EU Production',
+    usecols = lambda column: column in [
+        'year',
+        'EU domestic aviation consumption [Mt(oil)]',
+        'EU biofuel production [kt(oil)]',
+        'of which aviation fuel [kt(oil)]'
+    ],
+    dtype={
+        'year': int,
+        'EU domestic aviation consumption [Mt(oil)]': float,
+        'EU biofuel production [kt(oil)]': float,
+        'of which aviation fuel [kt(oil)]': float
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal='.'
+)
+
 # DATA MANIPULATION #############################
 
-df_eu['of which synth-fuel share [%]'] = ((df_eu['SAF share [%]']/100)*(df_eu['of which synth-fuel share [%]']/100))*100
+df_reg['of which synth-fuel share [%]'] = ((df_reg['SAF share [%]']/100)*(df_reg['of which synth-fuel share [%]']/100))*100
 
 # FIGURE ########################################
 
@@ -62,7 +82,7 @@ fig, axes = plt.subplots(
     ncols = 2,
     dpi = 300,
     figsize=(30*cm, 10*cm), # A4=(210x297)mm,
-    sharex=True
+    sharex=False
 )
 plt.subplots_adjust(wspace=0.2)
 
@@ -73,6 +93,9 @@ plt.subplots_adjust(wspace=0.2)
 
 axes[0].set_xlim(2023, 2053)
 axes[0].set_ylim(0,100)
+
+axes[1].set_xlim(2009, 2023)
+axes[1].set_ylim(0, 20)
 
 # TICKS AND LABELS ###########
 
@@ -85,22 +108,22 @@ axes[0].grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 axes[0].set_ylabel("Share of Aviation Fuel [\%]")
 
-axes[1].set_ylabel("Amount of Aviation Fuel (EU) [Ml]")
+axes[1].set_ylabel("Fuel Amount [Mt(oil equivalent)]")
 
 
 # PLOTTING ###################
 
 axes[0].bar(
-    x = df_eu['year'],
-    height = df_eu['SAF share [%]'],
+    x = df_reg['year'],
+    height = df_reg['SAF share [%]'],
     color = 'green',
     width = 2,
     label = 'Non-Fossil Fuels',
     edgecolor = 'black'
 )
 axes[0].bar(
-    x = df_eu['year'],
-    height = df_eu['of which synth-fuel share [%]'],
+    x = df_reg['year'],
+    height = df_reg['of which synth-fuel share [%]'],
     color = 'green',
     hatch = '////',
     width = 2,
@@ -108,8 +131,8 @@ axes[0].bar(
     edgecolor = 'white',
 )
 axes[0].bar(
-    x = df_eu['year'],
-    height = df_eu['of which synth-fuel share [%]'],
+    x = df_reg['year'],
+    height = df_reg['of which synth-fuel share [%]'],
     color = 'none',
     width = 2,
     edgecolor = 'black',
@@ -126,11 +149,39 @@ axes[0].text(
     transform = axes[0].transAxes  # Use relative axes coordinates
 )
 
+axes[1].plot(
+    df_prod['year'],
+    df_prod['EU domestic aviation consumption [Mt(oil)]'],
+    color = 'red',
+    label = 'EU Aviation Fuel Consumption'
+)
+axes[1].bar(
+    x = df_prod['year'],
+    height = df_prod['EU biofuel production [kt(oil)]']/(1E3),
+    color = 'green',
+    width = 1,
+    edgecolor = 'black',
+    label='EU Biofuel Production'
+)
+axes[1].bar(
+    x = df_prod['year'],
+    height = df_prod['of which aviation fuel [kt(oil)]']/(1E3),
+    color = 'none',
+    width = 1,
+    edgecolor = 'blue',
+    hatch = '////',
+    label='aviation'
+)
+
+
 # LEGEND ####################
 
 axes[0].legend(
     loc='upper right',
-    frameon = False
+)
+
+axes[1].legend(
+    loc='upper left',
 )
 
 # EXPORT #########################################
