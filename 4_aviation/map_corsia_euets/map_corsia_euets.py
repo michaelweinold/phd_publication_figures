@@ -52,6 +52,18 @@ df_airfrance = pd.read_csv(
     header = 'infer',
     index_col = False,
 )
+df_easyjet = pd.read_csv(
+    filepath_or_buffer = 'data/U27688_32c59827.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
+df_aireuropa = pd.read_csv(
+    filepath_or_buffer = 'data/UX51_32cb722b.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
 
 # DATA MANIPULATION #############################
 
@@ -83,6 +95,15 @@ airfrance_track, lat_airfrance, lon_airfrance = extract_coordinates_from_csv(
     df = df_airfrance,
     column_name = 'Position'
 )
+easyjet_track, lat_easyjet, lon_easyjet = extract_coordinates_from_csv(
+    df = df_easyjet,
+    column_name = 'Position'
+)
+aireuropa_track, lat_aireuropa, lon_aireuropa = extract_coordinates_from_csv(
+    df = df_aireuropa,
+    column_name = 'Position'
+)
+
 
 list_of_tracks = [finnair_track, british_track, airfrance_track]
 
@@ -190,6 +211,20 @@ ax.add_geometries(
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
     edgecolor = 'red',
+    linewidth = 2
+)
+ax.add_geometries(
+    geoms = easyjet_track,
+    crs = ccrs.PlateCarree(),
+    facecolor = 'none',
+    edgecolor = 'lightblue',
+    linewidth = 2
+)
+ax.add_geometries(
+    geoms = aireuropa_track,
+    crs = ccrs.PlateCarree(),
+    facecolor = 'none',
+    edgecolor = 'lightblue',
     linewidth = 2
 )
 
