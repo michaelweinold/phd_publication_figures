@@ -94,6 +94,7 @@ plt.subplots_adjust(wspace=0.2)
 axes[0].set_xlim(2023, 2053)
 axes[0].set_ylim(0,100)
 
+#axes[1].set_yscale('log')
 axes[1].set_xlim(2009, 2023)
 axes[1].set_ylim(0, 20)
 
@@ -117,7 +118,7 @@ axes[0].bar(
     x = df_reg['year'],
     height = df_reg['SAF share [%]'],
     color = 'green',
-    width = 2,
+    width = 3,
     label = 'Non-Fossil Fuels',
     edgecolor = 'black'
 )
@@ -126,7 +127,7 @@ axes[0].bar(
     height = df_reg['of which synth-fuel share [%]'],
     color = 'green',
     hatch = '////',
-    width = 2,
+    width = 3,
     label = 'of which Synth-Fuel',
     edgecolor = 'white',
 )
@@ -134,7 +135,7 @@ axes[0].bar(
     x = df_reg['year'],
     height = df_reg['of which synth-fuel share [%]'],
     color = 'none',
-    width = 2,
+    width = 3,
     edgecolor = 'black',
 )
 
@@ -153,24 +154,20 @@ axes[1].plot(
     df_prod['year'],
     df_prod['EU domestic aviation consumption [Mt(oil)]'],
     color = 'red',
+    linestyle = '--',
     label = 'EU Aviation Fuel Consumption'
 )
-axes[1].bar(
-    x = df_prod['year'],
-    height = df_prod['EU biofuel production [kt(oil)]']/(1E3),
+axes[1].plot(
+    df_prod['year'],
+    df_prod['EU biofuel production [kt(oil)]']/(1E3),
     color = 'green',
-    width = 1,
-    edgecolor = 'black',
     label='EU Biofuel Production'
 )
-axes[1].bar(
-    x = df_prod['year'],
-    height = df_prod['of which aviation fuel [kt(oil)]']/(1E3),
-    color = 'none',
-    width = 1,
-    edgecolor = 'blue',
-    hatch = '////',
-    label='aviation'
+axes[1].plot(
+    df_prod['year'],
+    df_prod['of which aviation fuel [kt(oil)]']/(1E3),
+    label = 'of which Aviation Fuel',
+    color='blue'
 )
 
 
