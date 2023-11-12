@@ -95,16 +95,24 @@ axes[0].bar(
     height = df_eu['SAF share [%]'],
     color = 'green',
     width = 2,
-    label = 'All Non-Fossil Fuels',
+    label = 'Non-Fossil Fuels',
     edgecolor = 'black'
 )
 axes[0].bar(
     x = df_eu['year'],
     height = df_eu['of which synth-fuel share [%]'],
-    color = 'blue',
-    width = 1,
-    label = 'Synth-Fuel',
-    edgecolor = 'black'
+    color = 'green',
+    hatch = '///',
+    width = 2,
+    label = 'of which Synth-Fuel',
+    edgecolor = 'white',
+)
+axes[0].bar(
+    x = df_eu['year'],
+    height = df_eu['of which synth-fuel share [%]'],
+    color = 'none',
+    width = 2,
+    edgecolor = 'black',
 )
 
 axes[0].text(
