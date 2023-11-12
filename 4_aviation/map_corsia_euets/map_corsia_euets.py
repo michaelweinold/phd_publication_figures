@@ -40,12 +40,6 @@ df_finnair = pd.read_csv(
     header = 'infer',
     index_col = False,
 )
-df_british = pd.read_csv(
-    filepath_or_buffer = 'data/BA57_301ab0b0.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-)
 df_airfrance = pd.read_csv(
     filepath_or_buffer = 'data/3138ab42.csv',
     sep = ',',
@@ -60,6 +54,12 @@ df_easyjet = pd.read_csv(
 )
 df_aireuropa = pd.read_csv(
     filepath_or_buffer = 'data/UX51_32cb722b.csv',
+    sep = ',',
+    header = 'infer',
+    index_col = False,
+)
+df_airfrance2 = pd.read_csv(
+    filepath_or_buffer = 'data/AF816_32c14da7.csv',
     sep = ',',
     header = 'infer',
     index_col = False,
@@ -87,10 +87,6 @@ finnair_track, lat_finnair, lon_finnair = extract_coordinates_from_csv(
     df = df_finnair,
     column_name = 'Position'
 )
-british_track, lat_british, lon_british = extract_coordinates_from_csv(
-    df = df_british,
-    column_name = 'Position'
-)
 airfrance_track, lat_airfrance, lon_airfrance = extract_coordinates_from_csv(
     df = df_airfrance,
     column_name = 'Position'
@@ -103,9 +99,13 @@ aireuropa_track, lat_aireuropa, lon_aireuropa = extract_coordinates_from_csv(
     df = df_aireuropa,
     column_name = 'Position'
 )
+airfrance2_track, lat_airfrance2, lon_airfrance2 = extract_coordinates_from_csv(
+    df = df_airfrance2,
+    column_name = 'Position'
+)
 
 
-list_of_tracks = [finnair_track, british_track, airfrance_track]
+list_of_tracks = [finnair_track, airfrance_track, airfrance2_track]
 
 # FIGURE ########################################
 
@@ -156,6 +156,14 @@ reader = shpreader.Reader(shpfilename)
 
 lines_list = []
 
+othercountries = ['CHE', 'NOR', 'LIE', 'ISL', 'GBR']
+
+countries = reader.records()
+for country in countries:
+    if country.attributes['ADM0_A3'] in othercountries:
+        for track in list_of_tracks:
+            lines_list.append(country.geometry.intersection(track))
+
 countries = reader.records()
 for country in countries:
     if country.attributes['ADM0_A3'] in cc.convert(cc.EU27['name_short'], to='ISO3'):
@@ -164,29 +172,18 @@ for country in countries:
         ax.add_geometries(
             country.geometry,
             ccrs.PlateCarree(),
-            facecolor='blue',
+            facecolor='lightblue',
             edgecolor='black',
             linewidth=1
         )
 
 countries = reader.records()
 for country in countries:
-    if country.attributes['ADM0_A3'] in ['POL']:
+    if country.attributes['ADM0_A3'] in othercountries:
         ax.add_geometries(
             country.geometry,
             ccrs.PlateCarree(),
-            facecolor='blue',
-            edgecolor='black',
-            linewidth=1
-        )
-
-countries = reader.records()
-for country in countries:
-    if country.attributes['ADM0_A3'] in ['CHE', 'NOR', 'LIE', 'ISL']:
-        ax.add_geometries(
-            country.geometry,
-            ccrs.PlateCarree(),
-            facecolor='green',
+            facecolor='lightgreen',
             edgecolor='black',
             linewidth=1
         )
@@ -194,13 +191,6 @@ for country in countries:
 
 ax.add_geometries(
     geoms = finnair_track,
-    crs = ccrs.PlateCarree(),
-    facecolor = 'none',
-    edgecolor = 'red',
-    linewidth = 2
-)
-ax.add_geometries(
-    geoms = british_track,
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
     edgecolor = 'red',
@@ -217,14 +207,14 @@ ax.add_geometries(
     geoms = easyjet_track,
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
-    edgecolor = 'lightblue',
+    edgecolor = 'blue',
     linewidth = 2
 )
 ax.add_geometries(
-    geoms = aireuropa_track,
+    geoms = airfrance2_track,
     crs = ccrs.PlateCarree(),
     facecolor = 'none',
-    edgecolor = 'lightblue',
+    edgecolor = 'green',
     linewidth = 2
 )
 
@@ -233,7 +223,7 @@ for line_segment in lines_list:
         geoms = line_segment,
         crs = ccrs.PlateCarree(),
         facecolor = 'none',
-        edgecolor = 'yellow',
+        edgecolor = 'blue',
         linewidth = 2
     )
 
@@ -245,12 +235,12 @@ import matplotlib.patheffects as pe
 
 legend_elements = [
     patches.Patch(
-        facecolor = 'blue',
+        facecolor = 'lightblue',
         edgecolor = 'black',
-        label = 'EU(27)'
+        label = 'EU Member States'
     ),
     patches.Patch(
-        facecolor = 'green',
+        facecolor = 'lightgreen',
         edgecolor = 'black',
         label = 'Other ETS Countries'
     ),
@@ -259,15 +249,21 @@ legend_elements = [
         ydata = [0],
         color = 'red',
         linestyle = '-',
-        label='ICAO CORSIA'
+        label='ICAO CORSIA ETS'
     ),
     Line2D(
         xdata = [0],
         ydata = [0],
-        color = 'yellow',
+        color = 'blue',
         linestyle = '-',
         label='EU ETS',
-        path_effects=[pe.Stroke(linewidth=5, foreground='black'), pe.Normal()]
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'green',
+        linestyle = '-',
+        label='No ETS',
     ),
 ]
 
@@ -288,3 +284,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
