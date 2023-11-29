@@ -76,7 +76,7 @@ ax2.set_ylim(0,105)
 
 # TICKS AND LABELS ###########
 
-a_labels = ['', '$a_{21}^P=0.8$', '$a_{32}^P=0.8$', '$a_{D3}^S=0.8$']
+a_labels = ['ref.prod.', '$a_{BA}^S=0.8$', '$a_{CB}^S=0.8$', '$a_{DC}^S=0.8$']
 
 # GRIDS ######################
 
@@ -139,7 +139,8 @@ ax.legend(
 
 # EXPORT #########################################
 
-figure_name: str = str(Path.cwd().stem + '.pdf')
+from pathlib import Path
+figure_name: str = str(Path(__file__).stem + '.pdf')
 
 plt.savefig(
     fname = figure_name,
