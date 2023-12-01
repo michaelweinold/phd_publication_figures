@@ -1,0 +1,135 @@
+#%%
+# runs code as interactive cell 
+# https://code.visualstudio.com/docs/python/jupyter-support-py
+
+# IMPORTS #######################################
+
+# plotting
+import matplotlib.pyplot as plt
+# unit conversion
+cm = 1/2.54 # for inches-cm conversion
+# time manipulation
+from datetime import datetime
+# data science
+import numpy as np
+import pandas as pd
+
+# SETUP #########################################
+
+
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "Arial",
+    "font.sans-serif": "Computer Modern",
+    'font.size': 11
+})
+
+# DATA IMPORT ###################################
+
+df_google = pd.read_csv(
+    filepath_or_buffer = 'data/google_trend.csv',
+    sep = ',',
+    decimal = '.',
+    index_col = 0,
+    parse_dates = True,
+    encoding = 'utf-8'
+)
+
+df_scopus = pd.read_csv(
+    filepath_or_buffer = 'data/scopus_trend.csv',
+    sep = ',',
+    decimal = '.',
+    index_col = 0,
+    parse_dates = True,
+    encoding = 'utf-8'
+)
+
+# DATA MANIPULATION #############################
+
+# FIGURE ########################################
+
+# SETUP ######################
+
+fig, ax = plt.subplots(
+    num = 'main',
+    nrows = 1,
+    ncols = 1,
+    dpi = 300,
+    figsize=(30*cm, 5*cm), # A4=(210x297)mm,
+)
+ax1 = ax.twinx()
+
+# SECONDARY AXES ##############
+
+# AXIS LIMITS ################
+
+ax.set_xlim(
+    datetime(2015, 1, 1),  # Start date
+    datetime(2022, 12, 31)  # End date
+)
+
+# TICKS AND LABELS ###########
+
+ax.minorticks_on()
+ax.tick_params(axis='x', which='minor', bottom=True)
+
+# GRIDS ######################
+
+ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
+ax.grid(which='minor', axis='y', linestyle=':', linewidth = 0.5)
+ax.grid(which='major', axis='x', linestyle='-', linewidth = 0.5)
+ax.grid(which='minor', axis='x', linestyle=':', linewidth = 0.5)
+
+# AXIS LABELS ################
+
+ax.set_ylabel("Google Search Inter. [\%]")
+ax1.set_ylabel("Num. of Publications [1]")
+
+# PLOTTING ###################
+
+ax.plot(
+    df_google.index,
+    df_google['RESULT'],
+    color = 'black',
+    linestyle = '-',
+    linewidth = 1,
+    label = 'Google Trends'
+)
+ax1.plot(
+    df_scopus.index,
+    df_scopus['RESULT'],
+    color = 'black',
+    linestyle = '--',
+    linewidth = 1,
+    label = 'Elsevier Scopus'
+)
+
+
+# LEGEND ####################
+
+# Get the handles and labels from both axes
+handles1, labels1 = ax.get_legend_handles_labels()
+handles2, labels2 = ax1.get_legend_handles_labels()
+
+# Combine the handles and labels
+handles = handles1 + handles2
+labels = labels1 + labels2
+
+ax.legend(
+    handles=handles,
+    labels=labels,
+    loc='upper left',
+)
+
+# EXPORT #########################################
+
+from pathlib import Path
+figure_name: str = str(Path.cwd().stem + '.pdf')
+
+plt.savefig(
+    fname = figure_name,
+    format="pdf",
+    bbox_inches='tight',
+    transparent = False
+)
+# %%
