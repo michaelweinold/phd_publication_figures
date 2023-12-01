@@ -34,14 +34,14 @@ df_eff = pd.read_excel(
         'Type',
         'YOI',
         'TSFC Cruise',
-        'BP Ratio'
+        'B/P Ratio'
     ],
     dtype={
         'Name': str,
         'Type': str,
         'YOI': int,
         'TSFC Cruise': float,
-        'BP Ratio': float
+        'B/P Ratio': float
     },
     header = 0,
     engine = 'openpyxl'
@@ -88,27 +88,159 @@ ax.grid(which='minor', axis='x', linestyle=':', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_ylabel("TSFC (Cruise) [mg/Ns]")
+ax.set_ylabel("TSFC (Cruise) [mg(JetA1)/Ns]")
 ax.set_xlabel("Aircraft Year of Introduction")
 
 # PLOTTING ###################
 
-ax.scatter(
+sc = ax.scatter(
     x = df_eff['YOI'],
     y = df_eff['TSFC Cruise'],
     marker = 'o',
-    color = 'blue',
-    label = 'Widebody'
+    c = df_eff['B/P Ratio'],
+    label = 'Widebody',
+    cmap = 'plasma',
 )
+plt.colorbar(sc, label='B/P Ratio')
 
 ax.axhline(y=11.1, color='black', linestyle='--', linewidth=2, label='Practical Limit w.r.t. NOx')
 ax.axhline(y=10.1, color='black', linestyle='-', linewidth=2, label = 'Theoretical Limit')
 
+# Add a thick arrow pointing down
+ax.annotate(
+    'lower=better', 
+    xy=(2040, 20), 
+    xytext=(2040, 27), 
+    arrowprops=dict(facecolor='black', width=1, headwidth=10),
+        va='center',
+    ha='center'
+)
+
+ax.scatter(
+    x = 2020,
+    y = 14.94,
+    color='green'
+)
+ax.scatter(
+    x = 2020,
+    y = 14.94,
+    facecolors='none',
+    edgecolors='black',
+    s=90,
+    label = 'Projection'
+)
+plt.annotate(
+    'GE9X',
+    (2020, 14.94),
+    xytext=(0, +10),
+    textcoords='offset points'
+)
+
+ax.scatter(
+    x = 2025,
+    y = 12.88,
+    color='green'
+)
+ax.scatter(
+    x = 2025,
+    y = 12.88,
+    facecolors='none',
+    edgecolors='black',
+    s=90,
+)
+plt.annotate(
+    'RR Ultrafan',
+    (2020, 12.88),
+    xytext=(-43, -10),
+    textcoords='offset points'
+)
+
+ax.scatter(
+    x = 2030,
+    y = 12.152,
+    color='green'
+)
+ax.scatter(
+    x = 2030,
+    y = 12.152,
+    facecolors='none',
+    edgecolors='black',
+    s=90,
+)
+plt.annotate(
+    'Open Rotor',
+    (2030, 12.152),
+    xytext=(-10, +10),
+    textcoords='offset points'
+)
+
+ax.scatter(
+    x = 2035,
+    y = 12,
+    color='green'
+)
+ax.scatter(
+    x = 2035,
+    y = 12,
+    facecolors='none',
+    edgecolors='black',
+    s=90,
+)
+plt.annotate(
+    'CFM Rise',
+    (2035, 12),
+    xytext=(+10, -2),
+    textcoords='offset points'
+)
+
 
 # LEGEND ####################
 
+from matplotlib.lines import Line2D
+
+legend_elements_categories = [
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'black',
+        markerfacecolor='black',
+        linestyle = 'None',
+        markersize=4,
+        marker='o',
+        label = 'Acft./Engine Combinations'
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'black',
+        markerfacecolor='none',
+        linestyle = 'None',
+        markersize=7,
+        marker='o',
+        label = 'Projections'
+    ),
+    Line2D(
+        [0],
+        [0],
+        color='black',
+        lw=2,
+        ls='--',
+        label='Phys. Limit (resp. to NOx)'
+    ),
+    Line2D(
+        [0],
+        [0],
+        color='black',
+        lw=2,
+        ls='-',
+        label='Phys. Limit'
+    )
+]
+
 ax.legend(
+    handles=legend_elements_categories,
     loc='lower right',
+    ncol=2
 )
 
 # EXPORT #########################################
