@@ -21,7 +21,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
-    'font.size': 12
+    'font.size': 11
 })
 
 # DATA IMPORT ###################################
@@ -161,6 +161,15 @@ ax.scatter(
 plt.annotate('SB-Wing', (2035, 27.8),
                 fontsize=8, xytext=(-10,10),
                 textcoords='offset points')
+
+ax.annotate(
+    'higher=better', 
+    xy=(1960, 27.5), 
+    xytext=(1960, 22.5), 
+    arrowprops=dict(facecolor='black', width=1, headwidth=10),
+        va='center',
+    ha='center'
+)
 
 # LEGEND ####################
 

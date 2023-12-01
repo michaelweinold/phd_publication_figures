@@ -21,7 +21,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
-    'font.size': 12
+    'font.size': 11
 })
 
 # DATA IMPORT ###################################

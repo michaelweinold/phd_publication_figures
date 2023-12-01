@@ -21,7 +21,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",
     "font.sans-serif": "Computer Modern",
-    'font.size': 12
+    'font.size': 11
 })
 
 # DATA IMPORT ###################################
@@ -93,7 +93,7 @@ for axis in [ax, axins]:
 
 # AXIS LABELS ################
 
-ax.set_ylabel("L/D [1]")
+ax.set_ylabel("OEW/PEL [kg/pax]")
 ax.set_xlabel("Aircraft Year of Introduction")
 
 # PLOTTING ###################
@@ -126,6 +126,14 @@ for axis in [ax, axins]:
 axins.annotate('A330-900', (2018, 299), fontsize=8, xytext=(-20, -10), textcoords='offset points')
 axins.annotate('B787-10', (2018, 308), fontsize=8, xytext=(-20, 5), textcoords='offset points')
 
+ax.annotate(
+    'lower=better', 
+    xy=(1960, 500), 
+    xytext=(1960, 700), 
+    arrowprops=dict(facecolor='black', width=1, headwidth=10),
+        va='center',
+    ha='center'
+)
 
 # LEGEND ####################
 
