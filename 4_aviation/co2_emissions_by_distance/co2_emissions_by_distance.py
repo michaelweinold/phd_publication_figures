@@ -53,6 +53,12 @@ df_eu = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
+df_function = pd.read_excel(
+    io = './data/data.xlsx',
+    sheet_name = 'Emissions Distance Function',
+    header = 0,
+    engine = 'openpyxl'
+)
 
 # DATA MANIPULATION #############################
 
@@ -85,6 +91,8 @@ fig, axes = plt.subplots(
     figsize=(30*cm, 10*cm), # A4=(210x297)mm,
 )
 
+plt.subplots_adjust(wspace=0.3)
+
 # SECONDARY AXES ##############
 
 # AXIS LIMITS ################
@@ -116,17 +124,23 @@ for ax in axes[0:2]:
 
 # GRIDS ######################
 
-for ax in axes[0:2]:
+for ax in axes:
     ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
     ax.grid(which='minor', axis='y', linestyle=':', linewidth = 0.5)
     ax.grid(which='major', axis='x', linestyle='-', linewidth = 0.5)
 
+axes[2].grid(which='minor', axis='x', linestyle=':', linewidth = 0.5)
+
 # AXIS LABELS ################
 
-axes[0].set_ylabel("Share of Emissions [%]")
+axes[0].set_ylabel("Share of Emissions [\%]")
+axes[1].set_ylabel("Share of Emissions [\%]")
 
-axes[0].set_xlabel("Flight Distance [km]")
-axes[1].set_xlabel("Flight Distance [km]")
+
+for ax in axes:
+    ax.set_xlabel("Flight Distance [km]")
+
+axes[2].set_ylabel("Emissions/Distance [kg(CO$_2$)/km]")
 
 # PLOTTING ###################
 
@@ -142,10 +156,68 @@ axes[1].bar(
     width = 0.75,
 )
 
+axes[2].plot(
+    df_function['x_737_upper'],
+    df_function['y_737_upper'],
+    color = 'black',
+    linewidth = 0.5,
+)
+axes[2].plot(
+    df_function['x_737_lower'],
+    df_function['y_737_lower'],
+    color = 'black',
+    linewidth = 0.5,
+)
+axes[2].fill_between(
+    df_function['x_737_upper'],
+    df_function['y_737_upper'],
+    df_function['y_737_lower'],
+    color = 'tab:blue',
+    alpha = 0.35,
+    label = 'Seating/Load Factor',
+)
+axes[2].plot(
+    df_function['x_737_average'],
+    df_function['y_737_average'],
+    color = 'black',
+    linewidth = 1,
+    label = 'Average',
+)
+
+axes[2].plot(
+    df_function['x_747_upper'],
+    df_function['y_747_upper'],
+    color = 'black',
+    linewidth = 0.5,
+)
+axes[2].plot(
+    df_function['x_747_lower'],
+    df_function['y_747_lower'],
+    color = 'black',
+    linewidth = 0.5,
+)
+axes[2].fill_between(
+    df_function['x_747_upper'],
+    df_function['y_747_upper'],
+    df_function['y_747_lower'],
+    color = 'tab:blue',
+    alpha = 0.35,
+)
+axes[2].plot(
+    df_function['x_747_average'],
+    df_function['y_747_average'],
+    color = 'black',
+    linewidth = 1,
+)
+
+
 # LEGEND ####################
 
-ax.legend(
-    loc='lower right',
+axes[1].set_title("(2022)", pad=7.5)
+axes[0].set_title("(2018)", pad=7.5)
+
+axes[2].legend(
+    loc='upper left',
 )
 
 # EXPORT #########################################

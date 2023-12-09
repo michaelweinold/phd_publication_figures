@@ -202,9 +202,9 @@ for ax in axes.flat:
 
 # TITLE ######################
 
-axes[2].set_title("EU (2015)", pad=7.5)
-axes[1].set_title("Japan (2019)", pad=7.5)
-axes[0].set_title("USA (2001)", pad=7.5)
+axes[2].set_title("(2015)", pad=7.5)
+axes[1].set_title("(2019)", pad=7.5)
+axes[0].set_title("(2001)", pad=7.5)
 
 # PLOTTING ###################
 
@@ -213,14 +213,14 @@ x = np.arange(len(labels))
 axes[0].set_xticks(x, labels)
 
 # EU
-axes[2].bar(
+axes[1].bar(
     x = x,
     height = df_eu['rail [%]'],
     width = width,
     label = 'Rail',
     color = 'darkorange',
 )
-axes[2].bar(
+axes[1].bar(
     x = x,
     bottom = df_eu['rail [%]'],
     height = df_eu['air [%]'],
@@ -228,7 +228,7 @@ axes[2].bar(
     label = 'Air',
     color = 'royalblue',
 )
-axes[2].bar(
+axes[1].bar(
     x = x,
     bottom = df_eu['rail [%]'] + df_eu['air [%]'],
     height = df_eu['car [%]'],
@@ -236,7 +236,7 @@ axes[2].bar(
     label = 'Car',
     color = 'brown',
 )
-axes[2].bar(
+axes[1].bar(
     x = x,
     bottom = df_eu['rail [%]'] + df_eu['air [%]'] + df_eu['car [%]'],
     height = df_eu['other [%]'],
@@ -246,14 +246,14 @@ axes[2].bar(
 )
 
 # Japan
-axes[1].bar(
+axes[2].bar(
     x = x,
     height = df_japan['rail [%]'],
     width = width,
     label = 'Rail',
     color = 'darkorange',
 )
-axes[1].bar(
+axes[2].bar(
     x = x,
     bottom = df_japan['rail [%]'],
     height = df_japan['air [%]'],
@@ -261,7 +261,7 @@ axes[1].bar(
     label = 'Air',
     color = 'royalblue',
 )
-axes[1].bar(
+axes[2].bar(
     x = x,
     bottom = df_japan['rail [%]'] + df_japan['air [%]'],
     height = df_japan['car [%]'],
@@ -269,7 +269,7 @@ axes[1].bar(
     label = 'Car',
     color = 'brown',
 )
-axes[1].bar(
+axes[2].bar(
     x = x,
     bottom = df_japan['rail [%]'] + df_japan['air [%]'] + df_japan['car [%]'],
     height = df_japan['other [%]'],
