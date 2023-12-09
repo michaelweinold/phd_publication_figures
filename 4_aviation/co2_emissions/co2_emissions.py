@@ -117,6 +117,15 @@ ax.xaxis.set_minor_locator(MultipleLocator(1))
 ax.minorticks_on()
 ax.tick_params(axis='x', which='minor', bottom=True)
 
+import matplotlib.ticker as ticker
+def thousand_formatter(value, tick_number):
+    """
+    Formats the tick label with thousand separators: 1000 = 1'000.
+    """
+    return f"{int(value):,}".replace(",", "'")
+
+ax.yaxis.set_major_formatter(ticker.FuncFormatter(thousand_formatter))
+
 # GRIDS ######################
 
 ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
@@ -225,6 +234,77 @@ legend_elements_categories = [
 ax.legend(
     handles = legend_elements_categories,
     loc='upper left',
+)
+
+# ZOOM #######################
+
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+
+ax_inset = zoomed_inset_axes(
+    parent_axes = ax,
+    zoom = 7,
+    loc = 'upper center',
+)
+mark_inset(
+    parent_axes = ax,
+    inset_axes = ax_inset,
+    loc1=3,
+    loc2=1,
+    fc="none",
+    ec="black"
+)
+ax_inset.set_xlim(2018, 2022)
+ax_inset.set_ylim(0, 1000)
+
+ax_inset.stackplot(
+    df_co2_all.index,
+    df_co2_all['Transport'],
+    colors = colors,
+)
+ax_inset.stackplot(
+    df_co2_av['Year'],
+    df_co2_av['Annual Emissions [kg(CO2)]'],
+    colors = ['yellow'],
+    labels = ['Aviation'],
+)
+
+import matplotlib.patches as patches
+
+rect = patches.Rectangle(
+    xy=(2020, 0),
+    width=1,
+    height=330,
+    linewidth=1,
+    hatch='///',
+    edgecolor='black',
+    facecolor='none'
+)
+ax_inset.add_patch(rect)
+ax_inset.annotate(
+    xy = (2020.5, 100),
+    text = 'Cloud Computing',
+    xytext = (2019.9, 100),
+    horizontalalignment = 'right',
+    verticalalignment = 'center',
+)
+
+rect = patches.Rectangle(
+    xy=(2020, 330),
+    width=1,
+    height=86,
+    linewidth=1,
+    hatch='|||',
+    edgecolor='black',
+    facecolor='none'
+)
+ax_inset.add_patch(rect)
+ax_inset.annotate(
+    xy = (2020.5, 390),
+    text = 'BTC Mining',
+    xytext = (2019.9, 390),
+    horizontalalignment = 'right',
+    verticalalignment = 'center',
 )
 
 # EXPORT #########################################
