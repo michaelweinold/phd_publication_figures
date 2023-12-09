@@ -282,10 +282,17 @@ rect = patches.Rectangle(
 )
 ax_inset.add_patch(rect)
 ax_inset.annotate(
-    xy = (2020.5, 100),
+    xy = (2019.9, 100),
     text = 'Cloud Computing',
     xytext = (2019.9, 100),
     horizontalalignment = 'right',
+    verticalalignment = 'center',
+)
+ax_inset.annotate(
+    xy = (2021.5, 100),
+    text = '330Mt',
+    xytext = (2021.1, 100),
+    horizontalalignment = 'left',
     verticalalignment = 'center',
 )
 
@@ -304,6 +311,13 @@ ax_inset.annotate(
     text = 'BTC Mining',
     xytext = (2019.9, 390),
     horizontalalignment = 'right',
+    verticalalignment = 'center',
+)
+ax_inset.annotate(
+    xy = (2021.5, 390),
+    text = '86Mt',
+    xytext = (2021.1, 390),
+    horizontalalignment = 'left',
     verticalalignment = 'center',
 )
 
