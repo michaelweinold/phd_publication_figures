@@ -26,9 +26,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="1.3379717"
-     inkscape:cx="411.81738"
-     inkscape:cy="225.71479"
+     inkscape:zoom="2.0413551"
+     inkscape:cx="194.47866"
+     inkscape:cy="143.53211"
      inkscape:window-width="1728"
      inkscape:window-height="1051"
      inkscape:window-x="0"
@@ -10469,7 +10469,7 @@
          id="tspan35-9"
          x="4.7244101"
          y="14.173228"
-         style="text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none">Example System</tspan></text>
+         style="text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none">Example System, 1 Process per Sector</tspan></text>
     <path
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.755906;stroke-miterlimit:4.1;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="M 0,18.897637 H 661.41738"
