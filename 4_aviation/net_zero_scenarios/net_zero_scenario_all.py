@@ -426,45 +426,83 @@ ax.set_ylabel("Global Aviation Emissions [Mt(CO$_2$)]")
 
 # PLOTTING ###################
 
-list_years_plot = [2020,2025,2030,2035,2040,2045,2050]
+# Destination2050
 
-# destination 2050
-
-def normalize_to_each_year(
+def normalize_dataframe_and_select_years(
     df_to_normalize: pd.DataFrame,
     df_reference: pd.DataFrame
 ) -> pd.DataFrame:
     df_normalized = pd.DataFrame()
     df_normalized['year'] = df_to_normalize['year']
     df_normalized['y'] = (df_to_normalize['y'] / df_reference['y'])*100
+    df_normalized = df_normalized[df_normalized['year'].isin([2020,2025,2030,2035,2040,2045,2050])]
     return df_normalized
 
-df_destination2050_net_normalized = normalize_to_each_year(df_destination2050_net, df_destination2050_reference)
-df_destination2050_effect_SAF_normalized = normalize_to_each_year(df_destination2050_effect_SAF, df_destination2050_reference)
-df_destination2050_SAF_normalized = normalize_to_each_year(df_destination2050_SAF, df_destination2050_reference)
+df_destination2050_net_norm = normalize_dataframe_and_select_years(
+    df_destination2050_net,
+    df_destination2050_reference
+)
+
+df_destination2050_market_norm = normalize_dataframe_and_select_years(
+    df_destination2050_effect_SAF,
+    df_destination2050_reference
+)
+
+df_destination2050_SAF_norm = normalize_dataframe_and_select_years(
+    df_destination2050_SAF,
+    df_destination2050_reference
+)
+
+df_destination2050_ops_norm = normalize_dataframe_and_select_years(
+    df_destination2050_effect_hydrogen,
+    df_destination2050_reference
+)
+
+df_destination2050_ref_norm = normalize_dataframe_and_select_years(
+    df_destination2050_reference,
+    df_destination2050_reference
+)
+
 
 ax.bar(
-    x = df_destination2050_SAF_normalized[df_destination2050_SAF_normalized['year'].isin(list_years_plot)]['year'],
-    height = df_destination2050_SAF_normalized[df_destination2050_SAF_normalized['year'].isin(list_years_plot)]['y'],
-    bottom=df_destination2050_net_normalized[df_destination2050_net_normalized['year'].isin(list_years_plot)]['y'] + df_destination2050_net_normalized[df_destination2050_net_normalized['year'].isin(list_years_plot)]['y'],
-    width=0.8,
-    color = 'green',
-    label = 'Not Compensated',
-)
-ax.bar(
-    x = df_destination2050_net_normalized[df_destination2050_net_normalized['year'].isin(list_years_plot)]['year'],
-    height = df_destination2050_net_normalized[df_destination2050_net_normalized['year'].isin(list_years_plot)]['y'],
+    x = df_destination2050_net_norm['year'],
+    height = df_destination2050_net_norm['y'],
+    bottom = None, 
     width=0.8,
     color = 'black',
     label = 'Not Compensated',
 )
 ax.bar(
-    x = df_destination2050_effect_SAF_normalized[df_destination2050_effect_SAF_normalized['year'].isin(list_years_plot)]['year'],
-    height = df_destination2050_effect_SAF_normalized[df_destination2050_effect_SAF_normalized['year'].isin(list_years_plot)]['y'],
-    bottom=df_destination2050_net_normalized[df_destination2050_net_normalized['year'].isin(list_years_plot)]['y'],
+    x = df_destination2050_market_norm['year'],
+    height = df_destination2050_market_norm['y'] - df_destination2050_net_norm['y'],
+    bottom = df_destination2050_net_norm['y'], 
     width=0.8,
     color = 'red',
-    label = 'Not Compensated',
+    label = 'Market Measures',
+)
+ax.bar(
+    x = df_destination2050_SAF_norm['year'],
+    height = df_destination2050_SAF_norm['y'] - df_destination2050_market_norm['y'],
+    bottom = df_destination2050_market_norm['y'], 
+    width=0.8,
+    color = 'green',
+    label = 'SAF',
+)
+ax.bar(
+    x = df_destination2050_ops_norm['year'],
+    height = df_destination2050_ops_norm['y'] - df_destination2050_SAF_norm['y'],
+    bottom = df_destination2050_SAF_norm['y'], 
+    width=0.8,
+    color = 'orange',
+    label = 'Operations and Infrastructure',
+)
+ax.bar(
+    x = df_destination2050_ref_norm['year'],
+    height = df_destination2050_ref_norm['y'] - df_destination2050_ops_norm['y'],
+    bottom = df_destination2050_ops_norm['y'], 
+    width=0.8,
+    color = 'blue',
+    label = 'Technology',
 )
 
 
