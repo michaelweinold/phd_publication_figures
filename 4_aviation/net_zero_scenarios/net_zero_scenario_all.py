@@ -359,6 +359,32 @@ df_Swiss_econ: pd.DataFrame = interpolate_1d_dataframe(
     new_x_values = list_of_years,
 )
 
+df_Swiss_saf_absolute = df_Swiss_saf.copy()
+df_Swiss_saf_absolute['y'] = df_Swiss_saf['y'] - df_Swiss_offset['y']
+
+df_Swiss_efficiency_absolute = df_Swiss_efficiency.copy()
+df_Swiss_efficiency_absolute['y'] = df_Swiss_efficiency['y'] - df_Swiss_saf['y']
+
+df_Swiss_ops_absolute = df_Swiss_ops.copy()
+df_Swiss_ops_absolute['y'] = df_Swiss_ops['y'] - df_Swiss_efficiency['y']
+
+df_Swiss_econ_absolute = df_Swiss_econ.copy()
+df_Swiss_econ_absolute['y'] = df_Swiss_econ['y'] - df_Swiss_ops['y']
+
+# new list of categories
+
+df_Swiss_econ_new = df_Swiss_econ.copy()
+df_Swiss_econ_new['y'] = df_Swiss_econ_absolute['y'] + df_Swiss_offset['y']
+
+df_Swiss_saf_new = df_Swiss_saf.copy()
+df_Swiss_saf_new['y'] = df_Swiss_saf_absolute['y'] + df_Swiss_econ_new['y']
+
+df_Swiss_ops_new = df_Swiss_ops.copy()
+df_Swiss_ops_new['y'] = df_Swiss_ops_absolute['y'] + df_Swiss_saf_new['y']
+
+df_Swiss_efficiency_new = df_Swiss_efficiency.copy()
+df_Swiss_efficiency_new['y'] = df_Swiss_efficiency_absolute['y'] + df_Swiss_ops_new['y']
+
 df_WayPoint2050_reduced: pd.DataFrame = interpolate_1d_dataframe(
     df = df_WayPoint2050,
     name_of_column_to_interpolate_x ='reduced (x)',
@@ -411,7 +437,7 @@ fig, ax = plt.subplots(
 # AXIS LIMITS ################
 
 ax.set_ylim(0, 110)
-ax.set_xlim(2013, 2051)
+ax.set_xlim(2013, 2052.5)
 
 # TICKS AND LABELS ###########
 
@@ -422,7 +448,7 @@ ax.grid(which='both', axis='y', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_ylabel("Global Aviation Emissions [Mt(CO$_2$)]")
+ax.set_ylabel("Share of total Aviation Emissions [\%]")
 
 # PLOTTING ###################
 
@@ -465,7 +491,7 @@ df_destination2050_ref_norm = normalize_dataframe_and_select_years(
 
 
 ax.bar(
-    x = df_destination2050_net_norm['year'],
+    x = df_destination2050_net_norm['year'] -0.5,
     height = df_destination2050_net_norm['y'],
     bottom = None, 
     width=0.8,
@@ -473,7 +499,7 @@ ax.bar(
     label = 'Not Compensated',
 )
 ax.bar(
-    x = df_destination2050_market_norm['year'],
+    x = df_destination2050_market_norm['year']-0.5,
     height = df_destination2050_market_norm['y'] - df_destination2050_net_norm['y'],
     bottom = df_destination2050_net_norm['y'], 
     width=0.8,
@@ -481,7 +507,7 @@ ax.bar(
     label = 'Market Measures',
 )
 ax.bar(
-    x = df_destination2050_SAF_norm['year'],
+    x = df_destination2050_SAF_norm['year']-0.5,
     height = df_destination2050_SAF_norm['y'] - df_destination2050_market_norm['y'],
     bottom = df_destination2050_market_norm['y'], 
     width=0.8,
@@ -489,7 +515,7 @@ ax.bar(
     label = 'SAF',
 )
 ax.bar(
-    x = df_destination2050_ops_norm['year'],
+    x = df_destination2050_ops_norm['year']-0.5,
     height = df_destination2050_ops_norm['y'] - df_destination2050_SAF_norm['y'],
     bottom = df_destination2050_SAF_norm['y'], 
     width=0.8,
@@ -497,7 +523,7 @@ ax.bar(
     label = 'Operations and Infrastructure',
 )
 ax.bar(
-    x = df_destination2050_ref_norm['year'],
+    x = df_destination2050_ref_norm['year']-0.5,
     height = df_destination2050_ref_norm['y'] - df_destination2050_ops_norm['y'],
     bottom = df_destination2050_ops_norm['y'], 
     width=0.8,
@@ -505,6 +531,204 @@ ax.bar(
     label = 'Technology',
 )
 
+# Eurocontrol
+
+df_eurocontrol_net_norm = normalize_dataframe_and_select_years(
+    df_eurocontrol_best_case,
+    df_eurocontrol_Fleet_evol
+)
+df_eurocontrol_market_norm = normalize_dataframe_and_select_years(
+    df_eurocontrol_Other,
+    df_eurocontrol_Fleet_evol
+)
+df_eurocontrol_saf_norm = normalize_dataframe_and_select_years(
+    df_eurocontrol_SAF,
+    df_eurocontrol_Fleet_evol
+)
+df_eurocontrol_ops_norm = normalize_dataframe_and_select_years(
+    df_eurocontrol_ATM,
+    df_eurocontrol_Fleet_evol
+)
+df_eurocontrol_ref_norm = normalize_dataframe_and_select_years(
+    df_eurocontrol_Fleet_evol,
+    df_eurocontrol_Fleet_evol
+)
+
+ax.bar(
+    x = df_eurocontrol_net_norm['year'] -1.5 ,
+    height = df_eurocontrol_net_norm['y'],
+    bottom = None, 
+    width=0.8,
+    color = 'black',
+)
+ax.bar(
+    x = df_eurocontrol_market_norm['year'] -1.5,
+    height = df_eurocontrol_market_norm['y'] - df_eurocontrol_net_norm['y'],
+    bottom = df_eurocontrol_net_norm['y'], 
+    width=0.8,
+    color = 'red',
+)
+ax.bar(
+    x = df_eurocontrol_saf_norm['year'] -1.5,
+    height = df_eurocontrol_saf_norm['y'] - df_eurocontrol_market_norm['y'],
+    bottom = df_eurocontrol_market_norm['y'], 
+    width=0.8,
+    color = 'green',
+)
+ax.bar(
+    x = df_eurocontrol_ops_norm['year'] -1.5,
+    height = df_eurocontrol_ops_norm['y'] - df_eurocontrol_saf_norm['y'],
+    bottom = df_eurocontrol_saf_norm['y'], 
+    width=0.8,
+    color = 'orange',
+)
+ax.bar(
+    x = df_eurocontrol_ref_norm['year'] -1.5,
+    height = df_eurocontrol_ref_norm['y'] - df_eurocontrol_ops_norm['y'],
+    bottom = df_eurocontrol_ops_norm['y'], 
+    width=0.8,
+    color = 'blue',
+)
+
+# Waypoint2050
+
+df_waypoint_net_norm = normalize_dataframe_and_select_years(
+    df_WayPoint2050_reduced,
+    df_WayPoint2050_Technology
+)
+df_waypoint_market_norm = normalize_dataframe_and_select_years(
+    df_WayPoint2050_MarketBased_Measure,
+    df_WayPoint2050_Technology
+)
+df_waypoint_saf_norm = normalize_dataframe_and_select_years(
+    df_WayPoint2050_SAF,
+    df_WayPoint2050_Technology
+)
+df_waypoint_ops_norm = normalize_dataframe_and_select_years(
+    df_WayPoint2050_Operations_and_Infrastructure,
+    df_WayPoint2050_Technology
+)
+df_waypoint_ref_norm = normalize_dataframe_and_select_years(
+    df_WayPoint2050_Technology,
+    df_WayPoint2050_Technology
+)
+
+ax.bar(
+    x = df_waypoint_net_norm['year'] +0.5 ,
+    height = df_waypoint_net_norm['y'],
+    bottom = None, 
+    width=0.8,
+    color = 'black',
+)
+ax.bar(
+    x = df_waypoint_market_norm['year'] +0.5 ,
+    height = df_waypoint_market_norm['y'] - df_waypoint_net_norm['y'],
+    bottom = df_waypoint_net_norm['y'], 
+    width=0.8,
+    color = 'red',
+)
+ax.bar(
+    x = df_waypoint_saf_norm['year'] +0.5 ,
+    height = df_waypoint_saf_norm['y'] - df_waypoint_market_norm['y'],
+    bottom = df_waypoint_market_norm['y'], 
+    width=0.8,
+    color = 'green',
+)
+ax.bar(
+    x = df_waypoint_ops_norm['year'] +0.5 ,
+    height = df_waypoint_ops_norm['y'] - df_waypoint_saf_norm['y'],
+    bottom = df_waypoint_saf_norm['y'], 
+    width=0.8,
+    color = 'orange',
+)
+ax.bar(
+    x = df_waypoint_ref_norm['year'] +0.5 ,
+    height = df_waypoint_ref_norm['y'] - df_waypoint_ops_norm['y'],
+    bottom = df_waypoint_ops_norm['y'], 
+    width=0.8,
+    color = 'blue',
+)
+
+# Swiss
+
+df_swiss_net_norm = normalize_dataframe_and_select_years(
+    df_Swiss_reduced,
+    df_Swiss_econ
+)
+df_swiss_offset_norm = normalize_dataframe_and_select_years(
+    df_Swiss_offset,
+    df_Swiss_econ
+)
+df_swiss_econ_norm = normalize_dataframe_and_select_years(
+    df_Swiss_econ_new,
+    df_Swiss_econ
+)
+df_swiss_saf_norm = normalize_dataframe_and_select_years(
+    df_Swiss_saf_new,
+    df_Swiss_econ
+)
+df_swiss_ops_norm = normalize_dataframe_and_select_years(
+    df_Swiss_ops_new,
+    df_Swiss_econ
+)
+df_swiss_ref_norm = normalize_dataframe_and_select_years(
+    df_Swiss_efficiency_new,
+    df_Swiss_econ
+)
+
+ax.bar(
+    x = df_swiss_net_norm['year'] +1.5 ,
+    height = df_swiss_net_norm['y'],
+    bottom = None, 
+    width=0.8,
+    color = 'black',
+)
+ax.bar(
+    x = df_swiss_offset_norm['year'] +1.5 ,
+    height = df_swiss_offset_norm['y'] - df_swiss_net_norm['y'],
+    bottom = df_swiss_net_norm['y'],
+    width=0.8,
+    color = 'grey',
+    label = 'Offsetting',
+)
+ax.bar(
+    x = df_swiss_econ_norm['year'] +1.5 ,
+    height = df_swiss_econ_norm['y'] - df_swiss_offset_norm['y'],
+    bottom = df_swiss_offset_norm['y'],
+    width=0.8,
+    color = 'red',
+)
+ax.bar(
+    x = df_swiss_saf_norm['year'] +1.5 ,
+    height = df_swiss_saf_norm['y'] - df_swiss_econ_norm['y'],
+    bottom = df_swiss_econ_norm['y'],
+    width=0.8,
+    color = 'green',
+)
+ax.bar(
+    x = df_swiss_ops_norm['year'] +1.5 ,
+    height = df_swiss_ops_norm['y'] - df_swiss_saf_norm['y'],
+    bottom = df_swiss_saf_norm['y'],
+    width=0.8,
+    color = 'orange',
+)
+ax.bar(
+    x = df_swiss_ref_norm['year'] +1.5 ,
+    height = df_swiss_ref_norm['y'] - df_swiss_ops_norm['y'],
+    bottom = df_swiss_ops_norm['y'],
+    width=0.8,
+    color = 'blue',
+)
+
+# Add your annotation
+ax.annotate(
+    'Bars (left to right)\n 1. Destination 2050\n 2. Eurocontrol\n 3. Waypoint 2050\n 4. Swiss ARCS',
+    xy=(0.02, 0.18), xycoords='axes fraction',
+    xytext=(0.02, 0.189), textcoords='axes fraction',
+    horizontalalignment='left', verticalalignment='center',
+    fontsize=12, color='black',
+    bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="white")
+)
 
 # LEGEND ####################
 

@@ -130,6 +130,51 @@ df_Swiss_econ: pd.DataFrame = interpolate_1d_dataframe(
     new_x_values = list_of_years,
 )
 
+# list of categories in original figure
+list_categories = [
+    'reduced', # net emissions
+    'offset',
+    'saf',
+    'efficiency', # technology
+    'ops',
+    'market measures'
+]
+
+# intended list of categories
+list_categories = [
+    'reduced', # net emissions
+    'offset',
+    'market measures',
+    'saf',
+    'ops',
+    'efficiency', # technology
+]
+
+df_Swiss_saf_absolute = df_Swiss_saf.copy()
+df_Swiss_saf_absolute['y'] = df_Swiss_saf['y'] - df_Swiss_offset['y']
+
+df_Swiss_efficiency_absolute = df_Swiss_efficiency.copy()
+df_Swiss_efficiency_absolute['y'] = df_Swiss_efficiency['y'] - df_Swiss_saf['y']
+
+df_Swiss_ops_absolute = df_Swiss_ops.copy()
+df_Swiss_ops_absolute['y'] = df_Swiss_ops['y'] - df_Swiss_efficiency['y']
+
+df_Swiss_econ_absolute = df_Swiss_econ.copy()
+df_Swiss_econ_absolute['y'] = df_Swiss_econ['y'] - df_Swiss_ops['y']
+
+# new list of categories
+
+df_Swiss_econ_new = df_Swiss_econ.copy()
+df_Swiss_econ_new['y'] = df_Swiss_econ_absolute['y'] + df_Swiss_offset['y']
+
+df_Swiss_saf_new = df_Swiss_saf.copy()
+df_Swiss_saf_new['y'] = df_Swiss_saf_absolute['y'] + df_Swiss_econ_new['y']
+
+df_Swiss_ops_new = df_Swiss_ops.copy()
+df_Swiss_ops_new['y'] = df_Swiss_ops_absolute['y'] + df_Swiss_saf_new['y']
+
+df_Swiss_efficiency_new = df_Swiss_efficiency.copy()
+df_Swiss_efficiency_new['y'] = df_Swiss_efficiency_absolute['y'] + df_Swiss_ops_new['y']
 
 # FIGURE ########################################
 
@@ -165,43 +210,37 @@ ax.set_ylabel("Aviation Emissions \n (Switzerland) [Mt(CO$_2$)]")
 # PLOTTING ###################
 
 ax.bar(
-    x = df_Swiss_econ['year'],
-    height = df_Swiss_econ['y'] - df_Swiss_ops['y'],
-    bottom = df_Swiss_ops['y'], 
-    width=0.8,
-    color = 'red',
-    label = 'Market Measures',
-)
-
-
-ax.bar(
-    x = df_Swiss_ops['year'],
-    height = df_Swiss_ops['y'] - df_Swiss_efficiency['y'],
-    bottom = df_Swiss_efficiency['y'], 
-    width=0.8,
-    color = 'orange',
-    label = 'Operations and Infrastructure',
-)
-
-ax.bar(
-    x = df_Swiss_efficiency['year'],
-    height = df_Swiss_efficiency['y'] - df_Swiss_saf['y'],
-    bottom = df_Swiss_saf['y'], 
+    x = df_Swiss_efficiency_new['year'],
+    height = df_Swiss_efficiency_new['y'] - df_Swiss_ops_new['y'],
+    bottom = df_Swiss_ops_new['y'], 
     width=0.8,
     color = 'blue',
     label = 'Technology',
 )
-
 ax.bar(
-    x = df_Swiss_saf['year'],
-    height = df_Swiss_saf['y'] - df_Swiss_offset['y'],
-    bottom = df_Swiss_offset['y'], 
+    x = df_Swiss_ops_new['year'],
+    height = df_Swiss_ops_new['y'] - df_Swiss_saf_new['y'],
+    bottom = df_Swiss_saf_new['y'], 
+    width=0.8,
+    color = 'orange',
+    label = 'Operations and Infrastructure',
+)
+ax.bar(
+    x = df_Swiss_saf_new['year'],
+    height = df_Swiss_saf_new['y'] - df_Swiss_econ_new['y'],
+    bottom = df_Swiss_econ_new['y'], 
     width=0.8,
     color = 'green',
     label = 'SAF',
 )
-
-
+ax.bar(
+    x = df_Swiss_econ_new['year'],
+    height = df_Swiss_econ_new['y'] - df_Swiss_offset['y'],
+    bottom = df_Swiss_offset['y'], 
+    width=0.8,
+    color = 'red',
+    label = 'Market Measures',
+)
 ax.bar(
     x = df_Swiss_offset['year'],
     height = df_Swiss_offset['y'] - df_Swiss_reduced['y'],
