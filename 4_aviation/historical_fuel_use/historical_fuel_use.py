@@ -30,7 +30,7 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_fuel = pd.read_excel(
+df_co2_historical = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'Global Aviation CO2',
     usecols = lambda column: column in [
@@ -44,40 +44,80 @@ df_fuel = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
-df_expenses = pd.read_excel(
+df_fuel_global_ipcc = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Fuel Use USA',
+    sheet_name = 'Fuel Use Global (IPCC)',
     usecols = lambda column: column in [
-        'year',
-        'labour expense [%]',
+        'Year',
+        'Fuel Burned [Gl]',
     ],
     dtype={
-        'year': int,
-        'labour expense [%]': float,
+        'Year': float,
+        'Fuel Burned [Gl]': float,
     },
-    parse_dates=['year'],
     header = 0,
     engine = 'openpyxl'
 )
-df_expenses = pd.read_excel(
+df_fuel_usa = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Fuel Use USA',
+    usecols = lambda column: column in [
+        'Year',
+        'Total [Gl]',
+    ],
+    dtype={
+        'Year': float,
+        'Total [Gl]': float,
+    },
+    header = 0,
+    engine = 'openpyxl'
+)
+df_fuel_ussr = pd.read_excel(
     io = 'data/data.xlsx',
     sheet_name = 'Fuel Use USSR',
     usecols = lambda column: column in [
-        'year',
-        'labour expense [%]',
+        'Year',
+        'Total [Gl]',
     ],
     dtype={
-        'year': int,
-        'labour expense [%]': float,
+        'Year': float,
+        'Total [Gl]': float,
     },
-    parse_dates=['year'],
     header = 0,
     engine = 'openpyxl'
 )
 
 # DATA MANIPULATION #############################
 
-df_fuel['producer price index (1950=100)'] = df_fuel['producer price index (1950=100)'] / 100
+df_co2_historical = df_co2_historical[df_co2_historical['Year'] <= 1971]
+df_fuel_global_ipcc = df_fuel_global_ipcc[df_fuel_global_ipcc['Year'] <= 1980]
+
+# peg co2 emissions data to fuel burn data
+conversion_factor = df_fuel_global_ipcc['Fuel Burned [Gl]'].iloc[0] / df_co2_historical['Annual Emissions [kg(CO2)]'].iloc[-1]
+df_co2_historical['Fuel Burned [Gl]'] = df_co2_historical['Annual Emissions [kg(CO2)]'] * conversion_factor
+
+df_fuel_usa = df_fuel_usa[df_fuel_usa['Year'] <= 1980]
+df_fuel_ussr = df_fuel_ussr[df_fuel_ussr['Year'] <= 1980]
+
+# extrapolate data
+# https://docs.scipy.org/doc/scipy/tutorial/interpolate/1D.html
+years_complete = np.arange(1960, 1981, 1)
+
+df_fuel_ussr_extrapolated = pd.DataFrame()
+df_fuel_ussr_extrapolated['Year'] = years_complete
+df_fuel_ussr_extrapolated['Total [Gl]'] = np.interp(
+    x = years_complete,
+    xp = df_fuel_ussr['Year'],
+    fp = df_fuel_ussr['Total [Gl]']
+)
+
+df_fuel_usa_extrapolated = pd.DataFrame()
+df_fuel_usa_extrapolated['Year'] = years_complete
+df_fuel_usa_extrapolated['Total [Gl]'] = np.interp(
+    x = years_complete,
+    xp = df_fuel_usa['Year'],
+    fp = df_fuel_usa['Total [Gl]']
+)
 
 # FIGURE ########################################
 
@@ -85,102 +125,64 @@ df_fuel['producer price index (1950=100)'] = df_fuel['producer price index (1950
 
 fig, ax = plt.subplots(
         num = 'main',
-        nrows = 2,
+        nrows = 1,
         ncols = 1,
         dpi = 300,
         figsize=(30*cm, 10*cm), # A4=(210x297)mm,
-        gridspec_kw = dict(
-            height_ratios=[3,1],
-        ),
-        sharex=True
     )
 
 # DATA #######################
 
 # AXIS LIMITS ################
 
-ax[0].set_xlim(
-    datetime.strptime('1949', '%Y'),
-    datetime.strptime('2023', '%Y')
+ax.set_xlim(
+    1950,
+    2023
 )
-ax[0].set_ylim(1,65)
-
-ax[1].set_ylim(0, 100)
 
 # TICKS AND LABELS ###########
 
-ax[0].minorticks_on()
-ax[0].tick_params(axis='x', which='minor', bottom=False)
+ax.minorticks_on()
+ax.tick_params(axis='x', which='minor', bottom=False)
 
 # GRIDS ######################
 
-ax[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-ax[0].grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
+ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+ax.grid(which='major', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax[0].set_ylabel("Producer Price Index \n (Aviation Fuel) [1950=1]")
-ax[1].set_xlabel("Year")
-ax[1].set_ylabel("Airline \n Expenses [\%]")
+ax.set_ylabel("Aviation Fuel Burned [Gl]")
 
 # PLOTTING ###################
 
-ax[0].plot(
-    df_fuel['date'],
-    df_fuel['producer price index (1950=100)'],
+ax.plot(
+    df_fuel_global_ipcc['Year'],
+    df_fuel_global_ipcc['Fuel Burned [Gl]'],
     color = 'black',
     linewidth = 1,
-    label = 'Jet Fuel (Kerosene)'
+    label = 'Fuel Burn'
 )
-ax[1].bar(
-    x = df_expenses['year'],
-    height = df_expenses['fuel expense [%]'],
-    width=200,
-    bottom=None,
-    align='center',
-    color = 'purple'
+ax.plot(
+    df_co2_historical['Year'],
+    df_co2_historical['Fuel Burned [Gl]'],
+    color = 'blue',
+    linewidth = 1,
 )
-ax[1].bar(
-    x = df_expenses['year'],
-    height = df_expenses['labour expense [%]'],
-    width=200,
-    bottom=df_expenses['fuel expense [%]'],
-    align='center',
-    color = 'green'
-)
-ax[1].bar(
-    x = df_expenses['year'],
-    height = df_expenses['other expense [%]'],
-    width=200,
-    bottom=df_expenses['fuel expense [%]'] + df_expenses['labour expense [%]'],
-    align='center',
-    color = 'orange'
+
+ax.stackplot(
+    df_fuel_usa_extrapolated['Year'],
+    df_fuel_usa_extrapolated['Total [Gl]'],
+    df_fuel_ussr_extrapolated['Total [Gl]'],
+    colors = ['blue', 'red'],
+    linewidth = 1,
+    alpha = 0.5,
 )
 
 # LEGEND ####################
 
-import matplotlib.patches as patches
-
-legend_elements = [
-    patches.Patch(
-        facecolor = 'purple',
-        edgecolor = 'none',
-        label = 'Fuel'
-    ),
-    patches.Patch(
-        facecolor = 'green',
-        edgecolor = 'none',
-        label = 'Labour'
-    ),
-    patches.Patch(
-        facecolor = 'orange',
-        edgecolor = 'none',
-        label = 'Other'
-    ),
-]
-ax[0].legend(
-    handles=legend_elements,
-    loc='lower left',
+ax.legend(
+    loc='upper left',
 )
 
 # EXPORT #########################################
