@@ -11,6 +11,8 @@ import matplotlib.font_manager as font_manager
 cm = 1/2.54 # for inches-cm conversion
 # time manipulation
 from datetime import datetime
+# country manipulation
+import country_converter as coco
 
 # data science
 import numpy as np
@@ -44,7 +46,7 @@ df_co2_historical = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
-df_fuel_global_ipcc = pd.read_excel(
+df_fuel_global_ipcc = pd.read_excel( # no longer needed
     io = 'data/data.xlsx',
     sheet_name = 'Fuel Use Global (IPCC)',
     usecols = lambda column: column in [
@@ -86,15 +88,15 @@ df_fuel_ussr = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
+df_fuel_global = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Fuel Use Global (EIA)',
+    header = 0,
+    index_col = 0,
+    engine = 'openpyxl'
+).drop(columns=['Source'])
 
 # DATA MANIPULATION #############################
-
-df_co2_historical = df_co2_historical[df_co2_historical['Year'] <= 1971]
-df_fuel_global_ipcc = df_fuel_global_ipcc[df_fuel_global_ipcc['Year'] <= 1980]
-
-# peg co2 emissions data to fuel burn data
-conversion_factor = df_fuel_global_ipcc['Fuel Burned [Gl]'].iloc[0] / df_co2_historical['Annual Emissions [kg(CO2)]'].iloc[-1]
-df_co2_historical['Fuel Burned [Gl]'] = df_co2_historical['Annual Emissions [kg(CO2)]'] * conversion_factor
 
 df_fuel_usa = df_fuel_usa[df_fuel_usa['Year'] <= 1980]
 df_fuel_ussr = df_fuel_ussr[df_fuel_ussr['Year'] <= 1980]
@@ -118,6 +120,107 @@ df_fuel_usa_extrapolated['Total [Gl]'] = np.interp(
     xp = df_fuel_usa['Year'],
     fp = df_fuel_usa['Total [Gl]']
 )
+
+# transpose dataframe
+df_fuel_global_t = df_fuel_global.transpose()
+df_fuel_global_t = df_fuel_global_t.rename_axis("Year")
+
+# convert million metric tonnes to Gl
+# https://aviationbenefits.org/environmental-efficiency/climate-action/sustainable-aviation-fuel/conversions-for-saf/
+df_fuel_global_t = df_fuel_global_t.apply(pd.to_numeric, errors='coerce')
+df_fuel_global_t = df_fuel_global_t * (1250000/1E9)
+
+# sum total fuel burn after 1980
+df_fuel_global_t['Total [Gl]'] = df_fuel_global_t.sum(axis=1)
+
+df_co2_historical = df_co2_historical[df_co2_historical['Year'] <= 1980]
+
+# peg co2 emissions data to fuel burn data
+conversion_factor = df_fuel_global_t['Total [Gl]'].iloc[0] / df_co2_historical['Annual Emissions [kg(CO2)]'].iloc[-1]
+df_co2_historical['Fuel Burned [Gl]'] = df_co2_historical['Annual Emissions [kg(CO2)]'] * conversion_factor
+
+# classify countries by region
+
+df_fuel_global = df_fuel_global.reset_index()
+df_fuel_global = df_reset.melt(id_vars='Country')
+
+unmatched_regions_dict = {
+    'Former Serbia and Montenegro': 'Western Europe',
+    'Former U.S.S.R.': 'Eastern Europe',
+    'Former Yugoslavia': 'Eastern Europe',
+    'Germany, East': 'Eastern Europe',
+    'Germany, West': 'Western Europe',
+    'Hawaiian Trade Zone': 'Oceania',
+    'Netherlands Antilles': 'Western Europe',
+    'U.S. Pacific Islands': 'Oceania',
+    'U.S. Territories': 'North America',
+    'Wake Island': 'Oceania',
+}
+
+# get list either from Wikipedia https://en.wikipedia.org/wiki/United_Nations_geoscheme
+# of from coco.CountryConverter().UNregion['UNregion'].unique().tolist()
+my_regions_dict = {
+    'Southern Asia': 'Asia',
+    'Northern Europe': 'Europe',
+    'Southern Europe': 'Europe',
+    'Northern Africa': 'Africa',
+    'Polynesia': 'Oceania',
+    'Middle Africa': 'Africa',
+    'Caribbean': 'Central and South America',
+    'Antarctica': 'Central and South America',
+    'South America': 'Central and South America',
+    'Western Asia': 'Asia',
+    'Australia and New Zealand': 'Oceania',
+    'Western Europe': 'Europe',
+    'Eastern Europe': 'Europe',
+    'Central America': 'Central and South America',
+    'Western Africa': 'Africa',
+    'Northern America': 'North America',
+    'Southern Africa': 'Africa',
+    'Eastern Africa': 'Africa',
+    'South-eastern Asia': 'Asia',
+    'Eastern Asia': 'Asia',
+    'Melanesia': 'Oceania',
+    'Micronesia': 'Oceania',
+    'Central Asia': 'Asia',
+}
+my_regions_list = list(set(my_regions_dict.values()))
+
+def add_country_classifications(
+    df: pd.DataFrame,
+    country_code_column: str,
+    coco_classification: str,
+) -> pd.DataFrame:
+    """
+    Group countries according to a country-converter ("coco") supported classification,
+    then sum the values of the relevant columns.
+
+    See Also
+    --------
+    https://github.com/IndEcol/country_converter?tab=readme-ov-file#classification-schemes
+    """
+    column_name_country_classification: str = 'country_classification_' + coco_classification
+    df[column_name_country_classification] = coco.convert(
+        names = df[country_code_column].tolist(),
+        to = coco_classification,
+        not_found = None,
+    )
+    df[column_name_country_classification] = df[column_name_country_classification].replace(unmatched_regions_dict)
+    return df
+
+
+df_grouped_unregion = add_country_classifications(
+    df = df_fuel_global,
+    country_code_column = 'Country',
+    coco_classification = 'UNregion',
+)
+
+df_grouped_region = df_grouped_unregion.copy()
+df_grouped_region['region'] = df_grouped_unregion['country_classification_UNregion'].replace(my_regions_dict)
+df_grouped_region['value'] = df_grouped_region['value'].apply(pd.to_numeric, errors='coerce')
+df_grouped_region['value'] = df_grouped_region['value'] * (1250000/1E9)
+df_grouped_region = df_grouped_region[['variable', 'region', 'value']].groupby(['variable', 'region']).sum().reset_index()
+
 
 # FIGURE ########################################
 
@@ -156,18 +259,20 @@ ax.set_ylabel("Aviation Fuel Burned [Gl]")
 
 # PLOTTING ###################
 
-ax.plot(
-    df_fuel_global_ipcc['Year'],
-    df_fuel_global_ipcc['Fuel Burned [Gl]'],
-    color = 'black',
-    linewidth = 1,
-    label = 'Fuel Burn'
-)
+
 ax.plot(
     df_co2_historical['Year'],
     df_co2_historical['Fuel Burned [Gl]'],
-    color = 'blue',
+    color = 'black',
     linewidth = 1,
+    label = 'Lee, Fahey, Skowron et al. (2021)'
+)
+ax.plot(
+    df_fuel_global_t.index,
+    df_fuel_global_t['Total [Gl]'],
+    color = 'red',
+    linewidth = 1,
+    label = 'U.S. Energy Information Administration (2023)'
 )
 
 ax.stackplot(
