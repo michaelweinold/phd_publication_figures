@@ -221,6 +221,8 @@ df_grouped_region['value'] = df_grouped_region['value'].apply(pd.to_numeric, err
 df_grouped_region['value'] = df_grouped_region['value'] * (1250000/1E9)
 df_grouped_region = df_grouped_region[['variable', 'region', 'value']].groupby(['variable', 'region']).sum().reset_index()
 
+# back to wide format
+df_fuel_global_regions = df_grouped_region.pivot(index='variable', columns='region', values='value').reset_index()
 
 # FIGURE ########################################
 
@@ -272,7 +274,7 @@ ax.plot(
     df_fuel_global_t['Total [Gl]'],
     color = 'red',
     linewidth = 1,
-    label = 'U.S. Energy Information Administration (2023)'
+    label = 'U.S. Energy Inf. Admin. (2023)'
 )
 
 ax.stackplot(
@@ -284,10 +286,39 @@ ax.stackplot(
     alpha = 0.5,
 )
 
+ax.stackplot(
+    df_fuel_global_regions['variable'],
+    df_fuel_global_regions['North America'],
+    df_fuel_global_regions['Asia'],
+    df_fuel_global_regions['Africa'],
+    df_fuel_global_regions['Central and South America'],
+    df_fuel_global_regions['Europe'],
+    df_fuel_global_regions['Oceania'],
+    colors = ['blue', 'red', 'brown', 'orange', 'green', 'purple'],
+    linewidth = 1,
+    alpha = 0.5,
+    labels = ['North America', 'Asia', 'Africa', 'Central and South America', 'Europe', 'Oceania']
+)
+
+ax.axvline(x=1980, color='black', linestyle='--')
+
 # LEGEND ####################
 
 ax.legend(
     loc='upper left',
+)
+ax.annotate(
+    'U.S.S.R. only ($<$ 1980)',  # Text to display in the annotation box
+    xy=(1980 - 1, 40),  # Position of the upper end of the vertical line
+    ha='right',  # Horizontal alignment of the text
+    va='bottom'  # Vertical alignment of the text
+)
+ax.annotate(
+    'U.S.A. only ($<$1980)',  # Text to display in the annotation box
+    xy=(1980 - 1, 7),  # Position of the upper end of the vertical line
+    ha='right',  # Horizontal alignment of the text
+    va='bottom',  # Vertical alignment of the text
+    color = 'white'
 )
 
 # EXPORT #########################################
