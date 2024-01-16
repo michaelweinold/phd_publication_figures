@@ -308,13 +308,13 @@ ax.legend(
     loc='upper left',
 )
 ax.annotate(
-    'U.S.S.R. only ($<$ 1980)',  # Text to display in the annotation box
+    'USSR only ($<$ 1980)',  # Text to display in the annotation box
     xy=(1980 - 1, 40),  # Position of the upper end of the vertical line
     ha='right',  # Horizontal alignment of the text
     va='bottom'  # Vertical alignment of the text
 )
 ax.annotate(
-    'U.S.A. only ($<$1980)',  # Text to display in the annotation box
+    'USA only ($<$1980)',  # Text to display in the annotation box
     xy=(1980 - 1, 7),  # Position of the upper end of the vertical line
     ha='right',  # Horizontal alignment of the text
     va='bottom',  # Vertical alignment of the text
