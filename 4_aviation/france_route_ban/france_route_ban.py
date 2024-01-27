@@ -36,9 +36,10 @@ popareas = gpd.read_file('data/base_geodata/ne_50m_urban_areas/ne_50m_urban_area
 rivers = gpd.read_file('data/base_geodata/ne_10m_rivers_lake_centerlines/ne_10m_rivers_lake_centerlines.shp')
 lakes = gpd.read_file('data/base_geodata/ne_10m_lakes/ne_10m_lakes.shp')
 
-track_paris_lyon = gpd.read_file('data/paris_lyon.geojson')
+track_paris_nice = gpd.read_file('data/paris_nice.geojson')
 track_paris_bordeaux = gpd.read_file('data/paris_bordeaux.geojson')
-
+track_paris_london = gpd.read_file('data/paris_london.geojson')
+track_paris_nantes = gpd.read_file('data/paris_nantes.geojson')
 
 # DATA MANIPULATION #############################
 
@@ -47,12 +48,14 @@ target_projection = "EPSG:3035" # seems to work well for Europe
 # https://automating-gis-processes.github.io/CSC/notebooks/L2/projections.html
 
 countries = countries.to_crs(target_projection)
-urban = urban.to_crs(target_projection)
+popareas = popareas.to_crs(target_projection)
 rivers = rivers.to_crs(target_projection)
 lakes = lakes.to_crs(target_projection)
 
-track_paris_lyon = track_paris_lyon.to_crs(target_projection)
+track_paris_nice = track_paris_nice.to_crs(target_projection)
 track_paris_bordeaux = track_paris_bordeaux.to_crs(target_projection)
+track_paris_london = track_paris_london.to_crs(target_projection)
+track_paris_nantes = track_paris_nantes.to_crs(target_projection)
 
 # https://geopandas.org/en/stable/docs/reference/api/geopandas.points_from_xy.html#geopandas-points-from-xy
 lower_left = gpd.points_from_xy(
@@ -63,7 +66,7 @@ lower_left = gpd.points_from_xy(
 
 upper_right = gpd.points_from_xy(
     x = [10], # longitude
-    y = [52], # latitude
+    y = [52.5], # latitude
     crs='EPSG:4326' # = WGS 84
 ).to_crs(target_projection)
 
@@ -101,16 +104,14 @@ ax.set_ylim(
 
 # PLOTTING ###################
 
-urban.plot(
+popareas.plot(
     ax = ax,
     color = 'orange',
-    label = 'Urban Areas',
     alpha = 0.5
 )
 rivers.plot(
     ax = ax,
     color = 'lightblue',
-    label = 'Rivers',
     alpha = 0.5
 )
 lakes.plot(
@@ -119,15 +120,21 @@ lakes.plot(
     alpha = 0.5
 )
 
-track_paris_lyon.plot(
+track_paris_nice.plot(
     ax = ax,
     color = 'red',
-    label = 'Paris-Lyon Track'
 )
 track_paris_bordeaux.plot(
     ax = ax,
     color = 'red',
-    label = 'Paris-Bordeaux Track'
+)
+track_paris_london.plot(
+    ax = ax,
+    color = 'red',
+)
+track_paris_nantes.plot(
+    ax = ax,
+    color = 'red',
 )
 
 
