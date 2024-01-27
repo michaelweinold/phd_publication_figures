@@ -57,9 +57,52 @@ track_paris_bordeaux = track_paris_bordeaux.to_crs(target_projection)
 track_paris_london = track_paris_london.to_crs(target_projection)
 track_paris_nantes = track_paris_nantes.to_crs(target_projection)
 
+airport_cdg = gpd.points_from_xy(
+    x = [2.547778], # longitude
+    y = [49.009722], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs('EPSG:3035')
+
+airport_lcy = gpd.points_from_xy(
+    x = [0.055278], # longitude
+    y = [51.505278], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs('EPSG:3035')
+
+airport_bod = gpd.points_from_xy(
+    x = [-0.715556], # longitude
+    y = [44.828333], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs('EPSG:3035')
+
+airport_nte = gpd.points_from_xy(
+    x = [-1.607778], # longitude
+    y = [47.156944], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs('EPSG:3035')
+
+airport_nce = gpd.points_from_xy(
+    x = [7.215], # longitude
+    y = [43.665278], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs('EPSG:3035')
+
+airport_tls = gpd.points_from_xy(
+    x = [1.367778], # longitude
+    y = [43.635], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs('EPSG:3035')
+
+airport_mrs = gpd.points_from_xy(
+    x = [5.215], # longitude
+    y = [43.436667], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs('EPSG:3035')
+
 # https://geopandas.org/en/stable/docs/reference/api/geopandas.points_from_xy.html#geopandas-points-from-xy
+
 lower_left = gpd.points_from_xy(
-    x = [-10], # longitude
+    x = [-8], # longitude
     y = [40], # latitude
     crs='EPSG:4326' # = WGS 84
 ).to_crs(target_projection)
@@ -78,7 +121,7 @@ ax = countries.plot(
     figsize = (20*cm, 20*cm),
     color = 'white',
     edgecolor = 'black',
-    linewidth = 0.5,
+    linewidth = 0.75,
     alpha = 1,
 )
 
@@ -97,6 +140,11 @@ ax.set_ylim(
 )
 
 # TICKS AND LABELS ###########
+
+ax.set_xticks([])
+ax.set_yticks([])
+ax.set_xticklabels([])
+ax.set_yticklabels([])
 
 # GRIDS ######################
 
@@ -137,10 +185,74 @@ track_paris_nantes.plot(
     color = 'red',
 )
 
+flight_cdg_lcy = ax.plot(
+    [airport_cdg.x[0], airport_lcy.x[0]],
+    [airport_cdg.y[0], airport_lcy.y[0]],
+    color = 'blue',
+    linestyle = '-',
+)
+
+flight_cdg_bod = ax.plot(
+    [airport_cdg.x[0], airport_bod.x[0]],
+    [airport_cdg.y[0], airport_bod.y[0]],
+    color = 'blue',
+    linestyle = '-',
+)
+
+flight_cdg_nte = ax.plot(
+    [airport_cdg.x[0], airport_nte.x[0]],
+    [airport_cdg.y[0], airport_nte.y[0]],
+    color = 'blue',
+    linestyle = '-',
+)
+
+flight_cdg_nce = ax.plot(
+    [airport_cdg.x[0], airport_nce.x[0]],
+    [airport_cdg.y[0], airport_nce.y[0]],
+    color = 'blue',
+    linestyle = '-',
+)
+
+flight_cdg_tls = ax.plot(
+    [airport_cdg.x[0], airport_tls.x[0]],
+    [airport_cdg.y[0], airport_tls.y[0]],
+    color = 'blue',
+    linestyle = '-',
+)
+
+flight_cdg_mrs = ax.plot(
+    [airport_cdg.x[0], airport_mrs.x[0]],
+    [airport_cdg.y[0], airport_mrs.y[0]],
+    color = 'blue',
+    linestyle = '-',
+)
+
 
 # LEGEND ####################
 
+import matplotlib.patches as patches
+from matplotlib.lines import Line2D
+import matplotlib.patheffects as pe
+
+legend_elements = [
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'blue',
+        linestyle = '-',
+        label='Flight Track',
+    ),
+    Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'red',
+        linestyle = '-',
+        label='Train Track',
+    ),
+]
+
 ax.legend(
+    handles=legend_elements,
     loc='upper left',
 )
 
@@ -156,4 +268,3 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
