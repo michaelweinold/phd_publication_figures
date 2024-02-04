@@ -35,9 +35,9 @@ plt.rcParams.update({
 # https://stackoverflow.com/q/69242928
 # it will be best to have separate plots for each country
 
-df_bio_cell_co2 = pd.read_excel(
+df_bio_oil_co2 = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'CO2 Bio-Cellulose Fuel',
+    sheet_name = 'CO2 Bio-Oil Fuel',
     usecols = lambda column: column in [
         'feedstock',
         'region',
@@ -51,9 +51,9 @@ df_bio_cell_co2 = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
-df_bio_cell_cost = pd.read_excel(
+df_bio_oil_cost = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Cost Bio-Cellulose Fuel',
+    sheet_name = 'Cost Bio-Oil Fuel',
     usecols = lambda column: column in [
         'year',
         'cost [$(2023)]'
@@ -65,9 +65,9 @@ df_bio_cell_cost = pd.read_excel(
     header = 0,
     engine = 'openpyxl'
 )
-df_bio_cell_avail = pd.read_excel(
+df_bio_oil_avail = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Availability Bio-Cellulose Fuel',
+    sheet_name = 'Availability Bio-Oil Fuel',
     usecols = lambda column: column in [
         'feedstock',
         'practical availability [Mt/year]'
@@ -141,42 +141,42 @@ axes[2].set_title('[k\$(2023)]', fontsize=10)
 # PLOTTING ###################
 
 axes[0].violinplot(
-    df_bio_cell_co2['LSf [gCO2e/MJ]'],
+    df_bio_oil_co2['LSf [gCO2e/MJ]'],
     #showfliers = True
 )
 axes[0].axhline(y=86, color='red', linestyle='--')
 axes[0].text(1, 54, 'Fossil \n Jet A1 \n Emission', ha='center')
 
-cellulosic = df_bio_cell_avail[df_bio_cell_avail['feedstock'] == 'cellulosic cover crops']['practical availability [Mt/year]'].iloc[0]
+waste = df_bio_oil_avail[df_bio_oil_avail['feedstock'] == 'waste and residue lipids']['practical availability [Mt/year]'].iloc[0]
 axes[1].bar(
     x = 0,
-    height = cellulosic,
+    height = waste,
     width=0.75,
-    color = 'yellowgreen',
+    color = 'skyblue',
 )
-agri = df_bio_cell_avail[df_bio_cell_avail['feedstock'] == 'agricultural residues']['practical availability [Mt/year]'].iloc[0]
+trees = df_bio_oil_avail[df_bio_oil_avail['feedstock'] == 'oil trees on degraded land']['practical availability [Mt/year]'].iloc[0]
 axes[1].bar(
     x = 0,
-    height = agri,
-    bottom = cellulosic,
+    height = trees,
+    bottom = waste,
     width=0.75,
-    color = 'lightgreen',
+    color = 'darkturquoise',
 )
-forest = df_bio_cell_avail[df_bio_cell_avail['feedstock'] == 'forestry residues']['practical availability [Mt/year]'].iloc[0]
+crops = df_bio_oil_avail[df_bio_oil_avail['feedstock'] == 'oil-cover crops']['practical availability [Mt/year]'].iloc[0]
 axes[1].bar(
     x = 0,
-    height = forest,
-    bottom = agri + cellulosic,
+    height = crops,
+    bottom = trees + waste,
     width=0.75,
-    color = 'mediumseagreen',
+    color = 'teal',
 )
 
 axes[1].axhline(y=350, color='red', linestyle='--')
 axes[1].text(0, 190, '2019 \n Fossil \n Prod.', ha='center')
 
 axes[2].plot(
-    df_bio_cell_cost['year'],
-    df_bio_cell_cost['cost [$(2023)]'],
+    df_bio_oil_cost['year'],
+    df_bio_oil_cost['cost [$(2023)]'],
     color = 'black',
     linewidth = 1,
 )
