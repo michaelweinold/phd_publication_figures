@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
 # geographic plotting
 import geopandas as gpd
+from shapely.geometry import LineString
 # unit conversion
 cm = 1/2.54 # for inches-cm conversion
 # time manipulation
@@ -36,8 +37,6 @@ popareas = gpd.read_file('data/base_geodata/ne_10m_urban_areas/ne_10m_urban_area
 rivers = gpd.read_file('data/base_geodata/ne_10m_rivers_lake_centerlines/ne_10m_rivers_lake_centerlines.shp')
 lakes = gpd.read_file('data/base_geodata/ne_10m_lakes/ne_10m_lakes.shp')
 graticules = gpd.read_file('data/base_geodata/ne_50m_graticules_10')
-
-countries1 = countries
 
 def import_flightradar_csv(filepath: str) ->gpd.GeoDataFrame:
     df = pd.read_csv(
@@ -85,8 +84,8 @@ lower_left = gpd.points_from_xy(
 ).to_crs(target_projection)
 
 upper_right = gpd.points_from_xy(
-    x = [46], # longitude
-    y = [65], # latitude
+    x = [70], # longitude
+    y = [55], # latitude
     crs='EPSG:4326' # = WGS 84
 ).to_crs(target_projection)
 
@@ -113,7 +112,7 @@ fig, ax = plt.subplots(
     nrows = 1,
     ncols = 1,
     dpi = 300,
-    figsize=(30*cm, 20*cm), # A4=(210x297)mm,
+    figsize=(18*cm, 18*cm), # A4=(210x297)mm,
 )
 
 countries.plot(
@@ -122,13 +121,6 @@ countries.plot(
     edgecolor = 'black',
     linewidth = 0.75,
     alpha = 1,
-)
-graticules.plot(
-    ax = ax,
-    color = 'grey',
-    linewidth = 0.5,
-    linestyle = '--',
-    alpha = 0.5,
 )
 
 # DATA #######################
@@ -154,7 +146,13 @@ ax.set_yticklabels([])
 
 # GRIDS ######################
 
-#ax.gridlines()
+graticules.plot(
+    ax = ax,
+    color = 'grey',
+    linewidth = 0.5,
+    linestyle = '--',
+    alpha = 0.5,
+)
 
 # AXIS LABELS ################
 
@@ -166,8 +164,52 @@ geoser_finnair.plot(
     linestyle = '-',
     linewidth = 2,
 )
+geoser_easyjet.plot(
+    ax = ax,
+    color = 'blue',
+    linestyle = '-',
+    linewidth = 2,
+)
+geoser_airfrance.plot(
+    ax = ax,
+    color = 'red',
+    linestyle = '-',
+    linewidth = 2,
+)
+geoser_airfrance2.plot(
+    ax = ax,
+    color = 'green',
+    linestyle = '-',
+    linewidth = 2,
+)
 
 # LEGEND ####################
+
+# https://github.com/IndEcol/country_converter?tab=readme-ov-file#classification-schemes
+import country_converter as coco
+cc = coco.CountryConverter()
+
+othercountries = ['CHE', 'NOR', 'LIE', 'ISL', 'GBR']
+
+for index, country in countries.iterrows():
+    if country['ADM0_A3'] in cc.convert(cc.EU27['name_short'], to='ISO3'):
+        country = gpd.GeoSeries(country['geometry']) # otherwise 'country' is just a series (NOT a geoseries)
+        country.plot(
+            ax = ax,
+            facecolor='lightblue',
+            edgecolor='black',
+            linewidth=1
+        )
+    elif country['ADM0_A3'] in othercountries:
+        country = gpd.GeoSeries(country['geometry'])
+        country.plot(
+            ax = ax,
+            facecolor='lightgreen',
+            edgecolor='black',
+            linewidth=1
+        )
+    else:
+        pass
 
 import matplotlib.patches as patches
 from matplotlib.lines import Line2D
@@ -209,7 +251,7 @@ legend_elements = [
 
 ax.legend(
     handles=legend_elements,
-    loc='upper left',
+    loc='upper right',
 )
 
 # EXPORT #########################################
@@ -224,3 +266,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
