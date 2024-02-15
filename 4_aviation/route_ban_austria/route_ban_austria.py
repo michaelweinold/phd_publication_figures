@@ -195,6 +195,7 @@ ax.legend(
 
 # EXPORT #########################################
 
+import os 
 file_path = os.path.abspath(__file__)
 file_name = os.path.splitext(os.path.basename(file_path))[0]
 figure_name: str = str(file_name + '.pdf')

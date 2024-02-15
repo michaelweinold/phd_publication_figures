@@ -8,10 +8,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
 # geographic plotting
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
-import shapely.geometry as sgeom
-import cartopy.io.shapereader as shpreader
+import geopandas as gpd
 # unit conversion
 cm = 1/2.54 # for inches-cm conversion
 # time manipulation
@@ -34,198 +31,141 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-df_finnair = pd.read_csv(
-    filepath_or_buffer = 'data/AY99_2f2a9256.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-)
-df_airfrance = pd.read_csv(
-    filepath_or_buffer = 'data/3138ab42.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-)
-df_easyjet = pd.read_csv(
-    filepath_or_buffer = 'data/U27688_32c59827.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-)
-df_aireuropa = pd.read_csv(
-    filepath_or_buffer = 'data/UX51_32cb722b.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-)
-df_airfrance2 = pd.read_csv(
-    filepath_or_buffer = 'data/AF816_32c14da7.csv',
-    sep = ',',
-    header = 'infer',
-    index_col = False,
-)
+countries = gpd.read_file('data/base_geodata/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp')
+popareas = gpd.read_file('data/base_geodata/ne_10m_urban_areas/ne_10m_urban_areas.shp')
+rivers = gpd.read_file('data/base_geodata/ne_10m_rivers_lake_centerlines/ne_10m_rivers_lake_centerlines.shp')
+lakes = gpd.read_file('data/base_geodata/ne_10m_lakes/ne_10m_lakes.shp')
+graticules = gpd.read_file('data/base_geodata/ne_50m_graticules_10')
+
+countries1 = countries
+
+def import_flightradar_csv(filepath: str) ->gpd.GeoDataFrame:
+    df = pd.read_csv(
+        filepath_or_buffer = filepath,
+        sep = ',',
+        header = 'infer',
+        index_col = False,
+    )
+    df[['lat', 'lon']] = df['Position'].str.split(',', expand=True)
+    df = df[['UTC', 'lat', 'lon']]
+
+    geodf = gpd.GeoDataFrame(
+        df,
+        geometry = gpd.points_from_xy(
+            x = df['lon'],
+            y = df['lat'],
+            crs = 'EPSG:4326' # World Geodetic System 1984 (standard for lat/lon)
+        )
+    )
+    return geodf
+
+geodf_finnair = import_flightradar_csv('data/AY99_2f2a9256.csv')
+geodf_airfrance = import_flightradar_csv('data/3138ab42.csv')
+geodf_easyjet = import_flightradar_csv('data/U27688_32c59827.csv')
+geodf_aireuropa = import_flightradar_csv('data/UX51_32cb722b.csv')
+geodf_airfrance2 = import_flightradar_csv('data/AF816_32c14da7.csv')
+
+# GEOGRAPHY SETUP ###############################
+
+# https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.set_crs.html
+target_projection = "EPSG:3035" # seems to work well for Europe
+# https://automating-gis-processes.github.io/CSC/notebooks/L2/projections.html
+
+countries = countries.to_crs(target_projection)
+popareas = popareas.to_crs(target_projection)
+rivers = rivers.to_crs(target_projection)
+lakes = lakes.to_crs(target_projection)
+graticules = graticules.to_crs(target_projection)
+
+# https://geopandas.org/en/stable/docs/reference/api/geopandas.points_from_xy.html#geopandas-points-from-xy
+lower_left = gpd.points_from_xy(
+    x = [-10], # longitude
+    y = [33], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs(target_projection)
+
+upper_right = gpd.points_from_xy(
+    x = [46], # longitude
+    y = [65], # latitude
+    crs='EPSG:4326' # = WGS 84
+).to_crs(target_projection)
 
 # DATA MANIPULATION #############################
 
-def extract_coordinates_from_csv(
-        df: pd.DataFrame,
-        column_name: str = 'Position'
-) -> pd.DataFrame:
-    df_coords: pd.DataFrame = df[column_name].str.split(',', expand=True).astype(float)
-    df_coords.columns = ['lat', 'lon']
-    ls_coords = sgeom.LineString(
-        zip(
-            df_coords['lon'],
-            df_coords['lat']
-        )
-    )
-    lat_cities: list = [df_coords['lat'].iloc[0], df_coords['lat'].iloc[-1]]
-    lon_cities: list = [df_coords['lon'].iloc[0], df_coords['lon'].iloc[-1]]
-    return ls_coords, lat_cities, lon_cities
+geodf_aireuropa = geodf_aireuropa.to_crs(target_projection)
+geodf_airfrance = geodf_airfrance.to_crs(target_projection)
+geodf_finnair = geodf_finnair.to_crs(target_projection)
+geodf_airfrance2 = geodf_airfrance2.to_crs(target_projection)
+geodf_easyjet = geodf_easyjet.to_crs(target_projection)
 
-finnair_track, lat_finnair, lon_finnair = extract_coordinates_from_csv(
-    df = df_finnair,
-    column_name = 'Position'
-)
-airfrance_track, lat_airfrance, lon_airfrance = extract_coordinates_from_csv(
-    df = df_airfrance,
-    column_name = 'Position'
-)
-easyjet_track, lat_easyjet, lon_easyjet = extract_coordinates_from_csv(
-    df = df_easyjet,
-    column_name = 'Position'
-)
-aireuropa_track, lat_aireuropa, lon_aireuropa = extract_coordinates_from_csv(
-    df = df_aireuropa,
-    column_name = 'Position'
-)
-airfrance2_track, lat_airfrance2, lon_airfrance2 = extract_coordinates_from_csv(
-    df = df_airfrance2,
-    column_name = 'Position'
-)
-
-
-list_of_tracks = [finnair_track, airfrance_track, airfrance2_track]
+geoser_finnair = gpd.GeoSeries(LineString(geodf_finnair['geometry']))
+geoser_airfrance = gpd.GeoSeries(LineString(geodf_airfrance['geometry']))
+geoser_easyjet = gpd.GeoSeries(LineString(geodf_easyjet['geometry']))
+geoser_aireuropa = gpd.GeoSeries(LineString(geodf_aireuropa['geometry']))
+geoser_airfrance2 = gpd.GeoSeries(LineString(geodf_airfrance2['geometry']))
 
 # FIGURE ########################################
 
 # SETUP ######################
 
-# https://stackoverflow.com/a/60724892/
-plateCr = ccrs.PlateCarree()
-plateCr._threshold = plateCr._threshold/10.
-
-fig = plt.figure(
+fig, ax = plt.subplots(
     num = 'main',
+    nrows = 1,
+    ncols = 1,
     dpi = 300,
-    figsize=(30*cm, 15*cm), # A4=(210x297)mm
+    figsize=(30*cm, 20*cm), # A4=(210x297)mm,
 )
-ax = plt.axes(
-    projection=ccrs.PlateCarree(),
-)
-ax.add_feature(cfeature.BORDERS, linestyle='-', alpha=1)
-ax.add_feature(cfeature.COASTLINE, linestyle='-', alpha=1)
 
+countries.plot(
+    ax = ax,
+    color = 'white',
+    edgecolor = 'black',
+    linewidth = 0.75,
+    alpha = 1,
+)
+graticules.plot(
+    ax = ax,
+    color = 'grey',
+    linewidth = 0.5,
+    linestyle = '--',
+    alpha = 0.5,
+)
 
 # DATA #######################
 
 # AXIS LIMITS ################
 
-ax.set_extent ((-45, 50, 30, 65), None) # (x0, x1, y0, y1)
+ax.set_xlim(
+    lower_left.x[0],
+    upper_right.x[0]
+)
+
+ax.set_ylim(
+    lower_left.y[0],
+    upper_right.y[0]
+)
 
 # TICKS AND LABELS ###########
 
+ax.set_xticks([])
+ax.set_yticks([])
+ax.set_xticklabels([])
+ax.set_yticklabels([])
+
 # GRIDS ######################
 
-ax.gridlines()
+#ax.gridlines()
 
 # AXIS LABELS ################
 
 # PLOTTING ###################
 
-# https://github.com/IndEcol/country_converter?tab=readme-ov-file#classification-schemes
-import country_converter as coco
-cc = coco.CountryConverter()
-
-shpfilename = shpreader.natural_earth(
-    resolution='50m',
-    category='cultural',
-    name='admin_0_countries'
+geoser_finnair.plot(
+    ax = ax,
+    color = 'red',
+    linestyle = '-',
+    linewidth = 2,
 )
-reader = shpreader.Reader(shpfilename)
-
-lines_list = []
-
-othercountries = ['CHE', 'NOR', 'LIE', 'ISL', 'GBR']
-
-countries = reader.records()
-for country in countries:
-    if country.attributes['ADM0_A3'] in othercountries:
-        for track in list_of_tracks:
-            lines_list.append(country.geometry.intersection(track))
-
-countries = reader.records()
-for country in countries:
-    if country.attributes['ADM0_A3'] in cc.convert(cc.EU27['name_short'], to='ISO3'):
-        for track in list_of_tracks:
-            lines_list.append(country.geometry.intersection(track))
-        ax.add_geometries(
-            country.geometry,
-            ccrs.PlateCarree(),
-            facecolor='lightblue',
-            edgecolor='black',
-            linewidth=1
-        )
-
-countries = reader.records()
-for country in countries:
-    if country.attributes['ADM0_A3'] in othercountries:
-        ax.add_geometries(
-            country.geometry,
-            ccrs.PlateCarree(),
-            facecolor='lightgreen',
-            edgecolor='black',
-            linewidth=1
-        )
-
-
-ax.add_geometries(
-    geoms = finnair_track,
-    crs = ccrs.PlateCarree(),
-    facecolor = 'none',
-    edgecolor = 'red',
-    linewidth = 2
-)
-ax.add_geometries(
-    geoms = airfrance_track,
-    crs = ccrs.PlateCarree(),
-    facecolor = 'none',
-    edgecolor = 'red',
-    linewidth = 2
-)
-ax.add_geometries(
-    geoms = easyjet_track,
-    crs = ccrs.PlateCarree(),
-    facecolor = 'none',
-    edgecolor = 'blue',
-    linewidth = 2
-)
-ax.add_geometries(
-    geoms = airfrance2_track,
-    crs = ccrs.PlateCarree(),
-    facecolor = 'none',
-    edgecolor = 'green',
-    linewidth = 2
-)
-
-for line_segment in lines_list:
-    ax.add_geometries(
-        geoms = line_segment,
-        crs = ccrs.PlateCarree(),
-        facecolor = 'none',
-        edgecolor = 'blue',
-        linewidth = 2
-    )
 
 # LEGEND ####################
 
@@ -269,7 +209,7 @@ legend_elements = [
 
 ax.legend(
     handles=legend_elements,
-    loc='lower left',
+    loc='upper left',
 )
 
 # EXPORT #########################################
@@ -284,4 +224,3 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
