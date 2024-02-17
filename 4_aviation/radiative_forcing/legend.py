@@ -63,11 +63,23 @@ import matplotlib.lines as lines
 
 # legend number 1
 
+import matplotlib as mpl
+mpl.rcParams['hatch.linewidth'] = 3
+
+# current workaround, compare: https://github.com/matplotlib/matplotlib/issues/26074
+white_patch =  patches.Patch(
+    facecolor='red',
+    edgecolor='black',
+    hatch='///',
+)
+white_patch._hatch_color = (1.0, 1.0, 1.0, 1.0)
+
 legend_1_elements = [
     patches.Patch(
         facecolor='red',
         edgecolor='black'
     ),
+    white_patch,
     plt.errorbar(
         x=0,
         y=0,
@@ -82,12 +94,15 @@ legend_1_elements = [
 legend_1 = ax.legend(
     handles = legend_1_elements,
     labels = [
-        'Best Estimate',
+        'Best Estimate (Total Effect)',
+        'Best Estimate (Sub-Effect)',
         '5/95\% Confidence Interval',
     ],
     loc = 'lower left',
     numpoints=1,
     title = 'Metastudy (Lee et al., 2021)',
+    alignment = 'left',
+    title_fontproperties={'weight':'bold'},
 )
 ax.add_artist(legend_1) # required for multiple legends
 
@@ -107,13 +122,13 @@ legend_2_elements = [
 ax.legend(
     handles = legend_2_elements,
     labels = [
-        'Best Estimate (Metastudy)',
-        '5/95\% Confidence Interval',
-        'Mean',
+        'Range (High/Low)',
     ],
     loc = 'lower right',
     numpoints=2,
     title = 'Individual Studies',
+    alignment = 'left',
+    title_fontproperties={'weight':'bold'},
 )
 
 # EXPORT #########################################
@@ -128,3 +143,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%
