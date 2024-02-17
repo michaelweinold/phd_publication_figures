@@ -4,6 +4,8 @@
 
 # IMPORTS #######################################
 
+# sys
+import os
 # plotting
 import matplotlib.pyplot as plt
 # unit conversion
@@ -16,7 +18,6 @@ import pandas as pd
 
 # SETUP #########################################
 
-
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "Arial",
@@ -27,24 +28,35 @@ plt.rcParams.update({
 # DATA IMPORT ###################################
 
 df_google = pd.read_csv(
-    filepath_or_buffer = 'data/google_trend.csv',
+    filepath_or_buffer = 'data/google_trend_sustav.csv',
     sep = ',',
     decimal = '.',
     index_col = 0,
     parse_dates = True,
     encoding = 'utf-8'
-)
+).reset_index()
 
-df_scopus = pd.read_csv(
-    filepath_or_buffer = 'data/scopus_trend.csv',
+df_scopus_sustav = pd.read_csv(
+    filepath_or_buffer = 'data/scopus_trend_sustav.csv',
     sep = ',',
     decimal = '.',
     index_col = 0,
     parse_dates = True,
     encoding = 'utf-8'
-)
+).reset_index()
+
+df_scopus_allaviation = pd.read_csv(
+    filepath_or_buffer = 'data/scopus_trend_all_aviation.csv',
+    sep = ',',
+    decimal = '.',
+    index_col = 0,
+    parse_dates = True,
+    encoding = 'utf-8'
+).reset_index()
 
 # DATA MANIPULATION #############################
+
+df_scopus_allaviation = df_scopus_allaviation.merge(df_scopus_sustav[['YEAR']], on='YEAR', how='inner')
 
 # FIGURE ########################################
 
@@ -64,8 +76,8 @@ ax1 = ax.twinx()
 # AXIS LIMITS ################
 
 ax.set_xlim(
-    datetime(2015, 1, 1),  # Start date
-    datetime(2022, 12, 31)  # End date
+    datetime(2005, 1, 1),  # Start date
+    datetime(2024, 12, 31)  # End date
 )
 
 # TICKS AND LABELS ###########
@@ -83,25 +95,36 @@ ax.grid(which='minor', axis='x', linestyle=':', linewidth = 0.5)
 # AXIS LABELS ################
 
 ax.set_ylabel("Google Search Inter. [\%]")
-ax1.set_ylabel("Num. of Publications [1]")
+ax1.set_ylabel("\"SustAv\" Research \n [\% of all Aviation Publs.]", color='blue')
 
 # PLOTTING ###################
 
+ax1.bar(
+    df_scopus['YEAR'],
+    df_scopus['RESULT'] / df_scopus_allaviation['RESULT'],
+    color = 'blue',
+    width = 100,
+    label = 'Scientific Publications'
+)
 ax.plot(
-    df_google.index,
-    df_google['RESULT'],
+    df_google['YEARMONTH'],
+    df_google['SEARCHINTEREST'],
     color = 'black',
     linestyle = '-',
-    linewidth = 1,
-    label = 'Google Trends'
+    linewidth = 1.5,
+    label = 'Google Search Interest'
 )
-ax1.plot(
-    df_scopus.index,
-    df_scopus['RESULT'],
+
+ax1.text(
+    x = 0.01,  # Relative x-coordinate
+    y = 0.9,   # Relative y-coordinate
+    s = r'\texttt{TITLE-ABS-KEY(sustainab* AND aviation) AND SUBJAREA(EART OR ENER OR ENGI OR ENVI OR MATE OR MATH OR PHYS)}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 10,
     color = 'black',
-    linestyle = '--',
-    linewidth = 1,
-    label = 'Elsevier Scopus'
+    transform = ax1.transAxes,  # Use axis coordinates
+    backgroundcolor = 'white'
 )
 
 
@@ -118,13 +141,14 @@ labels = labels1 + labels2
 ax.legend(
     handles=handles,
     labels=labels,
-    loc='upper left',
+    loc=(0.01, 0.49),
 )
 
 # EXPORT #########################################
 
-from pathlib import Path
-figure_name: str = str(Path.cwd().stem + '.pdf')
+file_path = os.path.abspath(__file__)
+file_name = os.path.splitext(os.path.basename(file_path))[0]
+figure_name: str = str(file_name + '.pdf')
 
 plt.savefig(
     fname = figure_name,
@@ -132,4 +156,3 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
