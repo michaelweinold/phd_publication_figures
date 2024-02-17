@@ -94,13 +94,13 @@ legend_1_elements = [
 legend_1 = ax.legend(
     handles = legend_1_elements,
     labels = [
-        'Best Estimate (Total Effect)',
-        'Best Estimate (Sub-Effect)',
+        'Total Effect',
+        'Sub-Effect',
         '5/95\% Confidence Interval',
     ],
     loc = 'lower left',
     numpoints=1,
-    title = 'Metastudy (Lee et al., 2021)',
+    title = 'Metastudy, Best Estimates (Lee et al., 2021)',
     alignment = 'left',
     title_fontproperties={'weight':'bold'},
 )
