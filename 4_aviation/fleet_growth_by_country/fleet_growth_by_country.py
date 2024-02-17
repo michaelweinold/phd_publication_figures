@@ -217,46 +217,44 @@ ax.bar(
     color = 'blue',
 )
 ax.bar(
+    x = df_asia['year'],
+    height=df_asia['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'],
+    label = 'Asia',
+    color = 'red',
+)
+ax.bar(
+    x = df_africa['year'],
+    height=df_africa['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'] + df_asia['sum(countAc)'],
+    label = 'Africa',
+    color = 'brown',
+)
+ax.bar(
     x = df_south_america['year'],
     height=df_south_america['sum(countAc)'],
-    bottom=df_north_america['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'] + df_asia['sum(countAc)'] + df_africa['sum(countAc)'],
     label = 'Central and South America',
     color = 'orange',
-
 )
-
 ax.bar(
     x = df_europe['year'],
     height=df_europe['sum(countAc)'],
-    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_asia['sum(countAc)'] + df_africa['sum(countAc)'],
     label = 'Europe',
     color = 'green',
 )
 
 ax.bar(
-    x = df_asia['year'],
-    height=df_asia['sum(countAc)'],
-    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_europe['sum(countAc)'],
-    label = 'Asia',
-    color = 'red',
-)
-
-ax.bar(
     x = df_oceania['year'],
     height=df_oceania['sum(countAc)'],
-    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_europe['sum(countAc)'] + df_asia['sum(countAc)'],
+    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_asia['sum(countAc)'] + df_africa['sum(countAc)'] + df_europe['sum(countAc)'],
     label = 'Oceania',
     color = 'purple',
 
 )
 
-ax.bar(
-    x = df_africa['year'],
-    height=df_africa['sum(countAc)'],
-    bottom=df_north_america['sum(countAc)'] + df_south_america['sum(countAc)'] + df_europe['sum(countAc)'] + df_asia['sum(countAc)'] + df_oceania['sum(countAc)'],
-    label = 'Africa',
-    color = 'brown',
-)
+
 
 
 # LEGEND ####################
