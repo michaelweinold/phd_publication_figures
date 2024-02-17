@@ -113,7 +113,7 @@ df_aerosols_rad = pd.read_excel(
 
 df_aerosols_clouds = pd.read_excel(
     io = 'data/data.xlsx',
-    sheet_name = 'Aerosols-Clouds',
+    sheet_name = 'Aerosols-NaturalClouds',
     usecols = lambda column: column in [
         'Authors (Label)',
         'ERF Average [mW/m2]',
@@ -520,7 +520,7 @@ ax2.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
 ax2.tick_params(axis='y', which='both', length=0) # no y-ticks
 
 ax2.set_title(
-    label = 'Short-Term Effects',
+    label = 'Short-Term Effects (Non-Cumulative)',
     fontsize = 11,
     fontweight = 'bold',
 )
@@ -697,6 +697,7 @@ ax5 = fig.add_axes(
     sharex = ax0
 )
 ax5.set_ylim(0,1)
+ax5.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
 ax5.set_yticklabels([]) # no y-tick labels
 ax5.tick_params(axis='y', which='both', length=0) # no y-ticks
 
@@ -751,7 +752,7 @@ ax5.text(
 # Aerosols-Clouds
 
 ax6 = fig.add_axes(
-    rect = (0,-1.3,1,0.2), # (left, bottom, width, height)
+    rect = (0,-1.06,1,0.075), # (left, bottom, width, height)
     label = 'aerosols-clouds',
     sharex = ax0
 )
@@ -759,46 +760,72 @@ ax6.set_ylim(0,2)
 ax6.set_yticklabels([]) # no y-tick labels
 ax6.tick_params(axis='y', which='both', length=0) # no y-ticks
 
-ax6.barh(
-    y = 0.5,
-    width = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'Cirrus Formation from Soot']['ERF Average [mW/m2]'],
-    height = 0.8,
-    align='center',
+x_upper = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Penner et al. (2018)']['ERF Upper Errorbar [mW/m2]']
+x_lower = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Penner et al. (2018)']['ERF Lower Errorbar [mW/m2]']
+ax6.plot(
+    (x_lower, x_upper),
+    (0.5, 0.5),
     color = 'blue',
-    edgecolor = 'black'
+    marker = 's',
+    markersize = 5,
+    markerfacecolor='blue',
+    linestyle = '--',
 )
-
-average = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'Cirrus Formation from Soot']['ERF Average [mW/m2]']
-lower = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'Cirrus Formation from Soot']['ERF Lower Errorbar [mW/m2]']
-upper = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'Cirrus Formation from Soot']['ERF Upper Errorbar [mW/m2]']
-ax6.errorbar(
-    x = average,
-    y = 0.5,
-    xerr = (
-        pd.Series([0]),
-        abs(average - upper)
-    ),
-    fmt = 'none',
-    capsize = 4,
-    ecolor = 'white',
-    elinewidth = 1,
-)
-ax6.errorbar(
-    x = average,
-    y = 0.5,
-    xerr = (
-        abs(average - lower),
-        pd.Series([0]),
-    ),
-    fmt = 'none',
-    capsize = 4,
-    ecolor = 'black',
-    elinewidth = 1,
+average = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Penner et al. (2018)']['ERF Average [mW/m2]']
+ax6.plot(
+    (average),
+    (0.5),
+    color = 'black',
+    marker = 'o',
+    markersize = 5,
+    markerfacecolor='blue',
 )
 ax6.text(
-    x = 0.755,  # Relative x-coordinate
+    x = 0.37,  # Relative x-coordinate
+    y = 0.28,   # Relative y-coordinate
+    s = r'\textbf{Penner et al. (2018)}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 8,
+    color = 'black',
+    transform = ax6.transAxes  # Use axis coordinates
+)
+
+x_upper = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Righi et al. (2021)']['ERF Upper Errorbar [mW/m2]']
+x_lower = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Righi et al. (2021)']['ERF Lower Errorbar [mW/m2]']
+ax6.plot(
+    (x_lower, x_upper),
+    (0.5, 0.5),
+    color = 'blue',
+    marker = 's',
+    markersize = 5,
+    markerfacecolor='blue',
+    linestyle = '--',
+)
+average = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Righi et al. (2021)']['ERF Average [mW/m2]']
+ax6.plot(
+    (average),
+    (0.5),
+    color = 'black',
+    marker = 'o',
+    markersize = 5,
+    markerfacecolor='blue',
+)
+ax6.text(
+    x = 0.538,  # Relative x-coordinate
+    y = 0.28,   # Relative y-coordinate
+    s = r'\textbf{Righi et al. (2021)}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 8,
+    color = 'black',
+    transform = ax6.transAxes  # Use axis coordinates
+)
+
+ax6.text(
+    x = 0.78,  # Relative x-coordinate
     y = 0.475,   # Relative y-coordinate
-    s = r'\textbf{Soot induced Cirrus Formation}',
+    s = r'\textbf{Natural Cloud Formation}',
     ha = 'left',
     va = 'center',
     fontsize = 11,
@@ -806,26 +833,6 @@ ax6.text(
     transform = ax6.transAxes  # Use axis coordinates
 )
 
-x_lower = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'All Cloud Formation from Sulfur']['ERF Lower Errorbar [mW/m2]']
-x_upper = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'All Cloud Formation from Sulfur']['ERF Upper Errorbar [mW/m2]']
-label1 = ax6.plot(
-    (x_lower, x_upper),
-    (1.5, 1.5),
-    color = 'black',
-    marker = 'o',
-    markersize = 5,
-    markerfacecolor='blue',
-    label='label1'
-)
-ax6.text(
-    x=-140,
-    y=1.5,
-    s=r'\textbf{Sulfur}',
-    ha='left',
-    va='center',
-    fontsize=8,
-    color='black',
-)
 
 # GRID ######################
 

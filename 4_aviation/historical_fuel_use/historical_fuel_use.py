@@ -142,7 +142,7 @@ df_co2_historical['Fuel Burned [Gl]'] = df_co2_historical['Annual Emissions [kg(
 # classify countries by region
 
 df_fuel_global = df_fuel_global.reset_index()
-df_fuel_global = df_reset.melt(id_vars='Country')
+df_fuel_global = df_fuel_global.melt(id_vars='Country')
 
 unmatched_regions_dict = {
     'Former Serbia and Montenegro': 'Western Europe',
@@ -283,7 +283,6 @@ ax.stackplot(
     df_fuel_ussr_extrapolated['Total [Gl]'],
     colors = ['blue', 'red'],
     linewidth = 1,
-    alpha = 0.5,
 )
 
 ax.stackplot(
@@ -296,7 +295,6 @@ ax.stackplot(
     df_fuel_global_regions['Oceania'],
     colors = ['blue', 'red', 'brown', 'orange', 'green', 'purple'],
     linewidth = 1,
-    alpha = 0.5,
     labels = ['North America', 'Asia', 'Africa', 'Central and South America', 'Europe', 'Oceania']
 )
 
