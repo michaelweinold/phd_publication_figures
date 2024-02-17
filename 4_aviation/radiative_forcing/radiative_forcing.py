@@ -22,7 +22,7 @@ plt.rcParams.update({
     "text.usetex": True,
     "font.family": "serif",
     "font.sans-serif": "Computer Modern",
-    'font.size': 8
+    'font.size': 12
 })
 
 # DATA IMPORT ###################################
@@ -133,6 +133,28 @@ df_aerosols_clouds = pd.read_excel(
     decimal='.'
 )
 
+df_contrail_cirrus = pd.read_excel(
+    io = 'data/data.xlsx',
+    sheet_name = 'Contrail-Cirrus',
+    usecols = lambda column: column in [
+        'Authors (Label)',
+        'ERF Average [mW/m2]',
+        'ERF Lower Errorbar [mW/m2]',
+        'ERF Upper Errorbar [mW/m2]',
+        'Effect',
+    ],
+    dtype={
+        'Authors (Label)': str,
+        'ERF Average [mW/m2]': float,
+        'ERF Lower Errorbar [mW/m2]': float,
+        'ERF Upper Errorbar [mW/m2]': float,
+        'Effect': str,
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal='.'
+)
+
 # DATA MANIPULATION #############################
 
 # FIGURE ########################################
@@ -169,13 +191,13 @@ mpl.rcParams['hatch.linewidth'] = 3
 # CO2
 
 ax0 = fig.add_axes(
-    rect = (0,0,1,0.1), # (left, bottom, width, height), relative to figure size
+    rect = (0,0,1,0.075), # (left, bottom, width, height), relative to figure size
     label = 'CO2',
 )
 ax0.set_xlim(-275,100)
 ax0.set_ylim(0,1)
 ax0.set_yticklabels([]) # no y-tick labels
-ax0.tick_params(labelbottom = False) # no x-tick labels, https://stackoverflow.com/a/50037830
+#ax0.tick_params(labelbottom = False) # no x-tick labels, https://stackoverflow.com/a/50037830
 ax0.tick_params(axis='y', which='both', length=0) # no y-ticks
 
 ax0.set_title(
@@ -218,25 +240,25 @@ ax0.errorbar(
     ecolor = 'black',
 )
 ax0.text(
-    x=-140,
-    y=0.5,
-    s=r'\textbf{CO$_2$ Emissions}',
-    ha='left',
-    va='center',
-    fontsize=8,
-    color='black',
+    x = 0.849,  # Relative x-coordinate
+    y = 0.475,   # Relative y-coordinate
+    s = r'\textbf{CO$_2$ Emissions}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax0.transAxes  # Use axis coordinates
 )
 
 # NOx
 
 ax1 = fig.add_axes(
-    rect = (0,-0.49,1,0.4), # (left, bottom, width, height)
+    rect = (0,-0.44,1,0.3), # (left, bottom, width, height)
     label = 'nox',
     sharex = ax0
 )
 ax1.set_ylim(0,4)
 ax1.set_yticklabels([]) # no y-tick labels
-ax1.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
 ax1.tick_params(axis='y', which='both', length=0) # no y-ticks
 
 ax1.set_title(
@@ -257,15 +279,15 @@ ax1.imshow(
     ]
 )
 ax1.text(
-    x=40,
-    y=0.5,
-    s=r'new: Grewe et al. (2019)',
-    ha='left',
-    va='center',
-    fontsize=10,
-    color='black',
+    x = 0.72,  # Relative x-coordinate
+    y = 0.115,   # Relative y-coordinate
+    s = r'\textbf{Net NO$_x$ Emissions}',
+    ha = 'right',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax1.transAxes  # Use axis coordinates
 )
-
 
 ax1.barh(
     y = 0.5,
@@ -301,15 +323,6 @@ ax1.errorbar(
     capsize = 4,
     ecolor = 'black',
     elinewidth = 1,
-)
-ax1.text(
-    x=-140,
-    y=0.5,
-    s=r'\textbf{Net NO$_x$}',
-    ha='left',
-    va='center',
-    fontsize=8,
-    color='black',
 )
 
 ax1.barh(
@@ -350,13 +363,14 @@ ax1.errorbar(
     elinewidth = 1,
 )
 ax1.text(
-    x=-140,
-    y=1.5,
-    s=r'\textbf{NO$_x$ (Ozone)}',
-    ha='left',
-    va='center',
-    fontsize=8,
-    color='black',
+    x = 0.67,  # Relative x-coordinate
+    y = 0.37,   # Relative y-coordinate
+    s = r'\textbf{NO$_x$ (Ozone)}',
+    ha = 'right',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax1.transAxes  # Use axis coordinates
 )
 
 ax1.barh(
@@ -435,13 +449,14 @@ ax1.errorbar(
     elinewidth = 1,
 )
 ax1.text(
-    x=-140,
-    y=2.5,
-    s=r'\textbf{NO$_x$ (Methane)}',
-    ha='left',
-    va='center',
-    fontsize=8,
-    color='black',
+    x = 0.62,  # Relative x-coordinate
+    y = 0.63,   # Relative y-coordinate
+    s = r'\textbf{NO$_x$ (Methane)}',
+    ha = 'right',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax1.transAxes  # Use axis coordinates
 )
 
 ax1.barh(
@@ -482,9 +497,330 @@ ax1.errorbar(
     elinewidth = 1,
 )
 ax1.text(
+    x = 0.71,  # Relative x-coordinate
+    y = 0.873,   # Relative y-coordinate
+    s = r'\textbf{NO$_x$ (Water)}',
+    ha = 'right',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax1.transAxes  # Use axis coordinates
+)
+
+# Soot/Radiation
+
+ax2 = fig.add_axes(
+    rect = (0,-0.66,1,0.075), # (left, bottom, width, height)
+    label = 'soot-radiation',
+    sharex = ax0
+)
+ax2.set_ylim(0,1)
+ax2.set_yticklabels([]) # no y-tick labels
+ax2.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
+ax2.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax2.set_title(
+    label = 'Short-Term Effects',
+    fontsize = 11,
+    fontweight = 'bold',
+)
+
+ax2.barh(
+    y = 0.5,
+    width = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Average [mW/m2]'],
+    height = 0.8,
+    align='center',
+    color = 'red',
+    edgecolor = 'black'
+)
+# https://stackoverflow.com/a/33857966
+average = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Average [mW/m2]']
+lower = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Lower Errorbar [mW/m2]']
+upper = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Soot']['ERF Upper Errorbar [mW/m2]']
+ax2.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax2.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+ax2.text(
+    x = 0.755,  # Relative x-coordinate
+    y = 0.475,   # Relative y-coordinate
+    s = r'\textbf{Soot-Radiation Trapping}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax2.transAxes  # Use axis coordinates
+)
+
+# Sulfur/Radiation
+
+ax3 = fig.add_axes(
+    rect = (0,-0.76,1,0.075), # (left, bottom, width, height)
+    label = 'sulfur-radiation',
+    sharex = ax0
+)
+ax3.set_ylim(0,1)
+ax3.set_yticklabels([]) # no y-tick labels
+ax3.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
+ax3.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax3.barh(
+    y = 0.5,
+    width = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Average [mW/m2]'],
+    height = 0.8,
+    align='center',
+    color = 'blue',
+    edgecolor = 'black'
+)
+# https://stackoverflow.com/a/33857966
+average = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Average [mW/m2]']
+lower = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Lower Errorbar [mW/m2]']
+upper = df_aerosols_rad[df_aerosols_rad['Effect'] == 'Sulfur']['ERF Upper Errorbar [mW/m2]']
+ax3.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax3.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+ax3.text(
+    x = 0.755,  # Relative x-coordinate
+    y = 0.475,   # Relative y-coordinate
+    s = r'\textbf{Sulfur-Radiation Trapping}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax3.transAxes  # Use axis coordinates
+)
+
+# Water Vapor (H2O)
+
+ax4 = fig.add_axes(
+    rect = (0,-0.86,1,0.075), # (left, bottom, width, height)
+    label = 'water',
+    sharex = ax0
+)
+ax4.set_ylim(0,1)
+ax4.set_yticklabels([]) # no y-tick labels
+ax4.tick_params(labelbottom = False) # https://stackoverflow.com/a/50037830
+ax4.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax4.barh(
+    y = 0.5,
+    width = df_h2o['ERF Average [mW/m2]'],
+    height = 0.8,
+    align='center',
+    color = 'red',
+    edgecolor = 'black'
+)
+
+average = df_h2o['ERF Average [mW/m2]']
+lower = df_h2o['ERF Lower Errorbar [mW/m2]']
+upper = df_h2o['ERF Upper Errorbar [mW/m2]']
+ax4.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax4.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+ax4.text(
+    x = 0.755,  # Relative x-coordinate
+    y = 0.475,   # Relative y-coordinate
+    s = r'\textbf{Water Vapor}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax4.transAxes  # Use axis coordinates
+)
+
+# Contrail-Cirrus
+ax5 = fig.add_axes(
+    rect = (0,-0.96,1,0.075), # (left, bottom, width, height)
+    label = 'aerosols-clouds',
+    sharex = ax0
+)
+ax5.set_ylim(0,1)
+ax5.set_yticklabels([]) # no y-tick labels
+ax5.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax5.barh(
+    y = 0.5,
+    width = df_contrail_cirrus[df_contrail_cirrus['Authors (Label)'] == 'Lee et al.']['ERF Average [mW/m2]'],
+    height = 0.8,
+    align='center',
+    color = 'red',
+    edgecolor = 'black'
+)
+
+average = df_contrail_cirrus[df_contrail_cirrus['Authors (Label)'] == 'Lee et al.']['ERF Average [mW/m2]']
+lower = df_contrail_cirrus[df_contrail_cirrus['Authors (Label)'] == 'Lee et al.']['ERF Lower Errorbar [mW/m2]']
+upper = df_contrail_cirrus[df_contrail_cirrus['Authors (Label)'] == 'Lee et al.']['ERF Upper Errorbar [mW/m2]']
+ax5.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax5.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+
+ax5.text(
+    x = 0.725,  # Relative x-coordinate
+    y = 0.475,   # Relative y-coordinate
+    s = r'\textbf{Contrail and Contrail-Cirrus Formation}',
+    ha = 'right',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax5.transAxes  # Use axis coordinates
+)
+
+# Aerosols-Clouds
+
+ax6 = fig.add_axes(
+    rect = (0,-1.3,1,0.2), # (left, bottom, width, height)
+    label = 'aerosols-clouds',
+    sharex = ax0
+)
+ax6.set_ylim(0,2)
+ax6.set_yticklabels([]) # no y-tick labels
+ax6.tick_params(axis='y', which='both', length=0) # no y-ticks
+
+ax6.barh(
+    y = 0.5,
+    width = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'Cirrus Formation from Soot']['ERF Average [mW/m2]'],
+    height = 0.8,
+    align='center',
+    color = 'blue',
+    edgecolor = 'black'
+)
+
+average = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'Cirrus Formation from Soot']['ERF Average [mW/m2]']
+lower = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'Cirrus Formation from Soot']['ERF Lower Errorbar [mW/m2]']
+upper = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'Cirrus Formation from Soot']['ERF Upper Errorbar [mW/m2]']
+ax6.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        pd.Series([0]),
+        abs(average - upper)
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'white',
+    elinewidth = 1,
+)
+ax6.errorbar(
+    x = average,
+    y = 0.5,
+    xerr = (
+        abs(average - lower),
+        pd.Series([0]),
+    ),
+    fmt = 'none',
+    capsize = 4,
+    ecolor = 'black',
+    elinewidth = 1,
+)
+ax6.text(
+    x = 0.755,  # Relative x-coordinate
+    y = 0.475,   # Relative y-coordinate
+    s = r'\textbf{Soot induced Cirrus Formation}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 11,
+    color = 'black',
+    transform = ax6.transAxes  # Use axis coordinates
+)
+
+x_lower = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'All Cloud Formation from Sulfur']['ERF Lower Errorbar [mW/m2]']
+x_upper = df_aerosols_clouds[df_aerosols_clouds['Effect'] == 'All Cloud Formation from Sulfur']['ERF Upper Errorbar [mW/m2]']
+label1 = ax6.plot(
+    (x_lower, x_upper),
+    (1.5, 1.5),
+    color = 'black',
+    marker = 'o',
+    markersize = 5,
+    markerfacecolor='blue',
+    label='label1'
+)
+ax6.text(
     x=-140,
-    y=3.5,
-    s=r'\textbf{NO$_x$ (Water)}',
+    y=1.5,
+    s=r'\textbf{Sulfur}',
     ha='left',
     va='center',
     fontsize=8,
@@ -501,6 +837,53 @@ for ax in fig.axes:
     )
 
 # LEGEND ####################
+    
+import matplotlib.patches as patches
+import matplotlib.lines as lines
+
+import matplotlib as mpl
+mpl.rcParams['hatch.linewidth'] = 3
+
+legend_elements = [
+    patches.Patch(
+        facecolor='red',
+        edgecolor='black'
+    ),
+    patches.Patch(
+        facecolor='red',
+        edgecolor='black',
+        hatch='///',
+    ),
+    lines.Line2D(
+        [0],
+        [1],
+        color='black',
+        lw=1,
+        marker='|',
+        linestyle='-',
+    ),
+    lines.Line2D(
+        [0],
+        [1],
+        color='black',
+        lw=2,
+        marker='s',
+        linestyle='--',
+    ),
+]
+
+ax1.legend(
+    handles = legend_elements,
+    labels = [
+        'Total Effect (Metastudy)',
+        'Sub-Effect (Metastudy)',
+        '5/95\% Confidence Interval (Metastudy)',
+        'High/Low Range (Individual Study)',
+    ],
+    loc = 'upper left',
+    numpoints=2,
+    alignment = 'left',
+)
 
 # EXPORT #########################################
 
@@ -514,3 +897,4 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
+# %%

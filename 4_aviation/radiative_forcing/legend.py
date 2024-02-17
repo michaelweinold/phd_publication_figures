@@ -66,20 +66,16 @@ import matplotlib.lines as lines
 import matplotlib as mpl
 mpl.rcParams['hatch.linewidth'] = 3
 
-# current workaround, compare: https://github.com/matplotlib/matplotlib/issues/26074
-white_patch =  patches.Patch(
-    facecolor='red',
-    edgecolor='black',
-    hatch='///',
-)
-white_patch._hatch_color = (1.0, 1.0, 1.0, 1.0)
-
 legend_1_elements = [
     patches.Patch(
         facecolor='red',
         edgecolor='black'
     ),
-    white_patch,
+    patches.Patch(
+        facecolor='red',
+        edgecolor='black',
+        hatch='///',
+    ),
     plt.errorbar(
         x=0,
         y=0,
@@ -113,9 +109,9 @@ legend_2_elements = [
         [0],
         [1],
         color='black',
-        lw=2,
-        marker='s',
-        linestyle='--',
+        lw=1,
+        marker='|',
+        linestyle='-',
     ),
 ]
 
