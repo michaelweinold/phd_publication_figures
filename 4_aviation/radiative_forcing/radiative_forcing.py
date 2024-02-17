@@ -28,7 +28,7 @@ plt.rcParams.update({
 # DATA IMPORT ###################################
 
 df_co2 = pd.read_excel(
-    io = 'data/data.xlsx',
+    io = 'data/data.xlsx', 
     sheet_name = 'CO2',
     usecols = lambda column: column in [
         'Authors (Label)',
