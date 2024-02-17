@@ -32,10 +32,7 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-countries = gpd.read_file('data/base_geodata/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp')
-popareas = gpd.read_file('data/base_geodata/ne_10m_urban_areas/ne_10m_urban_areas.shp')
-rivers = gpd.read_file('data/base_geodata/ne_10m_rivers_lake_centerlines/ne_10m_rivers_lake_centerlines.shp')
-lakes = gpd.read_file('data/base_geodata/ne_10m_lakes/ne_10m_lakes.shp')
+countries = gpd.read_file('data/base_geodata/ne_50m_admin_0_countries/ne_50m_admin_0_countries.shp')
 graticules = gpd.read_file('data/base_geodata/ne_50m_graticules_10')
 
 def import_flightradar_csv(filepath: str) ->gpd.GeoDataFrame:
@@ -71,9 +68,6 @@ target_projection = "EPSG:3035" # seems to work well for Europe
 # https://automating-gis-processes.github.io/CSC/notebooks/L2/projections.html
 
 countries = countries.to_crs(target_projection)
-popareas = popareas.to_crs(target_projection)
-rivers = rivers.to_crs(target_projection)
-lakes = lakes.to_crs(target_projection)
 graticules = graticules.to_crs(target_projection)
 
 # https://geopandas.org/en/stable/docs/reference/api/geopandas.points_from_xy.html#geopandas-points-from-xy

@@ -68,7 +68,7 @@ fig, ax = plt.subplots(
 
 # AXIS SCALING ###############
 
-ax.set_yscale('log')
+#ax.set_yscale('log')
 
 # AXIS LIMITS ################
 
