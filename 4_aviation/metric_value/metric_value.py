@@ -27,6 +27,51 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
+df_trendline = pd.read_excel(
+    io = 'data/data.xlsx', 
+    sheet_name = 'trendline',
+    usecols = lambda column: column in [
+        'year',
+        'metric value',
+    ],
+    dtype={
+        'year': float,
+        'metric value': float,
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal='.'
+)
+df_sa_acft = pd.read_excel(
+    io = 'data/data.xlsx', 
+    sheet_name = 'sa_acft',
+    usecols = lambda column: column in [
+        'year',
+        'metric value',
+    ],
+    dtype={
+        'year': int,
+        'metric value': float,
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal='.'
+)
+df_sta_acft = pd.read_excel(
+    io = 'data/data.xlsx', 
+    sheet_name = 'sta_acft',
+    usecols = lambda column: column in [
+        'year',
+        'metric value',
+    ],
+    dtype={
+        'year': int,
+        'metric value': float,
+    },
+    header = 0,
+    engine = 'openpyxl',
+    decimal='.'
+)
 
 # DATA MANIPULATION #############################
 
@@ -39,17 +84,14 @@ fig, ax = plt.subplots(
     nrows = 1,
     ncols = 1,
     dpi = 300,
-    figsize=(30*cm, 5*cm), # A4=(210x297)mm,
+    figsize=(30*cm, 10*cm), # A4=(210x297)mm,
 )
 
 # SECONDARY AXES ##############
 
 # AXIS LIMITS ################
 
-ax.set_xlim(
-    datetime(2005, 1, 1),  # Start date
-    datetime(2024, 12, 31)  # End date
-)
+ax.set_xlim(1960,2040)
 
 # TICKS AND LABELS ###########
 
@@ -65,23 +107,38 @@ ax.grid(which='minor', axis='x', linestyle=':', linewidth = 0.5)
 
 # AXIS LABELS ################
 
-ax.set_ylabel("Change Relative to 1950 [1]")
+ax.set_ylabel("\"ICAO CO$_2$ Metric\" [kg/km]")
 
 # PLOTTING ###################
 
 ax.plot(
-    df_google['YEARMONTH'],
-    df_google['SEARCHINTEREST'],
+    df_trendline['year'],
+    df_trendline['metric value'],
+    label = 'Trendline',
     color = 'black',
     linestyle = '-',
-    linewidth = 1.5,
-    label = 'Google Search Interest'
+    linewidth = 2,
 )
+ax.scatter(
+    df_sa_acft['year'],
+    df_sa_acft['metric value'],
+    label = 'SA Aircraft',
+    color = 'blue',
+    marker = 'x',
+)
+ax.scatter(
+    df_sta_acft['year'],
+    df_sta_acft['metric value'],
+    label = 'STA Aircraft',
+    color = 'red',
+    marker = 'x',
+)
+
 
 # LEGEND ####################
 
 ax.legend(
-    loc = 'upper left',
+    loc = 'upper right',
 )
 
 # EXPORT #########################################
