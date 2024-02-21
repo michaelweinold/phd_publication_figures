@@ -98,7 +98,7 @@ axes[0].bar(
 axes[0].text(
     x = 0.01,  # Relative x-coordinate
     y = 0.9,   # Relative y-coordinate
-    s = r'\texttt{TITLE-ABS-KEY(aviation OR aircraft) AND SUBJAREA(EART OR ENER OR ENGI OR ENVI OR MATE OR MATH OR PHYS)}',
+    s = r'\texttt{TITLE-ABS-KEY(supersonic AND aircraft) AND SUBJAREA(EART OR ENER OR ENGI OR ENVI OR MATE OR MATH OR PHYS)}',
     ha = 'left',
     va = 'center',
     fontsize = 10,
@@ -116,7 +116,7 @@ axes[1].bar(
 axes[1].text(
     x = 0.01,  # Relative x-coordinate
     y = 0.9,   # Relative y-coordinate
-    s = r'\texttt{TITLE-ABS-KEY(supersonic AND aircraft) AND SUBJAREA(EART OR ENER OR ENGI OR ENVI OR MATE OR MATH OR PHYS)}',
+    s = r'Normalized against \texttt{TITLE-ABS-KEY(aviation OR aircraft) AND SUBJAREA(EART OR ENER OR ENGI OR ENVI OR MATE OR MATH OR PHYS)}',
     ha = 'left',
     va = 'center',
     fontsize = 10,
@@ -140,4 +140,3 @@ plt.savefig(
     bbox_inches='tight',
     transparent = False
 )
-# %%
