@@ -110,7 +110,7 @@ ax.scatter(
 )
 ax.plot(
     df_annual['Year'],
-    df_annual['EU (MJ/ASK)'],
+    df_annual['EU [MJ/ASK]'],
     label = 'US Fleet Average',
     color = 'red',
     linestyle = '--',
