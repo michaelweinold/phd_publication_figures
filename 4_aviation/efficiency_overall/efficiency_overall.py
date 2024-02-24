@@ -80,7 +80,7 @@ fig, ax = plt.subplots(
 # AXIS LIMITS ################
 
 ax.set_xlim(1950, 2024)
-ax.set_ylim(0, 4)
+ax.set_ylim(0, 9)
 
 # TICKS AND LABELS ###########
 
@@ -101,6 +101,8 @@ ax.set_ylabel("$\eta$ = EU (MJ/ASK)")
 
 # PLOTTING ###################
 
+ax.axvline(x=1958, color='grey', linestyle='-')
+
 ax.scatter(
     df_acft['YOI'],
     df_acft['EU (MJ/ASK)'],
@@ -110,7 +112,7 @@ ax.scatter(
 )
 ax.plot(
     df_annual['Year'],
-    df_annual['EU [MJ/ASK]'],
+    df_annual['EU (MJ/ASK)'],
     label = 'US Fleet Average',
     color = 'red',
     linestyle = '--',

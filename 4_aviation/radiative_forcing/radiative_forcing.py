@@ -760,37 +760,6 @@ ax6.set_ylim(0,2)
 ax6.set_yticklabels([]) # no y-tick labels
 ax6.tick_params(axis='y', which='both', length=0) # no y-ticks
 
-x_upper = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Penner et al. (2018)']['ERF Upper Errorbar [mW/m2]']
-x_lower = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Penner et al. (2018)']['ERF Lower Errorbar [mW/m2]']
-ax6.plot(
-    (x_lower, x_upper),
-    (0.5, 0.5),
-    color = 'blue',
-    marker = 's',
-    markersize = 5,
-    markerfacecolor='blue',
-    linestyle = '--',
-)
-average = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Penner et al. (2018)']['ERF Average [mW/m2]']
-ax6.plot(
-    (average),
-    (0.5),
-    color = 'black',
-    marker = 'o',
-    markersize = 5,
-    markerfacecolor='blue',
-)
-ax6.text(
-    x = 0.37,  # Relative x-coordinate
-    y = 0.28,   # Relative y-coordinate
-    s = r'\textbf{Penner et al. (2018)}',
-    ha = 'left',
-    va = 'center',
-    fontsize = 8,
-    color = 'black',
-    transform = ax6.transAxes  # Use axis coordinates
-)
-
 x_upper = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Righi et al. (2021)']['ERF Upper Errorbar [mW/m2]']
 x_lower = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Righi et al. (2021)']['ERF Lower Errorbar [mW/m2]']
 ax6.plot(
@@ -822,10 +791,50 @@ ax6.text(
     transform = ax6.transAxes  # Use axis coordinates
 )
 
+average = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Gettelman and Chen (2013)']['ERF Average [mW/m2]']
+ax6.plot(
+    (average),
+    (1.5),
+    color = 'black',
+    marker = 'o',
+    markersize = 5,
+    markerfacecolor='blue',
+)
 ax6.text(
-    x = 0.78,  # Relative x-coordinate
+    x = 0.6,  # Relative x-coordinate
+    y = 0.7,   # Relative y-coordinate
+    s = r'\textbf{Gettelman/Chen (2013)}',
+    ha = 'right',
+    va = 'center',
+    fontsize = 8,
+    color = 'black',
+    transform = ax6.transAxes  # Use axis coordinates
+)
+
+average = df_aerosols_clouds[df_aerosols_clouds['Authors (Label)'] == 'Kapadia et al. (2016)']['ERF Average [mW/m2]']
+ax6.plot(
+    (average),
+    (1.5),
+    color = 'black',
+    marker = 'o',
+    markersize = 5,
+    markerfacecolor='blue',
+)
+ax6.text(
+    x = 0.68,  # Relative x-coordinate
+    y = 0.7,   # Relative y-coordinate
+    s = r'\textbf{Kapadia et al. (2016)}',
+    ha = 'left',
+    va = 'center',
+    fontsize = 8,
+    color = 'black',
+    transform = ax6.transAxes  # Use axis coordinates
+)
+
+ax6.text(
+    x = 0.8,  # Relative x-coordinate
     y = 0.475,   # Relative y-coordinate
-    s = r'\textbf{Natural Cloud Formation}',
+    s = r'\textbf{Cloudiness from Sulfur}',
     ha = 'left',
     va = 'center',
     fontsize = 11,
