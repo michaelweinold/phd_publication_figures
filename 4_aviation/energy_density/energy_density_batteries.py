@@ -221,7 +221,7 @@ fig, ax = plt.subplots(
         dpi = 300,
         figsize=(30*cm, 10*cm), # A4=(210x297)mm,
         gridspec_kw = dict(
-            height_ratios=[4, 1],
+            height_ratios=[3.5, 1],
         ),
         sharex=True
     )
@@ -266,7 +266,7 @@ ax[1].grid(which='both', axis='x', linestyle='-', linewidth = 0.5)
 # AXIS LABELS ################
 
 ax[1].set_xlabel("Gravimetric Energy Density [Wh/kg]")
-ax[1].set_ylabel("[\%]")
+ax[1].set_ylabel("Replacable [\%]")
 ax[0].set_ylabel("Vol. Energy Density [Wh/l]")
 
 # PLOTTING ###################
@@ -289,17 +289,18 @@ for rectangle in battery_rectangles_2011:
 ax[1].plot(
     df_acft_electrification_icct['battery energy density, commuter traffic, current EMF [Wh/kg]'],
     df_acft_electrification_icct['replacable commuter traffic, current EMF [%]'],
-    color = 'red',
+    color = 'green',
     linestyle = '-',
     linewidth = 1
 )
 ax[1].plot(
     df_acft_electrification_icct['battery energy density, commuter traffic, 15% EMF reduction [Wh/kg]'],
     df_acft_electrification_icct['replacable commuter traffic, 15% EMF reduction [%]'],
-    color = 'orange',
-    linestyle = '-',
+    color = 'green',
+    linestyle = '--',
     linewidth = 1
 )
+"""
 ax[1].plot(
     df_acft_electrification_icct['battery energy density, commuter traffic, 30% EMF reduction [Wh/kg]'],
     df_acft_electrification_icct['replacable commuter traffic, 30% EMF reduction [%]'],
@@ -307,21 +308,22 @@ ax[1].plot(
     linestyle = '-',
     linewidth = 1
 )
-
+"""
 ax[1].plot(
     df_acft_electrification_icct['battery energy density, turboprop traffic, current EMF [Wh/kg]'],
     df_acft_electrification_icct['replacable turboprop traffic, current EMF [%]'],
     color = 'red',
-    linestyle = '--',
+    linestyle = '-',
     linewidth = 1
 )
 ax[1].plot(
     df_acft_electrification_icct['battery energy density, turboprop traffic, 15% EMF reduction [Wh/kg]'],
     df_acft_electrification_icct['replacable turboprop traffic, 15% EMF reduction [%]'],
-    color = 'orange',
+    color = 'red',
     linestyle = '--',
     linewidth = 1
 )
+"""
 ax[1].plot(
     df_acft_electrification_icct['battery energy density, turboprop traffic, 30% EMF reduction [Wh/kg]'],
     df_acft_electrification_icct['replacable turboprop traffic, 30% EMF reduction [%]'],
@@ -329,7 +331,7 @@ ax[1].plot(
     linestyle = '--',
     linewidth = 1
 )
-
+"""
 ax[0].scatter(
     df_lion_historical['Wh/kg (historical)'],
     df_lion_historical['Wh/l (historical)'],
@@ -514,6 +516,47 @@ ax[0].add_artist(legend_categories)
 ax[0].legend(
     handles = legend_elements_battery_technology,
     loc = 'upper left',
+)
+
+legend_elements_categories_2 = [
+    Line2D(
+        [0],
+        [0],
+        color='green',
+        lw=2,
+        ls='-',
+        label='Commuter'
+    ),
+    Line2D(
+        [0],
+        [0],
+        color='red',
+        lw=2,
+        ls='-',
+        label='Turboprop'
+    ),
+    Line2D(
+        [0],
+        [0],
+        color='black',
+        lw=2,
+        ls='-',
+        label='Current kg'
+    ),
+    Line2D(
+        [0],
+        [0],
+        color='black',
+        lw=2,
+        ls='--',
+        label='15\% less kg'
+    )
+]
+
+ax[1].legend(
+    handles=legend_elements_categories_2,
+    loc='lower left',
+    ncol=2
 )
 
 # EXPORT #########################################

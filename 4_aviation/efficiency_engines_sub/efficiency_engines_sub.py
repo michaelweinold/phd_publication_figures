@@ -27,27 +27,20 @@ plt.rcParams.update({
 # DATA IMPORT ###################################
 
 df_eff = pd.read_excel(
-    io = '../efficiency/data/data_29-11-2023.xlsx',
-    sheet_name = 'data',
-    usecols = lambda column: column in [
-        'Name',
-        'Type',
-        'YOI',
-        'TSFC Cruise',
-        'B/P Ratio'
-    ],
-    dtype={
-        'Name': str,
-        'Type': str,
-        'YOI': int,
-        'TSFC Cruise': float,
-        'B/P Ratio': float
-    },
+    io = 'data/databank_with_engines.xlsx', # description here
+    sheet_name = 'Sheet1',
     header = 0,
     engine = 'openpyxl'
 )
 
 # DATA MANIPULATION #############################
+
+data = df_eff
+
+# Prepare DF for plotting
+data = data.dropna(subset='thermal_eff')
+data = data.loc[data['Type']!='Regional']
+data = data.groupby(['Engine Identification', 'YOI'], as_index=False).agg({'thermal_eff':'mean', 'prop_eff':'mean', 'Engine Efficiency':'mean'})
 
 # FIGURE ########################################
 
@@ -65,17 +58,12 @@ fig, ax = plt.subplots(
 
 # AXIS LIMITS ################
 
-ax.set_xlim(1950, 2050)
-ax.set_ylim(0,30)
+ax.set_xlim(0.7, 0.95)
+ax.set_ylim(0.4,0.65)
 
 # TICKS AND LABELS ###########
 
-from matplotlib.ticker import MultipleLocator
-ax.xaxis.set_major_locator(MultipleLocator(10))
-ax.xaxis.set_minor_locator(MultipleLocator(1))
-
 ax.minorticks_on()
-ax.tick_params(axis='x', which='minor', bottom=True)
 
 # GRIDS ######################
 
@@ -85,116 +73,39 @@ ax.grid(which='minor', axis='y', linestyle=':', linewidth = 0.5)
 ax.grid(which='major', axis='x', linestyle='-', linewidth = 0.5)
 ax.grid(which='minor', axis='x', linestyle=':', linewidth = 0.5)
 
-
 # AXIS LABELS ################
 
-ax.set_ylabel("TSFC (Cruise) [mg(JetA1)/Ns]")
-ax.set_xlabel("Aircraft Year of Introduction")
+ax.set_ylabel("Thermal Efficiency [1]")
+ax.set_xlabel("Propulsive Efficiency [1]")
 
 # PLOTTING ###################
 
-sc = ax.scatter(
-    x = df_eff['YOI'],
-    y = df_eff['TSFC Cruise'],
-    marker = 'o',
-    c = df_eff['B/P Ratio'],
-    label = 'Widebody',
-    cmap = 'plasma',
-)
-plt.colorbar(sc, label='B/P Ratio')
+# Colormap for years
+import matplotlib.colors as mcolors
 
-ax.axhline(y=11.1, color='black', linestyle='--', linewidth=2, label='Practical Limit w.r.t. NOx')
-ax.axhline(y=10.1, color='black', linestyle='-', linewidth=2, label = 'Theoretical Limit')
+column_data = pd.to_numeric(data['YOI'])
+norm = mcolors.Normalize(vmin=column_data.min(), vmax=column_data.max())
+norm_column_data = norm(column_data)
+cmap = plt.colormaps.get_cmap('viridis')
+colors = cmap(norm_column_data)
 
-# Add a thick arrow pointing down
-ax.annotate(
-    'lower=better', 
-    xy=(2040, 20), 
-    xytext=(2040, 27), 
-    arrowprops=dict(facecolor='black', width=1, headwidth=10),
-        va='center',
-    ha='center'
-)
+sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+sm.set_array([])
 
 ax.scatter(
-    x = 2020,
-    y = 14.94,
-    color='green'
+    data['prop_eff'],
+    data['thermal_eff'],
+    marker='o',
+    c=colors
 )
-ax.scatter(
-    x = 2020,
-    y = 14.94,
-    facecolors='none',
-    edgecolors='black',
-    s=90,
-    label = 'Projection'
-)
-plt.annotate(
-    'GE9X',
-    (2020, 14.94),
-    xytext=(0, +10),
-    textcoords='offset points'
-)
-
-ax.scatter(
-    x = 2025,
-    y = 12.88,
-    color='green'
-)
-ax.scatter(
-    x = 2025,
-    y = 12.88,
-    facecolors='none',
-    edgecolors='black',
-    s=90,
-)
-plt.annotate(
-    'RR Ultrafan',
-    (2020, 12.88),
-    xytext=(-43, -10),
-    textcoords='offset points'
-)
-
-ax.scatter(
-    x = 2030,
-    y = 12.152,
-    color='green'
-)
-ax.scatter(
-    x = 2030,
-    y = 12.152,
-    facecolors='none',
-    edgecolors='black',
-    s=90,
-)
-plt.annotate(
-    'Open Rotor',
-    (2030, 12.152),
-    xytext=(-10, +10),
-    textcoords='offset points'
-)
-
-ax.scatter(
-    x = 2035,
-    y = 12,
-    color='green'
-)
-ax.scatter(
-    x = 2035,
-    y = 12,
-    facecolors='none',
-    edgecolors='black',
-    s=90,
-)
-plt.annotate(
-    'CFM Rise',
-    (2035, 12),
-    xytext=(+10, -2),
-    textcoords='offset points'
-)
-
 
 # LEGEND ####################
+
+ax.vlines(0.925,0.4,0.6, color='black', label='Theoretical Limit')
+ax.hlines(0.55,0.7,0.925, color='black', label='Practical Limit NOx', linestyles='--')
+ax.hlines(0.6,0.7,0.925, color='black')
+
+plt.colorbar(sm, ax=plt.gca()).set_label('Aircraft Year of Introduction')
 
 from matplotlib.lines import Line2D
 
@@ -239,7 +150,7 @@ legend_elements_categories = [
 
 ax.legend(
     handles=legend_elements_categories,
-    loc='lower right',
+    loc='upper left',
     ncol=2
 )
 
