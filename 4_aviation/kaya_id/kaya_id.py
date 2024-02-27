@@ -107,6 +107,11 @@ ax.set_yscale('log')
 ax.minorticks_on()
 ax.tick_params(axis='x', which='minor', bottom=True)
 
+import matplotlib.ticker as ticker
+
+ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: '{:g}'.format(y)))
+ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, _: '{:g}'.format(y)))
+
 # GRIDS ######################
 
 ax.grid(which='major', axis='y', linestyle='-', linewidth = 0.5)
@@ -144,7 +149,13 @@ ax.plot(
     linewidth = 1.5,
     label = 'Energy Intensity (kJ/pax-km)'
 )
-ax.axhline(y=1, color='orange', linestyle='-', linewidth=1.5, label='Carbon Intensity')
+ax.axhline(
+    y=1,
+    color='orange',
+    linestyle='-',
+    linewidth=1.5,
+    label='Carbon Intensity'
+)
 
 ax.axvline(x=2019, color='black', linestyle='-', linewidth=1.5)
 
