@@ -111,26 +111,6 @@ from matplotlib.lines import Line2D
 
 legend_elements_categories = [
     Line2D(
-        xdata = [0],
-        ydata = [0],
-        color = 'black',
-        markerfacecolor='black',
-        linestyle = 'None',
-        markersize=4,
-        marker='o',
-        label = 'Acft./Engine Combinations'
-    ),
-    Line2D(
-        xdata = [0],
-        ydata = [0],
-        color = 'black',
-        markerfacecolor='none',
-        linestyle = 'None',
-        markersize=7,
-        marker='o',
-        label = 'Projections'
-    ),
-    Line2D(
         [0],
         [0],
         color='black',
@@ -145,7 +125,17 @@ legend_elements_categories = [
         lw=2,
         ls='-',
         label='Phys. Limit'
-    )
+    ),
+        Line2D(
+        xdata = [0],
+        ydata = [0],
+        color = 'black',
+        markerfacecolor='black',
+        linestyle = 'None',
+        markersize=4,
+        marker='o',
+        label = 'Engines'
+    ),
 ]
 
 ax.legend(
