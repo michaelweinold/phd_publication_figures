@@ -188,6 +188,29 @@ axes[1].legend(
     frameon = False
 )
 
+# ANNOTATIONS ################
+
+axes[0].text(
+    x=0.25,
+    y=0.1,
+    s=r"GTP$_{20}=$C/D",
+    ha='left',
+    va='center',
+    fontsize=12,
+    color='black',
+    transform=axes[0].transAxes
+)
+axes[0].text(
+    x=0.25,
+    y=0.2,
+    s=r"GWP$_{20}=$A/B",
+    ha='left',
+    va='center',
+    fontsize=12,
+    color='black',
+    transform=axes[0].transAxes
+)
+
 # EXPORT #########################################
 
 figure_name: str = str(Path.cwd().stem + '.pdf')

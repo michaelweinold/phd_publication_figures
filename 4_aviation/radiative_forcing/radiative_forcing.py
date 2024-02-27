@@ -749,6 +749,8 @@ ax5.text(
     transform = ax5.transAxes  # Use axis coordinates
 )
 
+# data seems to be RF instead of ERF, which the axis shows
+"""
 # Aerosols-Clouds
 
 ax6 = fig.add_axes(
@@ -841,7 +843,7 @@ ax6.text(
     color = 'black',
     transform = ax6.transAxes  # Use axis coordinates
 )
-
+"""
 
 # GRID ######################
 
