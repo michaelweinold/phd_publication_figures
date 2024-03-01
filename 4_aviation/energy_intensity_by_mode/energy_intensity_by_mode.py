@@ -227,6 +227,50 @@ ax[1].errorbar(
     capsize = 3,
     capthick = 1,
 )
+
+ax[0].axvline(x=1967, color='black', linestyle='-', linewidth=1.5)
+ax[0].text(
+    x=1966,
+    y=6500,
+    s=r'1967 Oil Embargo',
+    ha='right',
+    va='center',
+    fontsize=12,
+    color='black',
+)
+
+ax[0].axvline(x=1973, color='black', linestyle='-', linewidth=1.5)
+ax[0].text(
+    x=1974,
+    y=6500,
+    s=r'1973 Oil Crisis',
+    ha='left',
+    va='center',
+    fontsize=12,
+    color='black',
+)
+
+ax[0].axvline(x=1990, color='black', linestyle='-', linewidth=1.5)
+ax[0].text(
+    x=1989,
+    y=5500,
+    s=r'1990 Oil Shock',
+    ha='right',
+    va='center',
+    fontsize=12,
+    color='black',
+)
+
+ax[0].axvline(x=2003, color='black', linestyle='-', linewidth=1.5)
+ax[0].text(
+    x=2004,
+    y=4500,
+    s=r'2000s energy crisis',
+    ha='left',
+    va='center',
+    fontsize=12,
+    color='black',
+)
  
 # LEGEND ####################
 

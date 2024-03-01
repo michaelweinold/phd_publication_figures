@@ -81,7 +81,7 @@ for ax in axes:
 # AXIS LABELS ################
 
 for ax in axes:
-    ax.set_ylabel("Climate Impact")
+    ax.set_ylabel("Climate Impact (eg. ERF [Wm$^{-2}$])")
     ax.set_xlabel("Years")
 
 # PLOTTING ###################
@@ -193,7 +193,7 @@ axes[1].legend(
 axes[0].text(
     x=0.25,
     y=0.1,
-    s=r"GTP$_{20}=$C/D",
+    s=r"GTP$_{20}$(short-lived)=C/D",
     ha='left',
     va='center',
     fontsize=12,
@@ -203,7 +203,7 @@ axes[0].text(
 axes[0].text(
     x=0.25,
     y=0.2,
-    s=r"GWP$_{20}=$A/B",
+    s=r"GWP$_{20}$(short-lived)=A/B",
     ha='left',
     va='center',
     fontsize=12,
