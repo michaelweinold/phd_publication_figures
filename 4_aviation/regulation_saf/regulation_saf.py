@@ -102,8 +102,9 @@ axes[1].set_ylim(0, 20)
 
 # GRIDS ######################
 
-axes[0].grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
-axes[0].grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
+for ax in axes:
+    ax.grid(which='both', axis='y', linestyle='-', linewidth = 0.5)
+    ax.grid(which='both', axis='x', linestyle='--', linewidth = 0.5)
 
 # AXIS LABELS ################
 
@@ -119,7 +120,7 @@ axes[0].bar(
     height = df_reg['SAF share [%]'],
     color = 'green',
     width = 3,
-    label = 'Non-Fossil Fuels',
+    label = 'SAF',
     edgecolor = 'black'
 )
 axes[0].bar(
@@ -155,19 +156,24 @@ axes[1].plot(
     df_prod['EU domestic aviation consumption [Mt(oil)]'],
     color = 'red',
     linestyle = '--',
-    label = 'EU Aviation Fuel Consumption'
+    label = 'EU Aviation Fuel Consumption (domestic flt.)',
+    linewidth = 2
 )
-axes[1].plot(
-    df_prod['year'],
-    df_prod['EU biofuel production [kt(oil)]']/(1E3),
+axes[1].bar(
+    x = df_prod['year'],
+    height = df_prod['EU biofuel production [kt(oil)]']/(1E3),
     color = 'green',
-    label='EU Biofuel Production'
+    label='EU Biofuel Production',
+    width = 0.7,
 )
-axes[1].plot(
-    df_prod['year'],
-    df_prod['of which aviation fuel [kt(oil)]']/(1E3),
+axes[1].bar(
+    x = df_prod['year'],
+    height = df_prod['of which aviation fuel [kt(oil)]']/(1E3),
     label = 'of which Aviation Fuel',
-    color='blue'
+    color='white',
+    hatch = '////',
+    width = 0.7,
+    edgecolor = 'blue',
 )
 
 
