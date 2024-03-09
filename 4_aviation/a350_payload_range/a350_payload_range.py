@@ -170,6 +170,13 @@ ax.annotate(
     fontsize = 12,
 )
 
+image = plt.imread('A350.png')
+ax.imshow(
+    X = image,
+    aspect = 'auto',
+    extent=[9000, 12000, 40, 110]
+)
+
 # LEGEND ####################
 
 ax.legend(
