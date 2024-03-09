@@ -170,6 +170,7 @@ ax.annotate(
     fontsize = 12,
 )
 
+# https://commons.wikimedia.org/wiki/File:F-WWCF_A350_LBG_SIAE_2015_(18953559366).jpg
 image = plt.imread('A350.png')
 ax.imshow(
     X = image,
