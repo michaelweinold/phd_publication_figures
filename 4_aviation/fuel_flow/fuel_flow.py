@@ -27,8 +27,6 @@ plt.rcParams.update({
 
 # DATA IMPORT ###################################
 
-# based on "Total Fuel Burn" figure in:
-# https://eaglepubs.erau.edu/introductiontoaerospaceflightvehicles/chapter/flight-range-endurance/
 df_ff = pd.read_csv(
     filepath_or_buffer = r'data/data.csv'
 )
