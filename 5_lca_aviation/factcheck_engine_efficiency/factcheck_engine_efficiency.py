@@ -42,10 +42,10 @@ data = data.loc[data['Type']!='Regional']
 data = data.groupby(['Engine Identification', 'YOI'], as_index=False).agg({'thermal_eff':'mean', 'prop_eff':'mean', 'Engine Efficiency':'mean'})
 
 # https://doi.org/10.1016/j.scitotenv.2023.163881
-supposed_mean_hamelin_et_al_2035 = (2035, 0.986)
-supposed_mean_hamelin_et_al_2045 = (2045, 1.097)
-range_hamelin_et_al_2035 = (2035, 0.638, 0.813) # year, min, max
-range_hamelin_et_al_2045 = (2045, 0.738, 0.875) # year, min, max
+supposed_mean_hamelin_et_al_2035 = (2035, 0.58)
+supposed_mean_hamelin_et_al_2045 = (2045, 0.645)
+range_hamelin_et_al_2035 = (2035, 0.51, 0.65) # year, min, max
+range_hamelin_et_al_2045 = (2045, 0.59, 0.7) # year, min, max
 
 # FIGURE ########################################
 
